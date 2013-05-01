@@ -39,7 +39,7 @@ return array(
 	|
 	*/
 
-	'index' => 'index.php',
+	'index' => '',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -53,7 +53,7 @@ return array(
 	|
 	*/
 
-	'key' => 'YourSecretKeyGoesHere!',
+	'key' => 'wE31JOuZf0l4ChFTdLvAFRrKVvY6EcKL',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -192,7 +192,7 @@ return array(
 		'Str'        	=> 'Laravel\\Str',
 		'Task'       	=> 'Laravel\\CLI\\Tasks\\Task',
 		'URI'        	=> 'Laravel\\URI',
-		'Validator'  	=> 'Laravel\\Validator',
+//		'Validator'  	=> 'Laravel\\Validator',
 		'View'       	=> 'Laravel\\View',
 	),
 

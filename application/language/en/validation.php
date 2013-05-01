@@ -68,6 +68,7 @@ return array(
 	),
 	"unique"         => "The :attribute has already been taken.",
 	"url"            => "The :attribute format is invalid.",
+	"pin"            => "The :attribute does not exist or may have already been used.",
 
 	/*
 	|--------------------------------------------------------------------------
