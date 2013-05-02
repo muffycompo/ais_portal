@@ -104,4 +104,62 @@ class Ais {
         return '<p class="'.$css_class.'">'.$text.'</p>';
     }
 
+    public static function dashboard_links_by_role($role_id){
+        switch ($role_id) {
+            case 1:
+                # Student
+                return '
+                <p>'. HTML::link('#','Results') . '</p>
+                <p>'. HTML::link('#','Payments') . '</p>
+                <p>'. HTML::link('#','Assignments') . '</p>
+                <p>'. HTML::link('#','Clubs') . '</p>
+                <p>'. HTML::link('#','Sports') . '</p>
+                <p>'. HTML::link('#','Shopping') . '</p>
+                <p>'. HTML::link('#','Reports') . '</p>';
+                break;
+            case 2:
+                # Teacher
+                return '
+                <p>'. HTML::link('#','Results') . '</p>
+                <p>'. HTML::link('#','Classes') . '</p>';
+                break;
+            case 3:
+                # Accountant
+                return '
+                <p>'. HTML::link('#','Results') . '</p>
+                <p>'. HTML::link('#','Payments') . '</p>
+                <p>'. HTML::link('#','Staff') . '</p>
+                <p>'. HTML::link('#','Reports') . '</p>';
+                break;
+            case 4:
+                # Ecommerce
+                return '
+                <p>'. HTML::link('#','Results') . '</p>
+                <p>'. HTML::link('#','Sales') . '</p>
+                <p>'. HTML::link('#','Shop Inventory') . '</p>';
+                break;
+            case 5:
+                # Administrator
+                return '
+                <p>'. HTML::link('#','Results') . '</p>
+                <p>'. HTML::link('#','Payments') . '</p>
+                <p>'. HTML::link('#','Classes') . '</p>
+                <p>'. HTML::link('#','Assignments') . '</p>
+                <p>'. HTML::link('#','Staff') . '</p>
+                <p>'. HTML::link('#','Sales') . '</p>
+                <p>'. HTML::link('#','Calendar/Reminders') . '</p>
+                <p>'. HTML::link('#','Shop Inventory') . '</p>
+                <p>'. HTML::link('#','Clubs') . '</p>
+                <p>'. HTML::link('#','Sports') . '</p>
+                <p>'. HTML::link('#','Shopping') . '</p>
+                <p>'. HTML::link_to_route('users','Users') . '</p>
+                <p>'. HTML::link('#','Reports') . '</p>';
+                break;
+            default:
+                # Invalid
+                return '';
+                break;
+        }
+    }
+
 }

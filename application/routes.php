@@ -4,16 +4,22 @@
 Route::get('/', array('as'=>'home', 'uses'=>'home@index'));
 
 //    Users Controller - GET
+Route::get('users', array('as'=>'users', 'uses'=>'users@index'));
 Route::get('users/signup', array('as'=>'user_signup', 'uses'=>'users@signup'));
 Route::get('users/signup_complete', array('as'=>'signup_complete', 'uses'=>'users@signup_complete'));
 Route::get('users/login', array('as'=>'user_login', 'uses'=>'users@login'));
 Route::get('users/dashboard', array('as'=>'user_dashboard', 'uses'=>'users@dashboard'));
 Route::get('users/logout', array('as'=>'user_logout', 'uses'=>'users@logout'));
 Route::get('users/generate_pin', array('as'=>'generate_pin', 'uses'=>'users@generate_pin'));
+Route::get('users/new_user', array('as'=>'new_user', 'uses'=>'users@new_user'));
+Route::get('users/edit_user/(:num)', array('as'=>'edit_user', 'uses'=>'users@edit_user'));
+Route::get('users/delete_user/(:num)', array('as'=>'delete_user', 'uses'=>'users@delete_user'));
 
 //    Users Controller - POST
 Route::post('users/login', array('uses'=>'users@login'));
 Route::post('users/signup', array('uses'=>'users@signup'));
+Route::post('users/new_user', array('uses'=>'users@new_user'));
+Route::post('users/edit_user', array('uses'=>'users@edit_user'));
 
 
 

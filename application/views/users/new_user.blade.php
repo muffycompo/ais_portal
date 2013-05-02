@@ -1,11 +1,11 @@
 @layout('template.layout')
 
 @section('content')
-		
+
 <div class="home">
-	<h2>Sign Up</h2>
+	<h2>New User</h2>
 	@include('template.partials.notification')
-	{{ Form::open('users/signup','POST') }}
+	{{ Form::open('users/new_user','POST') }}
 		<p>
 			{{ Form::label('firstname','First Name:') }}<br>
 			{{ Form::input('text','firstname',Input::old('firstname'),array('id'=>'firstname')) }}
@@ -22,27 +22,17 @@
 			{{ $errors->first('email') }}
 		</p>
 		<p>
-			{{ Form::label('gsm_no','Phone No. (GSM):') }}<br>
-			{{ Form::input('text','gsm_no',Input::old('gsm_no'),array('id'=>'gsm_no','maxlength'=>'11')) }}
-			{{ $errors->first('gsm_no') }}
-		</p>
-		<p>
 			{{ Form::label('password','Password:') }}<br>
 			{{ Form::password('password',array('id'=>'password')) }}
 			{{ $errors->first('password') }}
 		</p>
 		<p>
-			{{ Form::label('password_confirmation','Confirm Password:') }}<br>
-			{{ Form::password('password_confirmation',array('id'=>'password_confirmation')) }}
-			{{ $errors->first('password_confirmation') }}
+			{{ Form::label('role_id','Role:') }}<br>
+			{{ Ais::role_dropdown('role_id',Input::old('role_id'),array('id'=>'role_id')) }}
+			{{ $errors->first('role_id') }}
 		</p>
 		<p>
-			{{ Form::label('pin_no','PIN No.:') }}<br>
-			{{ Form::input('text','pin_no',Input::old('pin_no'),array('id'=>'pin_no')) }}
-			{{ $errors->first('pin_no') }}
-		</p>
-		<p>	
-			{{ Form::submit('Signup') }} | {{ HTML::link_to_route('user_login','Cancel') }}
+			{{ Form::submit('Add User') }} | {{ HTML::link_to_route('users','Cancel') }}
 		</p>
 		{{ Form::close() }}
 </div>
