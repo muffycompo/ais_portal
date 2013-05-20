@@ -29,6 +29,11 @@ class Users_Controller extends Base_Controller {
         return View::make('users.dashboard');
     }
 
+    public function get_profile(){
+        $v_data['user'] = User::user_profile();
+        return View::make('users.profile', $v_data);
+    }
+
    public function get_signup_complete(){
         return View::make('users.signup_complete');
     }
@@ -40,6 +45,19 @@ class Users_Controller extends Base_Controller {
     public function get_edit_user($id){
         $v_data['user'] = User::show_user($id);
         return View::make('users.edit_user', $v_data);
+    }
+
+    public function get_edit_profile($id){
+        $v_data['user'] = User::show_user($id);
+        return View::make('users.edit_profile', $v_data);
+    }
+
+    public function get_forgot_password(){
+        return View::make('users.forgot_password');
+    }
+
+    public function get_password_confirmation(){
+        return View::make('users.password_confirmation');
     }
 
     public function get_delete_user($id){
@@ -116,6 +134,48 @@ class Users_Controller extends Base_Controller {
         }
     }
 
+    public function post_edit_profile(){
+        $validate = User::edit_profile_validation(Input::all());
+        if( $validate === true ){
+            $signup = User::edit_profile(Input::all());
+            if( $signup === false ){
+                return Redirect::back()->with('message',Ais::message_format('An error occurred while updating your profile, please try again later!','error'))->with_input();
+            } else {
+                return Redirect::to_route('user_profile')->with('message',Ais::message_format('Profile updated successfully','success'));
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
+
+    public function post_upload_photo(){
+        $validate = Registration::upload_photo_validation(Input::all());
+        if( $validate === true ){
+            $parent = User::upload_photo(Input::all());
+            if( $parent === false ){
+                return Redirect::back()->with('message',Ais::message_format('An error occurred while uploading your Profile Photo, please try again!','error'))->with_input();
+            } else {
+                return Redirect::back()->with('message',Ais::message_format('Profile Photo Uploaded successfully','success'));
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
+
+
+    public function post_forgot_password(){
+        $validate = User::forgot_password_validation(Input::all());
+        if( $validate === true ){
+            $reset = User::reset_password(Input::all());
+            if( $reset === 1 ){
+                return Redirect::back()->with('message',Ais::message_format('We do not have that email address in our database!','error'))->with_input();
+            } else {
+                return Redirect::to_route('password_confirmation')->with('email',Input::get('email'));
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
 
 
 
@@ -129,10 +189,11 @@ class Users_Controller extends Base_Controller {
 
 
 
-//    public function get_generate_pin(){
-//        $pin = Ais::generate_pin(10, 12);
+
+//    public function get_generate_hash(){
+//        $password = Hash::make('admin');
 //
-//        return Response::json($pin,200);
+//        return Response::json($password,200);
 //    }
 
 }

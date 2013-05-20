@@ -23,7 +23,7 @@
             {{ Form::submit('Login') }}	| {{ HTML::link_to_route('user_signup','Signup') }}
         </p>
         <p>
-            {{ HTML::link('#','Forgot Password?') }}
+            {{ HTML::link_to_route('forgot_password','Forgot Password?') }}
         </p>
 		{{ Form::close() }}
 </div>

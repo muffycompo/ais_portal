@@ -25,7 +25,7 @@
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->firstname }}</td>
                 <td>{{ $user->surname }}</td>
-                <td>{{ $user->role_id }}</td>
+                <td>{{ Expand::role($user->role_id) }}</td>
                 <td>
                     {{ HTML::link('users/edit_user/' . $user->id,'Edit') }}
                     @if($user->id != Session::get('user_id'))
@@ -36,7 +36,7 @@
           @endforeach
         @else
             <tr>
-                <td colspan="5"></td>
+                <td colspan="5">No Users found!</td>
             </tr>
         @endif
         </tbody>
