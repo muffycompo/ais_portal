@@ -5,7 +5,7 @@
 <div class="home">
 	<h2>Subjects</h2>
 	@include('template.partials.notification')
-    <p>{{ HTML::link('#','New Subject') }}</p>
+    <p>{{ HTML::link_to_route('new_subject','New Subject') }}</p>
     <table class="ais_table">
         <thead>
             <tr>
@@ -19,8 +19,8 @@
             <tr>
                 <td>{{ $subject->subject_name }}</td>
                 <td>
-                    {{ HTML::link('settings/subject/' . $subject->id . '/edit_subject','Edit') }} |
-                    {{ HTML::link('settings/subject/' . $subject->id . '/delete_subject','Delete') }}
+                    {{ HTML::link('settings/edit_subject/' . $subject->id,'Edit') }} |
+                    {{ HTML::link('settings/delete_subject/' . $subject->id,'Delete') }}
                 </td>
             </tr>
           @endforeach

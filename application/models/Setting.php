@@ -16,10 +16,26 @@ class Setting extends Basemodel {
         'amount' => 'numeric',
     );
 
+    private static $new_subject_rules = array(
+        'subject_title' => 'required|min:3',
+    );
+
+    private static $new_class_rules = array(
+        'class_name' => 'required|min:3',
+    );
+
 
 //  Validation
     public static function pin_payment_validation($input){
         return static::validation($input, static::$pin_payment_rules);
+    }
+
+    public static function new_class_validation($input){
+        return static::validation($input, static::$new_class_rules);
+    }
+
+    public static function new_subject_validation($input){
+        return static::validation($input, static::$new_subject_rules);
     }
 
 //  DB Inserts
@@ -45,7 +61,46 @@ class Setting extends Basemodel {
         } else {
             return false;
         }
+    }
 
+    public static function new_class($data){
+        $class_array = array('class_name' => Str::upper($data['class_name']));
+        $class = DB::table('classes')->insert($class_array);
+        if($class){
+            return $class;
+        } else {
+            return false;
+        }
+    }
+
+    public static function new_subject($data){
+        $subject_array = array('subject_name' => Str::title($data['subject_title']));
+        $subject = DB::table('subjects')->insert($subject_array);
+        if($subject){
+            return $subject;
+        } else {
+            return false;
+        }
+    }
+
+    public static function edit_subject($data){
+        $subject_array = array('subject_name' => Str::title($data['subject_title']));
+        $subject = DB::table('subjects')->where('id','=',$data['subject_id'])->update($subject_array);
+        if($subject){
+            return $subject;
+        } else {
+            return false;
+        }
+    }
+
+    public static function edit_class($data){
+        $class_array = array('class_name' => Str::upper($data['class_name']));
+        $class = DB::table('classes')->where('id','=',$data['class_id'])->update($class_array);
+        if($class){
+            return $class;
+        } else {
+            return false;
+        }
     }
 
     public static function assign_class($data){
@@ -103,12 +158,28 @@ class Setting extends Basemodel {
         }
     }
 
-
-
     public static function show_teacher($id){
         $teacher = DB::table('users')->where('id','=',$id)->first();
         if( $teacher ){
             return $teacher;
+        } else {
+            return null;
+        }
+    }
+
+    public static function show_class($id){
+        $class = DB::table('classes')->where('id','=',$id)->first();
+        if( $class ){
+            return $class;
+        } else {
+            return null;
+        }
+    }
+
+    public static function show_subject($id){
+        $subject = DB::table('subjects')->where('id','=',$id)->first();
+        if( $subject ){
+            return $subject;
         } else {
             return null;
         }
@@ -161,6 +232,22 @@ class Setting extends Basemodel {
     protected static function check_teacher_exist_for_class($user_id){
         $teacher =  DB::table('teachers_and_classes')->where('user_id','=',$user_id)->count();
         if( $teacher > 0 ){ return true; } else { return false; }
+    }
+
+    public static function delete_class($id){
+        try{
+            DB::table('classes')->delete((int)$id);
+        } catch (Exception $e){
+            return false;
+        }
+    }
+
+    public static function delete_subject($id){
+        try{
+            DB::table('subjects')->delete((int)$id);
+        } catch (Exception $e){
+            return false;
+        }
     }
 
 }

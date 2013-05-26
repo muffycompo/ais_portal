@@ -11,6 +11,12 @@ class Users_Controller extends Base_Controller {
 
    public $restful = true;
 
+    public function __construct(){
+        parent::__construct();
+        $this->filter('before','auth')->except(array('login','signup','signup_complete','forgot_password','password_confirmation',));
+        $this->filter('before','auth')->except(array('login','signup','forgot_password'))->on('post');
+    }
+
 //    Controller Actions - GET
     public function get_index(){
         $v_data['users'] = User::all_users();

@@ -37,17 +37,24 @@ Route::get('payments/fees', array('as'=>'fee_payments', 'uses'=>'payments@fees')
 Route::get('payments/student_fees', array('as'=>'student_fee_payments', 'uses'=>'payments@student_fees'));
 Route::get('payments/new_pin', array('as'=>'new_pin_payment', 'uses'=>'payments@new_pin'));
 Route::get('payments/new_fee', array('as'=>'new_fee_payment', 'uses'=>'payments@new_fee'));
+Route::get('payments/add_new_fee', array('as'=>'add_new_fee', 'uses'=>'payments@add_new_fee'));
 Route::get('payments/pin_receipt/(:num)', array('as'=>'pin_receipt', 'uses'=>'payments@pin_receipt'));
 Route::get('payments/fee_receipt/(:num)', array('as'=>'fee_receipt', 'uses'=>'payments@fee_receipt'));
 Route::get('payments/pin_slip/(:num)', array('as'=>'pin_slip', 'uses'=>'payments@pin_slip'));
 Route::get('payments/edit_pin_payment/(:num)', array('as'=>'edit_pin_payment', 'uses'=>'payments@edit_pin_payment'));
 Route::get('payments/edit_fee_payment/(:num)', array('as'=>'edit_fee_payment', 'uses'=>'payments@edit_fee_payment'));
+Route::get('payments/fees_schedule', array('as'=>'fees_schedule', 'uses'=>'payments@fees_schedule'));
+Route::get('payments/fees_schedule/(:num)', array('as'=>'fees_schedule_term', 'uses'=>'payments@fees_schedule_term'));
+Route::get('payments/class_fee_schedule/(:num)/(:num)', array('as'=>'class_fee_schedule', 'uses'=>'payments@class_fee_schedule'));
+Route::get('payments/edit_fee_schedule/(:num)', array('as'=>'edit_fee_schedule', 'uses'=>'payments@edit_fee_schedule'));
+Route::get('payments/delete_fee_schedule/(:num)', array('as'=>'delete_fee_schedule', 'uses'=>'payments@delete_fee_schedule'));
 
 
 
 //    Payments Controller - POST
 Route::post('payments/new_pin', array('uses'=>'payments@new_pin'));
 Route::post('payments/new_fee', array('uses'=>'payments@new_fee'));
+Route::post('payments/add_new_fee', array('uses'=>'payments@add_new_fee'));
 Route::post('payments/edit_pin_payment', array('uses'=>'payments@edit_pin_payment'));
 Route::post('payments/edit_fee_payment', array('uses'=>'payments@edit_fee_payment'));
 
@@ -91,13 +98,23 @@ Route::get('settings', array('as'=>'settings', 'uses'=>'settings@index'));
 Route::get('settings/teachers', array('as'=>'teachers', 'uses'=>'settings@teachers'));
 Route::get('settings/teacher/(:num)/assign_subject', array('as'=>'assign_subject', 'uses'=>'settings@assign_subject'));
 Route::get('settings/subjects', array('as'=>'ais_subjects', 'uses'=>'settings@subjects'));
+Route::get('settings/new_subject', array('as'=>'new_subject', 'uses'=>'settings@new_subject'));
+Route::get('settings/edit_subject/(:num)', array('as'=>'edit_subject', 'uses'=>'settings@edit_subject'));
 Route::get('settings/classes', array('as'=>'ais_classes', 'uses'=>'settings@classes'));
+Route::get('settings/new_class', array('as'=>'new_class', 'uses'=>'settings@new_class'));
+Route::get('settings/edit_class/(:num)', array('as'=>'edit_class', 'uses'=>'settings@edit_class'));
+Route::get('settings/delete_class/(:num)', array('as'=>'delete_class', 'uses'=>'settings@delete_class'));
+Route::get('settings/delete_subject/(:num)', array('as'=>'delete_subject', 'uses'=>'settings@delete_subject'));
 Route::get('settings/teacher/(:num)/assign_class', array('as'=>'assign_class', 'uses'=>'settings@assign_class'));
 
 //    Settings Controller - POST
 Route::post('settings', array('uses'=>'settings@index'));
 Route::post('settings/assign_subject', array('uses'=>'settings@assign_subject'));
+Route::post('settings/new_subject', array('uses'=>'settings@new_subject'));
+Route::post('settings/edit_subject', array('uses'=>'settings@edit_subject'));
 Route::post('settings/assign_class', array('uses'=>'settings@assign_class'));
+Route::post('settings/new_class', array('uses'=>'settings@new_class'));
+Route::post('settings/edit_class', array('uses'=>'settings@edit_class'));
 
 
 
@@ -144,5 +161,5 @@ Route::filter('csrf', function()
 
 Route::filter('auth', function()
 {
-	if (Auth::guest()) return Redirect::to_route('user_login');
+	if (Auth::guest()) return Redirect::to_route('user_login')->with('message',Ais::message_format('You must login to access that area!','error'));
 });

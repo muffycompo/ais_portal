@@ -105,6 +105,14 @@ class Ais {
         return Form::select($name, $options, $selected, $attributes);
     }
 
+   public static function recurring_dropdown($name, $selected = null, $attributes = array()){
+        $options = array(
+            '1' => 'Termly',
+            '2' => 'Annually'
+        );
+        return Form::select($name, $options, $selected, $attributes);
+    }
+
     public static function generate_pin($number_to_gen = '', $pin_length = ''){
         $num_to_gen = (! empty($number_to_gen))? $number_to_gen : 10;
         $length = (! empty($pin_length))? $pin_length : 6;
@@ -207,9 +215,6 @@ class Ais {
                 return 'img/avatar_placeholder.png';
             }
         }
-
-
-
     }
 
     public static function active_academic_session(){
@@ -226,6 +231,11 @@ class Ais {
         $count = DB::table('teachers_and_classes')->where('user_id','=',$user_id)
             ->where('class_id','=',$class_id)
             ->count();
+        if($count == 1){ return true;} else { return false;}
+    }
+
+    public static function is_admin($user_id){
+        $count = DB::table('users')->where('id','=',$user_id)->where('role_id','=',5)->count();
         if($count == 1){ return true;} else { return false;}
     }
 

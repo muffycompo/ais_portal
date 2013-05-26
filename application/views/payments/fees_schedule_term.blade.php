@@ -3,13 +3,12 @@
 @section('content')
 
 <div class="home">
-	<h2>Classes</h2>
+	<h2>Fees Schedule by Class - {{ Expand::term_name($term_id) }}</h2>
 	@include('template.partials.notification')
-    <p>{{ HTML::link_to_route('new_class','New Class') }}</p>
     <table class="ais_table">
         <thead>
             <tr>
-                <th>Class Title</th>
+                <th>Class</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -19,19 +18,18 @@
             <tr>
                 <td>{{ $class->class_name }}</td>
                 <td>
-                    {{ HTML::link('settings/edit_class/' . $class->id,'Edit') }} |
-                    {{ HTML::link('settings/delete_class/' . $class->id,'Delete') }}
+                    {{ HTML::link('payments/class_fee_schedule/' . $term_id . '/' . $class->id,'View Fee Schedule') }}
                 </td>
             </tr>
           @endforeach
         @else
             <tr>
-                <td colspan="2">No Class has been added yet!</td>
+                <td colspan="2">No Fees Schedule for this Class!</td>
             </tr>
         @endif
         </tbody>
     </table>
 
-    <p>{{ HTML::link_to_route('settings','Back') }}</p>
+    <p>{{ HTML::link_to_route('fees_schedule','Back') }}</p>
 </div>
 @endsection

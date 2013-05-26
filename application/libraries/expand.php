@@ -69,6 +69,23 @@ class Expand {
         return $opts->subject_name;
     }
 
+    public static function term_name($term_id){
+        switch ($term_id) {
+            case 1:
+                return 'First Term';
+                break;
+           case 2:
+                return 'Second Term';
+                break;
+           case 3:
+                return 'Third Term';
+                break;
+            default:
+                return '';
+                break;
+        }
+    }
+
     public static function ca_exam_score($id, $subject_id, $class_id, $type){
         $admission_no = Ais::resolve_admission_no_from_userid($id);
         $result = DB::table('results')->where('admission_no','=',$admission_no)

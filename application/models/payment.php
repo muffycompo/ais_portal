@@ -22,6 +22,10 @@ class Payment extends Basemodel {
         'teller_no' => 'required|numeric',
     );
 
+   private static $add_fee_payment_rules = array(
+        'paid_amount' => 'required|numeric',
+    );
+
     private static $user_rules = array(
         'firstname' => 'required|min:3',
         'surname' => 'required|min:3',
@@ -42,6 +46,10 @@ class Payment extends Basemodel {
 
     public static function fee_payment_validation($input){
         return static::validation($input, static::$fee_payment_rules);
+    }
+
+    public static function add_fee_validation($input){
+        return static::validation($input, static::$add_fee_payment_rules);
     }
 
    public static function edit_pin_payment_validation($input){
@@ -98,6 +106,23 @@ class Payment extends Basemodel {
             'payment_category_id' => $data['payment_category_id'],
         );
         $new_fee = DB::table('payments')->insert($new_fee_data);
+        if( $new_fee ) {
+            return $new_fee;
+        } else {
+            return false;
+        }
+
+    }
+
+    public static function add_new_fee($data){
+        $new_fee_data = array(
+            'amount' => $data['paid_amount'],
+            'payment_category_id' => $data['payment_category_id'],
+            'class_id' => $data['class_id'],
+            'term_id' => $data['term_id'],
+            'recurring_payment' => $data['recurring_payment'],
+        );
+        $new_fee = DB::table('schedule_of_fees')->insert($new_fee_data);
         if( $new_fee ) {
             return $new_fee;
         } else {
@@ -204,6 +229,17 @@ class Payment extends Basemodel {
             return array_merge($fee_payments, $user);
         } else {
             return false;
+        }
+    }
+
+    public static function fee_schedule($term_id, $class_id){
+        $fees = DB::table('schedule_of_fees')->where('term_id','=',$term_id)
+                ->where('class_id','=',$class_id)
+                ->get();
+        if($fees){
+            return $fees;
+        } else {
+            return null;
         }
     }
 

@@ -4,6 +4,11 @@ class Admin_Controller extends Base_Controller {
 
     public $restful = true;
 
+    public function __construct(){
+        parent::__construct();
+        $this->filter('before','auth');
+    }
+
 	public function get_admissions(){
 		return View::make('admin.admissions_dashboard');
 	}

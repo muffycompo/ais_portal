@@ -11,6 +11,11 @@ class Payments_Controller extends Base_Controller {
 
    public $restful = true;
 
+    public function __construct(){
+        parent::__construct();
+        $this->filter('before','auth');
+    }
+
 //    Controller Actions - GET
     public function get_index(){
         return View::make('payments.payment_dashboard');
@@ -44,6 +49,10 @@ class Payments_Controller extends Base_Controller {
         return View::make('payments.new_fee');
     }
 
+    public function get_add_new_fee(){
+        return View::make('payments.add_new_fee');
+    }
+
     public function get_edit_pin_payment($id){
         $v_data['pin_payment'] = Payment::pin_payment($id);
         return View::make('payments.edit_pin_payment', $v_data);
@@ -62,6 +71,23 @@ class Payments_Controller extends Base_Controller {
     public function get_student_fees(){
         $v_data['fee_payments'] = Payment::student_fee_payments();
         return View::make('payments.student_fees', $v_data);
+    }
+
+    public function get_fees_schedule(){
+        return View::make('payments.fees_schedule');
+    }
+
+    public function get_fees_schedule_term($term_id){
+        $v_data['classes'] = Setting::all_classes();
+        $v_data['term_id'] = (int)$term_id;
+        return View::make('payments.fees_schedule_term', $v_data);
+    }
+
+    public function get_class_fee_schedule($term_id, $class_id){
+        $v_data['fees'] = Payment::fee_schedule($term_id, $class_id);
+        $v_data['term_id'] = $term_id;
+        $v_data['class_id'] = $class_id;
+        return View::make('payments.fees_schedule_class', $v_data);
     }
 
 
@@ -90,6 +116,20 @@ class Payments_Controller extends Base_Controller {
                 return Redirect::back()->with('message',Ais::message_format('An error occurred while adding the payment, please try again!','error'))->with_input();
             } else {
                 return Redirect::to_route('fee_payments');
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
+
+   public function post_add_new_fee(){
+        $validate = Payment::add_fee_validation(Input::all());
+        if( $validate === true ){
+            $new_fee = Payment::add_new_fee(Input::all());
+            if( $new_fee === false ){
+                return Redirect::back()->with('message',Ais::message_format('An error occurred while adding the payment, please try again!','error'))->with_input();
+            } else {
+                return Redirect::back()->with('message',Ais::message_format('New fee added for '.Expand::payment_category(Input::get('payment_category_id')).' successfully!','success'));
             }
         } else {
             return Redirect::back()->with_errors($validate)->with_input();
