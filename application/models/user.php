@@ -194,8 +194,17 @@ class User extends Basemodel {
         if($count == 1){return true;} else { return false;}
     }
 
-    public static function all_users(){
+    public static function all_admin_users(){
         $users = DB::table('users')->where('role_id','!=',1)->order_by('firstname','asc')->get();
+        if( $users ){
+            return $users;
+        } else {
+            return null;
+        }
+    }
+
+    public static function all_students(){
+        $users = DB::table('users')->where('role_id','=',1)->order_by('firstname','asc')->get();
         if( $users ){
             return $users;
         } else {
@@ -214,6 +223,7 @@ class User extends Basemodel {
 
    public static function edit_user($data){
        $user_id = $data['user_id'];
+       $class = false;
        $edit_user = array(
            'firstname' => Str::title($data['firstname']),
            'surname' => Str::title($data['surname']),
@@ -221,9 +231,13 @@ class User extends Basemodel {
        );
         if( ! empty($data['password']) ) { $edit_user['password'] = Hash::make($data['password']); }
         $users = DB::table('users')->where('id','=',$user_id)->update($edit_user);
+       if(isset($data['class_id']) && ! empty($data['class_id'])) {
+           $class = DB::table('biodata')->where('user_id','=',$data['user_id'])->update(array('current_class_id' => $data['class_id']));
+       }
         if( $users ){
             return $users;
         } else {
+            if($class !== false){ return $class;}
             return false;
         }
     }

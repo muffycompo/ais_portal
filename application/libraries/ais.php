@@ -241,12 +241,19 @@ class Ais {
 
     public static function resolve_userid_from_admission_no($admission_no){
         $user = DB::table('official_use')->where('admission_no','=',$admission_no)->first(array('user_id'));
-        return $user->user_id;
+        if($user) {return $user->user_id;} else { return '';}
     }
 
     public static function resolve_admission_no_from_userid($user_id){
         $user = DB::table('official_use')->where('user_id','=',$user_id)->first(array('admission_no'));
-        return $user->admission_no;
+        if($user) {return $user->admission_no;} else { return '';}
+
+    }
+
+    public static function resolve_classid_from_userid($user_id){
+        $user = DB::table('biodata')->where('user_id','=',$user_id)->first(array('current_class_id'));
+        if($user) {return $user->current_class_id;} else { return '';}
+
     }
 
     public static function assigned_teacher_subjects($user_id){
@@ -463,7 +470,7 @@ class Ais {
             case 1:
                 # Student
                 return '
-                <p>Current Academic Session: <strong>'.Ais::active_academic_session().'</strong></p>
+                <p>Current Academic Session: <strong>'.Expand::academic_session(Ais::active_academic_session()).'</strong></p>
                 <p>'. HTML::link('#','First Term Result') . '</p>
                 <p>'. HTML::link('#','Second Term Result') . '</p>
                 <p>'. HTML::link('#','Third Term Result') . '</p>';

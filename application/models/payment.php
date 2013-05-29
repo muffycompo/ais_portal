@@ -233,15 +233,24 @@ class Payment extends Basemodel {
     }
 
     public static function fee_schedule($term_id, $class_id){
-        $fees = DB::table('schedule_of_fees')->where('term_id','=',$term_id)
-                ->where('class_id','=',$class_id)
-                ->get();
-        if($fees){
-            return $fees;
-        } else {
-            return null;
+            $status = 2; // Default to 2 for current students
+            $fees = static::get_fees($class_id, $term_id, $status);
+            if($fees == false){
+                return null;
+            } else {
+                return $fees;
+            }
         }
-    }
+
+    public static function fee_schedule_amount($term_id, $class_id){
+            $status = 2; // Default to 2 for current students
+            $fees_amount = static::get_fees_amount($class_id, $term_id, $status);
+            if($fees_amount == false){
+                return 0;
+            } else {
+                return $fees_amount;
+            }
+        }
 
     public static function show_pin($pin_id){
            $pin = DB::table('pins')->where('id','=',$pin_id)->first(array('pin_no'));
@@ -268,5 +277,31 @@ class Payment extends Basemodel {
         }
     }
 
+//  Tertiary DB Queries - Schedule of Fees
+    protected static function get_fees($class_id, $term_id, $student_status, $recurring = ''){
+        if(!empty($recurring)){
+            $schedule_of_fees = DB::table('schedule_of_fees')->where('class_id','=',$class_id)->where('term_id','=',$term_id)->where('recurring_payment','=',$recurring)->where('status','=',$student_status)->get();
+        } else {
+            $schedule_of_fees = DB::table('schedule_of_fees')->where('class_id','=',$class_id)->where('term_id','=',$term_id)->where('status','=',$student_status)->get();
+        }
+        if($schedule_of_fees) {
+            return $schedule_of_fees;
+        } else {
+            return false;
+        }
+    }
+
+    protected static function get_fees_amount($class_id, $term_id, $student_status = 2, $recurring = ''){
+        if(!empty($recurring)){
+            $fees_amount = DB::table('schedule_of_fees')->where('class_id','=',$class_id)->where('term_id','=',$term_id)->where('recurring_payment','=',$recurring)->where('status','=',$student_status)->sum('amount');
+        } else {
+            $fees_amount = DB::table('schedule_of_fees')->where('class_id','=',$class_id)->where('term_id','=',$term_id)->where('status','=',$student_status)->sum('amount');
+        }
+        if($fees_amount) {
+            return $fees_amount;
+        } else {
+            return false;
+        }
+    }
 
 }

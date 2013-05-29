@@ -13,14 +13,19 @@ class Users_Controller extends Base_Controller {
 
     public function __construct(){
         parent::__construct();
-        $this->filter('before','auth')->except(array('login','signup','signup_complete','forgot_password','password_confirmation',));
+        $this->filter('before','auth')->except(array('login','signup','signup_complete','forgot_password','password_confirmation','logout'));
         $this->filter('before','auth')->except(array('login','signup','forgot_password'))->on('post');
     }
 
 //    Controller Actions - GET
     public function get_index(){
-        $v_data['users'] = User::all_users();
+        $v_data['users'] = User::all_admin_users();
         return View::make('users.userlist',$v_data);
+    }
+
+    public function get_students(){
+        $v_data['users'] = User::all_students();
+        return View::make('users.studentlist',$v_data);
     }
 
     public function get_login(){

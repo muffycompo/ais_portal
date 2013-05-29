@@ -86,6 +86,20 @@ class Expand {
         }
     }
 
+    public static function recurring($recurring_id){
+        switch ($recurring_id) {
+            case 1:
+                return 'Termly';
+                break;
+           case 2:
+                return 'Annually';
+                break;
+            default:
+                return '';
+                break;
+        }
+    }
+
     public static function ca_exam_score($id, $subject_id, $class_id, $type){
         $admission_no = Ais::resolve_admission_no_from_userid($id);
         $result = DB::table('results')->where('admission_no','=',$admission_no)
@@ -106,6 +120,46 @@ class Expand {
                $total = ($total + static::ca_exam_score($id, $subject_id, $class_id, $i));
             }
             return $total;
-        }
+    }
+
+    public static function ca_exam_grade($score){
+            $score = (int)$score;
+            if($score > 90 && $score <=100){
+                return array(
+                    'grade' => 'A',
+                    'comment' => 'Distinction'
+                );
+            } elseif($score > 80 && $score <=89){
+                return array(
+                    'grade' => 'B2',
+                    'comment' => 'Very Good'
+                );
+            } elseif($score > 70 && $score <=79){
+                return array(
+                    'grade' => 'B1',
+                    'comment' => 'Good'
+                );
+            } elseif($score > 60 && $score <=69){
+                return array(
+                    'grade' => 'C',
+                    'comment' => 'Credit'
+                );
+            } elseif($score > 50 && $score <=59){
+                return array(
+                    'grade' => 'P',
+                    'comment' => 'Pass'
+                );
+            } elseif($score > 0 && $score <=100){
+                return array(
+                    'grade' => 'F',
+                    'comment' => 'Fail'
+                );
+            } else {
+                return array(
+                    'grade' => '',
+                    'comment' => ''
+                );
+            }
+    }
 
 }

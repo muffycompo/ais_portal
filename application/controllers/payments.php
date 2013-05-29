@@ -87,6 +87,7 @@ class Payments_Controller extends Base_Controller {
         $v_data['fees'] = Payment::fee_schedule($term_id, $class_id);
         $v_data['term_id'] = $term_id;
         $v_data['class_id'] = $class_id;
+        $v_data['total_amount'] = Payment::fee_schedule_amount($term_id, $class_id);
         return View::make('payments.fees_schedule_class', $v_data);
     }
 

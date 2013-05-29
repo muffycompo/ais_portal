@@ -9,7 +9,8 @@
         <thead>
             <tr>
                 <th>Fee Title</th>
-                <th>Amount</th>
+                <th>Amount (N)</th>
+                <th>Recurring</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -17,17 +18,23 @@
         @if(! is_null($fees) && is_array($fees) )
           @foreach($fees as $fee)
             <tr>
-                <td>{{ $fee->payment_category_id }}</td>
-                <td>{{ $fee->amount }}</td>
+                <td>{{ Expand::payment_category($fee->payment_category_id) }}</td>
+                <td>{{ Ais::format_to_currency($fee->amount) }}</td>
+                <td>{{ Expand::recurring($fee->recurring_payment) }}</td>
                 <td>
                     {{ HTML::link('payments/edit_fee_schedule/' . $fee->id,'Edit') }} |
                     {{ HTML::link('payments/delete_fee_schedule/' . $fee->id,'Delete') }}
                 </td>
             </tr>
           @endforeach
+          <tr>
+                <td><strong>TOTAL</strong></td>
+                <td>{{ Ais::format_to_currency($total_amount) }}</td>
+                <td colspan="2"></td>
+          </tr>
         @else
             <tr>
-                <td colspan="3">No Fees Schedule for this Class!</td>
+                <td colspan="4">No Fees Schedule for this Class!</td>
             </tr>
         @endif
         </tbody>

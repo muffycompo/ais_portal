@@ -5,6 +5,7 @@ Route::get('/', array('as'=>'home', 'uses'=>'home@index'));
 
 //    Users Controller - GET
 Route::get('users', array('as'=>'users', 'uses'=>'users@index'));
+Route::get('users/students', array('as'=>'students', 'uses'=>'users@students'));
 Route::get('users/signup', array('as'=>'user_signup', 'uses'=>'users@signup'));
 Route::get('users/signup_complete', array('as'=>'signup_complete', 'uses'=>'users@signup_complete'));
 Route::get('users/login', array('as'=>'user_login', 'uses'=>'users@login'));
@@ -88,6 +89,8 @@ Route::get('results', array('as'=>'results', 'uses'=>'results@index'));
 Route::get('results/assessments', array('as'=>'assessments', 'uses'=>'results@assessments'));
 Route::get('results/assessment/(:num)/(:num)', array('as'=>'assessment', 'uses'=>'results@assessment'));
 Route::get('results/new_assessment/(:num)/(:num)/(:num)', array('as'=>'new_assessment', 'uses'=>'results@new_assessment'));
+Route::get('results/unpublish_result/(:num)/(:num)/(:num)', array('as'=>'unpublish_result', 'uses'=>'results@unpublish_result'));
+Route::get('results/publish_result/(:num)/(:num)/(:num)', array('as'=>'publish_result', 'uses'=>'results@publish_result'));
 
 //    Results Controller - POST
 Route::post('results', array('as'=>'results', 'uses'=>'results@index'));

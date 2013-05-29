@@ -3,18 +3,18 @@
 @section('content')
 
 <div class="home">
-	<h2>Admin Users</h2>
+	<h2>Students</h2>
 	@include('template.partials.notification')
 
-    <p>{{ HTML::link_to_route('new_user','New User') }} | {{ HTML::link_to_route('students','Students') }}</p>
+    <p>{{ HTML::link_to_route('new_user','New User') }} | {{ HTML::link_to_route('users','Admin Users') }}</p>
 
     <table class="ais_table">
         <thead>
             <tr>
+                <th>Admission No.</th>
                 <th>First Name</th>
                 <th>Surname</th>
                 <th>Email</th>
-                <th>Role</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -22,10 +22,10 @@
         @if(! is_null($users) && is_array($users) )
           @foreach($users as $user)
             <tr>
+                <td>{{ Ais::resolve_admission_no_from_userid($user->id) }}</td>
                 <td>{{ $user->firstname }}</td>
                 <td>{{ $user->surname }}</td>
                 <td>{{ $user->email }}</td>
-                <td>{{ Expand::role($user->role_id) }}</td>
                 <td>
                     {{ HTML::link('users/edit_user/' . $user->id,'Edit') }}
                     @if($user->id != Session::get('user_id'))

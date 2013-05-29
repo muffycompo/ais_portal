@@ -95,6 +95,14 @@ class Result extends Basemodel {
         }
     }
 
+   public static function publish_result($student_id,$subject_id, $class_id){
+       return static::result_publish_status($student_id,$subject_id, $class_id,2);
+    }
+
+   public static function unpublish_result($student_id,$subject_id, $class_id){
+       return static::result_publish_status($student_id,$subject_id, $class_id,1);
+    }
+
   public static function registered_students_in_class($class_id){
         $registered_students = DB::table('users')
             ->left_join('biodata','users.id','=','biodata.user_id')
@@ -109,6 +117,36 @@ class Result extends Basemodel {
         }
     }
 
+    public static function result_report($subject_id, $class_id){
+        $results = array();
+        $student_results = static::registered_students_in_class($class_id);
+        if($student_results) {
+            foreach ($student_results as $result) {
+                $admission_no = Ais::resolve_admission_no_from_userid($result->id);
+                $results = array(
+                    array(
+                        'student_id' => $result->id,
+                        'firstname' => $result->firstname,
+                        'surname' => $result->surname,
+                        'first_ca_score' => Expand::ca_exam_score($result->id, $subject_id, $class_id, 1),
+                        'second_ca_score' => Expand::ca_exam_score($result->id, $subject_id, $class_id, 2),
+                        'third_ca_score' => Expand::ca_exam_score($result->id, $subject_id, $class_id, 3),
+                        'exam_score' => Expand::ca_exam_score($result->id, $subject_id, $class_id, 4),
+                        'total' => Expand::ca_exam_total($result->id,$subject_id, $class_id),
+                        'grade' => Expand::ca_exam_grade(Expand::ca_exam_total($result->id,$subject_id, $class_id))['grade'],
+                        'comment' => Expand::ca_exam_grade(Expand::ca_exam_total($result->id,$subject_id, $class_id))['comment'],
+                        'publish_status' => static::check_publish_status($admission_no, $class_id, $subject_id),
+                    )
+                );
+
+            }
+            return $results;
+        } else {
+            return null;
+        }
+
+    }
+
   protected static function check_assessment_exist_for_student($admission_no, $class_id, $subject_id, $assessment_type){
         $count =  DB::table('results')->where('admission_no','=',$admission_no)
             ->where('class_id','=',$class_id)
@@ -117,6 +155,40 @@ class Result extends Basemodel {
             ->count();
         if( $count > 0 ){ return true; } else { return false; }
     }
+
+    protected static function check_publish_status($admission_no, $class_id, $subject_id){
+        $results =  DB::table('results')->where('admission_no','=',$admission_no)
+            ->where('class_id','=',$class_id)
+            ->where('subject_id','=',$subject_id)
+            ->get(array('assessment_type_id'));
+        $t = 0;
+        foreach($results as $result){
+            if($result->assessment_type_id = 2){
+                $t += 1;
+            } else {
+                $t += 0;
+            }
+            if($t == 4){
+                return true;
+            } else{
+                return false;
+            }
+        }
+    }
+
+    protected static function result_publish_status($student_id,$subject_id, $class_id, $status){
+           $admission_no = Ais::resolve_admission_no_from_userid($student_id);
+           // TODO: Remember to add term and academic session later
+           $result = DB::table('results')->where('admission_no','=',$admission_no)
+                        ->where('subject_id','=',$subject_id)
+                        ->where('class_id','=',$class_id)
+                        ->update(array('published'=>$status));
+            if( $result ){
+                return true;
+            } else {
+                return false;
+            }
+        }
 
 
 }

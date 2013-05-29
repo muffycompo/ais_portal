@@ -21,6 +21,13 @@
 			{{ Form::password('password',array('id'=>'password')) }}
 			{{ $errors->first('password') }}
 		</p>
+		@if($user->role_id == 1)
+		<p>
+			{{ Form::label('class_id','Class:') }}<br>
+			{{ Ais::class_dropdown('class_id',Ais::resolve_classid_from_userid($user->id),array('id'=>'class_id')) }}
+			{{ $errors->first('class_id') }}
+		</p>
+		@endif
 		<p>
 			{{ Form::label('role_id','Role:') }}<br>
 			{{ Ais::role_dropdown('role_id',$user->role_id,array('id'=>'role_id')) }}
