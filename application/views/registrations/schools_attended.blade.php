@@ -22,8 +22,8 @@
           @foreach($schools as $school)
             <tr>
                 <td>{{ $school->school_name }}</td>
-                <td>{{ $school->class_from_id }}</td>
-                <td>{{ $school->class_to_id }}</td>
+                <td>{{ Expand::classes($school->class_from_id) }}</td>
+                <td>{{ Expand::classes($school->class_to_id) }}</td>
                 <td>{{ $school->year_from }}</td>
                 <td>{{ $school->year_to }}</td>
                 <td>

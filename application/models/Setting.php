@@ -43,11 +43,13 @@ class Setting extends Basemodel {
         $teacher_array = array(
             'user_id' => $data['user_id'],
             'subject_id' => $data['subject_id'],
-            'class_id' => $data['class_id']
+            'class_id' => $data['class_id'],
+            'term_id' => $data['term_id']
         );
         $teacher_update_array = array(
             'subject_id' => $data['subject_id'],
-            'class_id' => $data['class_id']
+            'class_id' => $data['class_id'],
+            'term_id' => $data['term_id']
         );
         if(static::check_teacher_exist_for_subject($data['user_id'], $data['subject_id'], $data['class_id'])){
             $teacher = DB::table('teachers_and_subjects')->where('user_id','=',$data['user_id'])
@@ -245,6 +247,23 @@ class Setting extends Basemodel {
     public static function delete_subject($id){
         try{
             DB::table('subjects')->delete((int)$id);
+        } catch (Exception $e){
+            return false;
+        }
+    }
+
+    public static function unassign_subject($id, $subject_id, $class_id, $term_id){
+        try{
+            $subject = DB::table('teachers_and_subjects')->where('user_id','=',$id)
+                ->where('subject_id','=',$subject_id)
+                ->where('class_id','=',$class_id)
+                ->where('term_id','=',$term_id)
+                ->delete();
+            if($subject){
+                return true;
+            } else {
+                return false;
+            }
         } catch (Exception $e){
             return false;
         }

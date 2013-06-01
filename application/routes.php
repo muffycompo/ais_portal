@@ -87,10 +87,11 @@ Route::post('registrations/finalize_application', array('uses'=>'registrations@f
 //    Results Controller - GET
 Route::get('results', array('as'=>'results', 'uses'=>'results@index'));
 Route::get('results/assessments', array('as'=>'assessments', 'uses'=>'results@assessments'));
-Route::get('results/assessment/(:num)/(:num)', array('as'=>'assessment', 'uses'=>'results@assessment'));
-Route::get('results/new_assessment/(:num)/(:num)/(:num)', array('as'=>'new_assessment', 'uses'=>'results@new_assessment'));
-Route::get('results/unpublish_result/(:num)/(:num)/(:num)', array('as'=>'unpublish_result', 'uses'=>'results@unpublish_result'));
-Route::get('results/publish_result/(:num)/(:num)/(:num)', array('as'=>'publish_result', 'uses'=>'results@publish_result'));
+Route::get('results/term_result/(:num)', array('as'=>'term_result', 'uses'=>'results@term_result'));
+Route::get('results/assessment/(:num)/(:num)/(:num)', array('as'=>'assessment', 'uses'=>'results@assessment'));
+Route::get('results/new_assessment/(:num)/(:num)/(:num)/(:num)', array('as'=>'new_assessment', 'uses'=>'results@new_assessment'));
+Route::get('results/unpublish_result/(:num)/(:num)/(:num)/(:num)', array('as'=>'unpublish_result', 'uses'=>'results@unpublish_result'));
+Route::get('results/publish_result/(:num)/(:num)/(:num)/(:num)', array('as'=>'publish_result', 'uses'=>'results@publish_result'));
 
 //    Results Controller - POST
 Route::post('results', array('as'=>'results', 'uses'=>'results@index'));
@@ -109,6 +110,7 @@ Route::get('settings/edit_class/(:num)', array('as'=>'edit_class', 'uses'=>'sett
 Route::get('settings/delete_class/(:num)', array('as'=>'delete_class', 'uses'=>'settings@delete_class'));
 Route::get('settings/delete_subject/(:num)', array('as'=>'delete_subject', 'uses'=>'settings@delete_subject'));
 Route::get('settings/teacher/(:num)/assign_class', array('as'=>'assign_class', 'uses'=>'settings@assign_class'));
+Route::get('settings/unassign_subject/(:num)/(:num)/(:num)/(:num)', array('as'=>'unassign_subject', 'uses'=>'settings@unassign_subject'));
 
 //    Settings Controller - POST
 Route::post('settings', array('uses'=>'settings@index'));

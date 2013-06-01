@@ -198,22 +198,26 @@ class Ais {
         $img_dir = 'uploads/' . $user_id .'/passport/';
         $abs_path = dirname(dirname(dirname(__FILE__))) . DS . 'public' . DS . 'uploads' . DS . $user_id . DS .'passport' . DS;
         $files = glob($abs_path . $user_id.'_passport.*');
-        $pieces = explode(DS,$files[0]);
-        $img = end($pieces);
-        if($role_id == 1){
-            $passport = DB::table('biodata')->where('user_id','=',$user_id)->first(array('passport_path'));
-            if(empty($passport->passport_path) || is_null($passport->passport_path)){
-                return 'img/avatar_placeholder.png';
+        if($files){
+            $pieces = explode(DS,$files[0]);
+            $img = end($pieces);
+            if($role_id == 1){
+                $passport = DB::table('biodata')->where('user_id','=',$user_id)->first(array('passport_path'));
+                if(empty($passport->passport_path) || is_null($passport->passport_path)){
+                    return 'img/avatar_placeholder.png';
+                } else {
+                    return  $img_dir . $passport->passport_path;
+                }
             } else {
-                return  $img_dir . $passport->passport_path;
+                $img_path = $files[0];
+                if(File::exists($img_path)){
+                    return $img_dir . $img;
+                } else {
+                    return 'img/avatar_placeholder.png';
+                }
             }
         } else {
-            $img_path = $files[0];
-            if(File::exists($img_path)){
-                return $img_dir . $img;
-            } else {
-                return 'img/avatar_placeholder.png';
-            }
+            return 'img/avatar_placeholder.png';
         }
     }
 
@@ -471,9 +475,9 @@ class Ais {
                 # Student
                 return '
                 <p>Current Academic Session: <strong>'.Expand::academic_session(Ais::active_academic_session()).'</strong></p>
-                <p>'. HTML::link('#','First Term Result') . '</p>
-                <p>'. HTML::link('#','Second Term Result') . '</p>
-                <p>'. HTML::link('#','Third Term Result') . '</p>';
+                <p>'. HTML::link('results/term_result/1','First Term') . '</p>
+                <p>'. HTML::link('results/term_result/2','Second Term') . '</p>
+                <p>'. HTML::link('results/term_result/3','Third Term') . '</p>';
                 break;
             case 2:
                 # Teacher

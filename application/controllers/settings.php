@@ -55,8 +55,17 @@ class Settings_Controller extends Base_Controller {
 
     public function get_assign_subject($id){
         $v_data['teacher'] = Setting::show_teacher((int) $id);
-        $v_data['subjects'] = Setting::assigned_teacher_subjects((int) $id, true);
+        $v_data['subjects'] = Setting::assigned_teacher_subjects((int) $id);
         return View::make('settings.assign_subject',$v_data);
+    }
+
+    public function get_unassign_subject($id, $subject_id, $class_id, $term_id){
+        $unassign_subject = Setting::unassign_subject($id, $subject_id, $class_id, $term_id);
+        if($unassign_subject === false){
+            return Redirect::back()->with('message',Ais::message_format('An error occurred while un-assigning the subject, remove other references and try again!','error'));
+        } else {
+            return Redirect::back()->with('message',Ais::message_format('Subject un-assigned successfully!','success'));
+        }
     }
 
     public function get_assign_class($id){

@@ -100,56 +100,58 @@ class Expand {
         }
     }
 
-    public static function ca_exam_score($id, $subject_id, $class_id, $type){
+    public static function ca_exam_score($id, $subject_id, $class_id, $term_id, $type){
         $admission_no = Ais::resolve_admission_no_from_userid($id);
         $result = DB::table('results')->where('admission_no','=',$admission_no)
             ->where('subject_id','=',$subject_id)
             ->where('class_id','=',$class_id)
+            ->where('term_id','=',$term_id)
+            ->where('academic_session_id','=',Ais::active_academic_session())
             ->where('assessment_type_id','=',$type)
             ->first(array('score'));
         if($result){
             return $result->score;
         } else {
-            return 'N/S';
+            return 0;
         }
     }
 
-    public static function ca_exam_total($id, $subject_id, $class_id){
+    public static function ca_exam_total($id, $subject_id, $class_id, $term_id){
             $total = 0;
             for($i=1; $i < 5; $i++){
-               $total = ($total + static::ca_exam_score($id, $subject_id, $class_id, $i));
+               $total = $total + static::ca_exam_score($id, $subject_id, $class_id, $term_id, $i);
             }
             return $total;
     }
 
     public static function ca_exam_grade($score){
             $score = (int)$score;
-            if($score > 90 && $score <=100){
+            if($score >= 90 && $score <=100){
                 return array(
                     'grade' => 'A',
                     'comment' => 'Distinction'
                 );
-            } elseif($score > 80 && $score <=89){
-                return array(
-                    'grade' => 'B2',
-                    'comment' => 'Very Good'
-                );
-            } elseif($score > 70 && $score <=79){
+            } elseif($score >= 80 && $score <=89){
                 return array(
                     'grade' => 'B1',
+                    'comment' => 'Very Good'
+                );
+            } elseif($score >= 70 && $score <=79){
+                return array(
+                    'grade' => 'B2',
                     'comment' => 'Good'
                 );
-            } elseif($score > 60 && $score <=69){
+            } elseif($score >= 60 && $score <=69){
                 return array(
                     'grade' => 'C',
                     'comment' => 'Credit'
                 );
-            } elseif($score > 50 && $score <=59){
+            } elseif($score >= 50 && $score <=59){
                 return array(
                     'grade' => 'P',
                     'comment' => 'Pass'
                 );
-            } elseif($score > 0 && $score <=100){
+            } elseif($score >= 0 && $score <= 49){
                 return array(
                     'grade' => 'F',
                     'comment' => 'Fail'

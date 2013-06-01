@@ -20,9 +20,10 @@
       {{ Form::hidden('subject_id',$subject_id) }}
       {{ Form::hidden('class_id',$class_id) }}
       {{ Form::hidden('user_id',$user->id) }}
+      {{ Form::hidden('term_id',$term_id) }}
     </p>
     <p>
-        {{ Form::submit('Save Result') }} | {{ HTML::link('results/assessment/' . $subject_id . '/' . $class_id,'Back') }}
+        {{ Form::submit('Save Result') }} | {{ HTML::link('results/assessment/' . $subject_id . '/' . $class_id . '/' . $term_id,'Back') }}
     </p>
     {{ Form::close() }}
 </div>

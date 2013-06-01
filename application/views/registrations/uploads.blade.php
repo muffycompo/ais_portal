@@ -11,7 +11,7 @@
                 <td><p><strong>A - Passport Photo</strong></p></td>
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                 <td>
-                    {{ HTML::image(Ais::passport_image(),'Passport Photo') }}<br>
+                    {{ HTML::image(Ais::passport_image() . '?id=' . md5(date('his')),'Passport Photo') }}<br>
                     {{ Form::open_for_files('registrations/upload_photo','POST') }}
                     {{ Form::file('passport_photo') }}<br>
                     {{ Form::submit('Upload') }}<br>
