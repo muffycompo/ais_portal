@@ -305,6 +305,13 @@ class Ais {
         if($subject) { return $subject->id; } else { return 1; }
     }
 
+    public static function check_gsm_number($number)
+    {
+        // Validate GSM numbers
+        $pattern = '/^0[78][01]\d{8}$/';
+        $validate = preg_match($pattern, $number);
+        if($validate){ return true;} else { return false;}
+    }
     public static function send_email($from, $to, $subject, $body, $html = true){
         $email = new Postmark();
         $email->from_name($from);

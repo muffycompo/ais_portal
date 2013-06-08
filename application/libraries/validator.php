@@ -13,4 +13,8 @@ class Validator extends Laravel\Validator {
         if(User::check_pin($value)){ return true;} else {return false;}
     }
 
+    public static function validate_gsm_number($attribute, $value){
+        return Ais::check_gsm_number($value);
+    }
+
 }

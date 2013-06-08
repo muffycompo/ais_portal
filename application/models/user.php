@@ -19,7 +19,7 @@ class User extends Basemodel {
         'firstname' => 'required|min:3',
         'surname' => 'required|min:3',
         'email' => 'required|email|unique:users',
-        'gsm_no' => 'required',
+        'gsm_no' => 'required|gsm_number',
         'password' => 'required|min:5|confirmed',
         'password_confirmation' => 'required',
         'pin_no' => 'required|pin',
