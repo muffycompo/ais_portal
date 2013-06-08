@@ -121,7 +121,14 @@ Route::post('settings/assign_class', array('uses'=>'settings@assign_class'));
 Route::post('settings/new_class', array('uses'=>'settings@new_class'));
 Route::post('settings/edit_class', array('uses'=>'settings@edit_class'));
 
+//    Reports Controller - GET
+Route::get('reports', array('as'=>'reports', 'uses'=>'reports@index'));
+Route::get('reports/broadsheets', array('as'=>'session_broadsheet', 'uses'=>'reports@session_broadsheet'));
+Route::get('reports/broadsheet/(:num)/(:num)', array('as'=>'class_broadsheets', 'uses'=>'reports@broadsheets'));
+Route::get('reports/broadsheet/(:num)/(:num)/(:num)', array('as'=>'broadsheets', 'uses'=>'reports@broadsheet'));
 
+//    Settings Controller - POST
+Route::post('reports', array('uses'=>'reports@index'));
 
 
 //    Admin Controller - GET

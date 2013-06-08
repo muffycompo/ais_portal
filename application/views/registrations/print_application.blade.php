@@ -100,7 +100,7 @@
             </tr>
             <tr>
                 <td>Religion</td>
-                <td><strong>{{ $parent_info->father_religion }}</strong></td>
+                <td><strong>{{ Expand::religion($parent_info->father_religion) }}</strong></td>
             </tr>
             <tr>
                 <td>Residential Address</td>
@@ -120,7 +120,7 @@
             </tr>
             <tr>
                 <td>Religion</td>
-                <td><strong>{{ $parent_info->mother_religion }}</strong></td>
+                <td><strong>{{ Expand::religion($parent_info->mother_religion) }}</strong></td>
             </tr>
             <tr>
                 <td>Phone Number</td>

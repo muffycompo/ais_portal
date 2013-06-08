@@ -105,6 +105,14 @@ class Ais {
         return Form::select($name, $options, $selected, $attributes);
     }
 
+   public static function religion_dropdown($name, $selected = null, $attributes = array()){
+        $opts = DB::table('religions')->get();
+        foreach($opts as $opt){
+            $options[$opt->id] = $opt->religion_name;
+        }
+        return Form::select($name, $options, $selected, $attributes);
+    }
+
    public static function recurring_dropdown($name, $selected = null, $attributes = array()){
         $options = array(
             '1' => 'Termly',
@@ -254,7 +262,13 @@ class Ais {
 
     }
 
-    public static function resolve_classid_from_userid($user_id){
+    public static function resolve_classid_from_userid($user_id, $other = ''){
+        if(!empty($other)){
+            if($other == 'last'){
+                $user = DB::table('biodata')->where('user_id','=',$user_id)->first(array('last_class_id'));
+                if($user) {return $user->last_class_id;} else { return '';}
+            }
+        }
         $user = DB::table('biodata')->where('user_id','=',$user_id)->first(array('current_class_id'));
         if($user) {return $user->current_class_id;} else { return '';}
 
@@ -268,6 +282,27 @@ class Ais {
     public static function assigned_teacher_class($user_id){
         $class = Setting::assigned_teacher_class($user_id,true);
         return $class;
+    }
+
+    public static function student_total_score($subject_id,$class_id,$term_id,$session_id , $user_id)
+    {
+        return Report::subject_total_score($subject_id,$class_id,$term_id, $session_id, $user_id);
+    }
+
+    public static function total_score_per_class($class_id, $term_id, $session_id)
+    {
+        return Report::student_position_per_class($class_id, $term_id, $session_id);
+    }
+
+    public static function class_promotion($average, $user_id, $class_id, $term_id, $session_id){
+        return Report::average_promotion($average, $user_id, $class_id, $term_id, $session_id);
+    }
+
+    public static function resolve_subject_id($subject_name)
+    {
+        $subject_name = Str::title($subject_name);
+        $subject = DB::table('subjects')->where('subject_name','=',$subject_name)->first('id');
+        if($subject) { return $subject->id; } else { return 1; }
     }
 
     public static function send_email($from, $to, $subject, $body, $html = true){
@@ -460,7 +495,7 @@ class Ais {
                 <p>'. HTML::link('#','Shopping') . '</p>
                 <p>'. HTML::link_to_route('users','Users') . '</p>
                 <p>'. HTML::link_to_route('settings','Portal Settings') . '</p>
-                <p>'. HTML::link('#','Reports') . '</p>';
+                <p>'. HTML::link_to_route('reports','Reports') . '</p>';
                 break;
             default:
                 # Invalid
@@ -489,6 +524,20 @@ class Ais {
                 return '
                 <p>'. HTML::link('#','Result per Class') . '</p>
                 <p>'. HTML::link('#','Result per Subject') . '</p>';
+                break;
+            default:
+                # Invalid
+                return '';
+                break;
+        }
+    }
+
+    public static function reports_dashboard_links($role_id){
+        switch ($role_id) {
+            case 5:
+                # Administrator
+                return '
+                <p>'. HTML::link_to_route('session_broadsheet','Broadsheets Report') . '</p>';
                 break;
             default:
                 # Invalid

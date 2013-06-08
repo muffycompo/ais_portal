@@ -11,12 +11,12 @@ class Admin extends Basemodel {
 
 //  Validation Rules
     private static $examination_rules = array(
-        'mathematics' => 'required|numeric',
-        'english' => 'required|numeric',
-        'science' => 'required|numeric',
-        'social_science' => 'required|numeric',
-        'quran' => 'required|numeric',
-        'arabic' => 'required|numeric',
+        'mathematics' => 'required|numeric|max:100',
+        'english' => 'required|numeric|max:100',
+        'science' => 'required|numeric|max:100',
+        'social_science' => 'required|numeric|max:100',
+        'quran' => 'required|numeric|max:100',
+        'arabic' => 'required|numeric|max:100',
     );
 
 
@@ -38,8 +38,8 @@ class Admin extends Basemodel {
             'user_id' => $data['user_id'],
         );
         $official_use_data = array(
-            'last_class_id' => $data['last_class'],
-            'present_class_id' => $data['present_class'],
+            'last_class_id' => Ais::resolve_classid_from_userid($data['user_id'], 'last'),
+            'present_class_id' => Ais::resolve_classid_from_userid($data['user_id']),
             'admission_recommendation_id' => $data['admission_recommendation_id'],
             'aic_id' => $data['class_admitted_into'],
             'admission_no' => Ais::generate_admission_no(1,6,'AR'),

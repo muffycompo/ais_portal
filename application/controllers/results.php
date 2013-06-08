@@ -39,6 +39,13 @@ class Results_Controller extends Base_Controller {
        $v_data['class_id'] = Ais::resolve_classid_from_userid(Session::get('user_id'));
        $v_data['term_id'] = $term_id;
        $v_data['biodata'] = Result::student_result_biodata();
+       $v_data['subjects_offered'] = Result::subjects_offered('',$term_id);
+       $v_data['total_score'] = Result::student_subjects_total_score('',$term_id);
+       $v_data['final_average'] = Result::student_final_average('',$term_id);
+       $v_data['final_position'] = Result::position_per_class('',$term_id);
+       $v_data['final_grade'] = Result::final_grade('',$term_id);
+       $v_data['number_in_class'] = Result::registered_students_in_class($v_data['class_id'],true);
+       $v_data['class_average'] = Result::result_class_average('',$term_id);
        return View::make('results.term_result', $v_data);
    }
 
@@ -72,7 +79,14 @@ class Results_Controller extends Base_Controller {
 //    Controller Actions - POST
 
     public function post_new_assessment(){
-        $validate = Result::new_assessment_validation(Input::all());
+        $assessment_type_id = Input::get('assessment_type_id');
+        if($assessment_type_id == 1){
+            $validate = Result::new_fa_assessment_validation(Input::all());
+        } elseif($assessment_type_id == 2 || $assessment_type_id == 3){
+            $validate = Result::new_sta_assessment_validation(Input::all());
+        } else {
+            $validate = Result::new_exam_assessment_validation(Input::all());
+        }
         if( $validate === true ){
             $assessment = Result::new_assessment(Input::all());
             if( $assessment === false ){

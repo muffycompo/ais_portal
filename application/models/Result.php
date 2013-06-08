@@ -10,14 +10,30 @@
 class Result extends Basemodel {
 
 //  Validation Rules
-    private static $new_assessment_rules = array(
-        'score' => 'required|numeric',
+    private static $new_fa_assessment_rules = array(
+        'score' => 'required|numeric|max:20',
+    );
+
+    private static $new_sta_assessment_rules = array(
+        'score' => 'required|numeric|max:10',
+    );
+
+    private static $new_exam_assessment_rules = array(
+        'score' => 'required|numeric|max:60',
     );
 
 
 //  Validation
-    public static function new_assessment_validation($input){
-        return static::validation($input, static::$new_assessment_rules);
+    public static function new_fa_assessment_validation($input){
+        return static::validation($input, static::$new_fa_assessment_rules);
+    }
+
+    public static function new_sta_assessment_validation($input){
+        return static::validation($input, static::$new_sta_assessment_rules);
+    }
+
+    public static function new_exam_assessment_validation($input){
+        return static::validation($input, static::$new_exam_assessment_rules);
     }
 
 //  DB Inserts
@@ -104,7 +120,7 @@ class Result extends Basemodel {
        return static::result_publish_status($student_id,$subject_id, $class_id,$term_id,1);
     }
 
-  public static function registered_students_in_class($class_id){
+  public static function registered_students_in_class($class_id, $num = false){
         $registered_students = DB::table('users')
             ->left_join('biodata','users.id','=','biodata.user_id')
             ->where('biodata.current_class_id','=',$class_id)
@@ -112,6 +128,7 @@ class Result extends Basemodel {
                 'users.id','users.firstname','users.surname','biodata.age','biodata.gender_id'
             ));
         if( $registered_students ){
+            if($num){ return count($registered_students);}
             return $registered_students;
         } else {
             return null;
@@ -206,6 +223,86 @@ class Result extends Basemodel {
         }
     }
 
+  public static function result_class_average($user_id = '', $term_id = ''){
+    $user_id = empty($user_id)? Session::get('user_id') : $user_id;
+    $class_id = Ais::resolve_classid_from_userid($user_id);
+    $term_id = empty($term_id)? Ais::active_term() : $term_id;
+    $students = static::registered_students_in_class($class_id);
+      if($students){
+          $ave = array();
+          foreach ($students as $student) {
+              $total_score = static::student_subjects_total_score($student->id, $term_id);
+              $subject_offered = static::subjects_offered($student->id, $term_id);
+              if($total_score > 0 && $subject_offered > 0){
+                $ave[] = ($total_score / $subject_offered);
+              }
+          }
+          if(!empty($ave)){
+              return array('highest_average' => max($ave), 'lowest_average'=>min($ave));
+          } else {
+              return array('highest_average' => 0, 'lowest_average'=>0);
+          }
+
+      } else {
+              return array('highest_average' => 0, 'lowest_average'=>0);
+       }
+  }
+
+  public static function student_subjects_total_score($user_id = '', $term_id = ''){
+      $user_id = empty($user_id)? Session::get('user_id') : $user_id;
+      $class_id = Ais::resolve_classid_from_userid($user_id);
+      $term_id = empty($term_id)? Ais::active_term() : $term_id;
+      $academic_session_id = Ais::active_academic_session();
+      $subjects = static::registered_subjects_result($user_id,$class_id, $term_id, $academic_session_id);
+      if($subjects){
+          $total = 0;
+          foreach ($subjects as $subject) {
+              $total += static::total_score_per_student($subject->subject_id,$class_id,$term_id, $user_id);
+          }
+        return $total;
+      } else {
+          return 0;
+      }
+  }
+
+  public static function student_final_average($user_id = '', $term_id =''){
+      $user_id = empty($user_id)? Session::get('user_id') : $user_id;
+      $term_id = empty($term_id)? Ais::active_term() : $term_id;
+      $subjects_offered = Result::subjects_offered($user_id, $term_id);
+      $total_score = Result::student_subjects_total_score($user_id, $term_id);
+      if($subjects_offered > 0 && $total_score > 0){
+          return ($total_score / $subjects_offered);
+      } else {
+          return 0;
+      }
+  }
+
+  public static function position_per_class($user_id = '', $term_id = ''){
+    $user_id = empty($user_id)? Session::get('user_id') : $user_id;
+    $term_id = empty($term_id)? Ais::active_term() : $term_id;
+    $class_id = Ais::resolve_classid_from_userid($user_id);
+    $students = static::registered_students_in_class($class_id);
+      if($students){
+          $ave = array();
+          foreach ($students as $student) {
+              $ave[] = static::student_final_average($student->id, $term_id);
+          }
+          natsort($ave);
+          $ave = array_reverse($ave);
+          $pos = array_keys($ave, static::student_final_average($user_id, $term_id));
+          return $pos[0] + 1;
+      } else {
+          return 0;
+      }
+  }
+
+  public static function final_grade($user_id = '', $term_id=''){
+      $user_id = empty($user_id)? Session::get('user_id') : $user_id;
+      $term_id = empty($term_id)? Ais::active_term() : $term_id;
+      $final_average = static::student_final_average($user_id,$term_id);
+      return Expand::ca_exam_grade($final_average);
+  }
+
   protected static function check_assessment_exist_for_student($admission_no, $class_id, $subject_id, $assessment_type){
         $count =  DB::table('results')->where('admission_no','=',$admission_no)
             ->where('class_id','=',$class_id)
@@ -258,20 +355,44 @@ class Result extends Basemodel {
             ->where('assessment_type_id','=',4)
             ->group_by('admission_no')->get('admission_no');
         if($total){
-            $students_total = count($total);
-            return $students_total;
+            return count($total);
         } else {
             return 0;
         }
     }
 
+    protected static function total_score($subject_id, $class_id, $term_id){
+           $total = DB::table('results')->where('subject_id','=',$subject_id)
+                       ->where('published','=',2)
+                       ->where('class_id','=',$class_id)
+                       ->where('term_id','=',$term_id)
+                       ->group_by('subject_id')->sum('score');
+           if($total){
+               return $total;
+           } else {
+               return 0;
+           }
+       }
+
+    protected static function total_score_per_student($subject_id, $class_id, $term_id, $user_id = ''){
+           $user_id = empty($user_id)? Session::get('user_id') : $user_id;
+           $admission_no = Ais::resolve_admission_no_from_userid($user_id);
+           $total = DB::table('results')->where('subject_id','=',$subject_id)
+                       ->where('admission_no','=',$admission_no)
+                       ->where('published','=',2)
+                       ->where('class_id','=',$class_id)
+                       ->where('term_id','=',$term_id)
+                       ->group_by('subject_id')->sum('score');
+           if($total){
+               return $total;
+           } else {
+               return 0;
+           }
+       }
+
     protected static function class_average_per_subject($subject_id, $class_id, $term_id){
-        $total = DB::table('results')->where('subject_id','=',$subject_id)
-            ->where('published','=',2)
-            ->where('class_id','=',$class_id)
-            ->where('term_id','=',$term_id)
-            ->group_by('subject_id')->sum('score');
-        if($total){
+        $total = static::total_score($subject_id, $class_id, $term_id);
+        if($total > 0){
             $total_scores = $total;
             $total_students = static::total_students_per_subject($subject_id, $class_id, $term_id);
             $class_average = round(($total_scores / $total_students),2);
@@ -280,6 +401,26 @@ class Result extends Basemodel {
             return 0;
         }
     }
+
+  public static function subjects_offered($user_id = '', $term_id = ''){
+      $user_id = empty($user_id)? Session::get('user_id') : $user_id;
+      $admission_no = Ais::resolve_admission_no_from_userid($user_id);
+      $class_id = Ais::resolve_classid_from_userid($user_id);
+      $term_id = empty($term_id)? Ais::active_term() : $term_id;
+      $academic_session_id = Ais::active_academic_session();
+      $subjects_count = DB::table('results')->where('admission_no','=',$admission_no)
+                    ->where('class_id','=',$class_id)
+                    ->where('term_id','=',$term_id)
+                    ->where('academic_session_id','=',$academic_session_id)
+                    ->group_by('subject_id')
+                    ->get(array('subject_id'));
+      if($subjects_count){
+          return count($subjects_count);
+      } else {
+          return 0;
+      }
+
+  }
 
   protected static function position_per_subject($subject_id, $class_id, $term_id){
       $total = DB::query('SELECT SUM(score) AS total_score FROM results WHERE subject_id = ? AND published = ? AND class_id = ? AND term_id = ? GROUP BY admission_no;',array($subject_id, 2,$class_id, $term_id));

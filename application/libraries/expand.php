@@ -69,6 +69,11 @@ class Expand {
         return $opts->subject_name;
     }
 
+    public static function religion($id){
+        $opts = DB::table('religions')->where('id','=',$id)->first(array('religion_name'));
+        return $opts->religion_name;
+    }
+
     public static function term_name($term_id){
         switch ($term_id) {
             case 1:

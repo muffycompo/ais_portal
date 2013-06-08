@@ -18,7 +18,7 @@
 		</p>
 		<p>
 			{{ Form::label('father_religion',"Father's Religion:") }}<br>
-			{{ Form::input('text','father_religion',(isset($parent->father_religion) ? $parent->father_religion : Input::old('father_religion')),array('id'=>'father_religion')) }}
+			{{ Ais::religion_dropdown('father_religion', (isset($parent->father_religion) ? $parent->father_religion : Input::old('father_religion')),array('id'=>'father_religion')) }}
 			{{ $errors->first('father_religion') }}
 		</p>
 		<p>
@@ -43,7 +43,7 @@
 		</p>
 		<p>
 			{{ Form::label('mother_religion',"Mother's Religion:") }}<br>
-			{{ Form::input('text','mother_religion',(isset($parent->mother_religion) ? $parent->mother_religion : Input::old('mother_religion')),array('id'=>'mother_religion')) }}
+			{{ Ais::religion_dropdown('mother_religion', (isset($parent->father_religion) ? $parent->father_religion : Input::old('mother_religion')),array('id'=>'mother_religion')) }}
 			{{ $errors->first('mother_religion') }}
 		</p>
 		<p>

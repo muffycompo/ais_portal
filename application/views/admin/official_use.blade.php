@@ -40,17 +40,6 @@
 		</p>
 
 		<h3>Admission Recommendation</h3>
-
-		<p>
-			{{ Form::label('last_class','Last Class:') }}<br>
-			{{ Ais::class_dropdown('last_class',Input::old('last_class'),array('id'=>'last_class')) }}
-			{{ $errors->first('last_class') }}
-		</p>
-		<p>
-			{{ Form::label('present_class','Present Class:') }}<br>
-			{{ Ais::class_dropdown('present_class',Input::old('present_class'),array('id'=>'present_class')) }}
-			{{ $errors->first('present_class') }}
-		</p>
 		<p>
 			{{ Form::label('admission_recommendation_id','Recommendation:') }}<br>
 			{{ Ais::admission_recommendation_dropdown('admission_recommendation_id',Input::old('admission_recommendation_id'),array('id'=>'admission_recommendation_id')) }}

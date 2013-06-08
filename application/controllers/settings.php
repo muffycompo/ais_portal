@@ -83,6 +83,15 @@ class Settings_Controller extends Base_Controller {
         }
      }
 
+    public function post_assign_class(){
+        $teacher = Setting::assign_class(Input::all());
+        if( $teacher === false ){
+         return Redirect::back()->with('message',Ais::message_format('An error occurred while assigning class, please try again!','error'));
+        } else {
+         return Redirect::to_route('teachers')->with('message',Ais::message_format('Assigned Class Successfully!','success'));
+        }
+     }
+
     public function post_new_class(){
         $validate = Setting::new_class_validation(Input::all());
         if( $validate === true ){
