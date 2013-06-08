@@ -31,7 +31,7 @@ class Registration extends Basemodel {
        'father_phone_no' => 'required|min:3|gsm_number',
        'mother_name' => 'required|min:3',
        'mother_occupation' => 'required|min:3',
-       'mother_religion' => 'required|min:3',
+       'mother_religion' => 'required',
     );
 
    private static $medical_record_rules = array(
