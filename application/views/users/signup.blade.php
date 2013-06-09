@@ -38,7 +38,7 @@
 		</p>
 		<p>
 			{{ Form::label('pin_no','PIN No.:') }}<br>
-			{{ Form::input('text','pin_no',Input::old('pin_no'),array('id'=>'pin_no')) }}
+			{{ Form::password('pin_no',array('id'=>'pin_no')) }}
 			{{ $errors->first('pin_no') }}
 		</p>
 		<p>	

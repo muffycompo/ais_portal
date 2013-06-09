@@ -38,5 +38,6 @@ return array(
 	'docs' => array('handles' => 'docs'),
     'resizer' => array('auto' => true),
 	'postmark' => array('auto' => true),
+    'csv' => array('auto' => true),
 
 );

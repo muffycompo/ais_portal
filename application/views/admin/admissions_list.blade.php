@@ -5,13 +5,16 @@
 <div class="home">
 	<h2>Admissions List</h2>
 	@include('template.partials.notification')
-    <p>{{ HTML::link('#','Download List (CSV)') }}</p>
+	@if(! is_null($admissions) && is_array($admissions) )
+    <p>{{ HTML::link('admin/export_csv_list/2','Download List (CSV)') }}</p>
+    @endif
     <table class="ais_table">
         <thead>
             <tr>
                 <th>Admission No</th>
-                <th>First Name</th>
                 <th>Surname</th>
+                <th>First Name</th>
+                <th>Other Names</th>
                 <th>Class Admitted into</th>
                 <th>Recommendation</th>
                 <th>Action</th>
@@ -22,8 +25,9 @@
           @foreach($admissions as $admission)
             <tr>
                 <td>{{ $admission->admission_no }}</td>
-                <td>{{ $admission->firstname }}</td>
                 <td>{{ $admission->surname }}</td>
+                <td>{{ $admission->firstname }}</td>
+                <td>{{ $admission->othernames }}</td>
                 <td>{{ Expand::classes($admission->aic_id) }}</td>
                 <td>{{ Expand::admission_recommendation($admission->admission_recommendation_id) }}</td>
                 <td>
@@ -33,7 +37,7 @@
           @endforeach
         @else
             <tr>
-                <td colspan="7">Admissions Lists is empty!</td>
+                <td colspan="8">Admissions Lists is empty!</td>
             </tr>
         @endif
         </tbody>

@@ -134,6 +134,7 @@ Route::post('reports', array('uses'=>'reports@index'));
 //    Admin Controller - GET
 Route::get('admin/admissions', array('as' => 'admissions', 'uses'=>'admin@admissions'));
 Route::get('admin/admissions_list', array('as' => 'admissions_list', 'uses'=>'admin@admissions_list'));
+Route::get('admin/export_csv_list/(:num)', array('as' => 'export_csv_list', 'uses'=>'admin@export_csv_list'));
 Route::get('admin/applicants_list', array('as' => 'applicants_list', 'uses'=>'admin@applicants_list'));
 Route::get('admin/official_use/(:num)', array('as' => 'official_use', 'uses'=>'admin@official_use'));
 Route::get('admin/approve_admission/(:num)', array('as' => 'approve_admission', 'uses'=>'admin@approve_admission'));

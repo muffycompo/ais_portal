@@ -6,15 +6,20 @@
 	<h2>Bio-Data</h2>
 	@include('template.partials.notification')
 	{{ Form::open('registrations/biodata','POST') }}
+        <p>
+            {{ Form::label('surname','Surname:') }}<br>
+            {{ Form::input('text','surname',(isset($user_meta->surname) ? $user_meta->surname : Session::get('surname')),array('id'=>'surname')) }}
+            {{ $errors->first('surname') }}
+        </p>
 		<p>
 			{{ Form::label('firstname','First Name:') }}<br>
 			{{ Form::input('text','firstname',(isset($user_meta->firstname) ? $user_meta->firstname : Session::get('firstname')),array('id'=>'firstname')) }}
 			{{ $errors->first('firstname') }}
 		</p>
 		<p>
-			{{ Form::label('surname','Surname:') }}<br>
-			{{ Form::input('text','surname',(isset($user_meta->surname) ? $user_meta->surname : Session::get('surname')),array('id'=>'surname')) }}
-			{{ $errors->first('surname') }}
+			{{ Form::label('othernames','Other Names:') }}<br>
+			{{ Form::input('text','othernames',(isset($user_meta->othernames) ? $user_meta->othernames : Input::old('othernames')),array('id'=>'othernames')) }}
+			{{ $errors->first('othernames') }}
 		</p>
 		<p>
 			{{ Form::label('date_of_birth','Date of Birth (dd/mm/YYYY):') }}<br>

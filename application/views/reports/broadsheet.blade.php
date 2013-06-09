@@ -32,6 +32,7 @@
             $trialpromoted = 0;
             $c_ave = 0;
             $cl_ave = array();
+            $students_count = count($students);
          ?>
           @foreach($students as $student)
             <tr>
@@ -88,9 +89,9 @@
         </tbody>
     </table>
     <p>
-        No. of Students: <strong>{{ $subject_count }}</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class Average: <strong>{{ number_format(round($c_ave / $subject_count),2) }}</strong><br>
-        No. of Promoted: <strong>{{ $promoted }}</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Highest Average in Class: <strong>{{ max($cl_ave) }}</strong><br>
-        No. of Promoted on Trial: <strong>{{ $trialpromoted }}</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lowest Average in Class: <strong>{{ min($cl_ave) }}</strong><br>
+        No. of Students: <strong>{{ $students_count }}</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class Average: <strong>{{ number_format(round($c_ave / $subject_count),2) }}</strong><br>
+        No. of Promoted: <strong>{{ $promoted }}</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Highest Average in Class: <strong>{{ number_format(max($cl_ave),2) }}</strong><br>
+        No. of Promoted on Trial: <strong>{{ $trialpromoted }}</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lowest Average in Class: <strong>{{ number_format(min($cl_ave),2) }}</strong><br>
         No. of Repeat: <strong>{{ $notpromoted }}</strong>
     </p>
     @else

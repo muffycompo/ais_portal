@@ -238,7 +238,7 @@ class Result extends Basemodel {
               }
           }
           if(!empty($ave)){
-              return array('highest_average' => max($ave), 'lowest_average'=>min($ave));
+              return array('highest_average' => number_format(max($ave),2), 'lowest_average'=>number_format(min($ave),2));
           } else {
               return array('highest_average' => 0, 'lowest_average'=>0);
           }

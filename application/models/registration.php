@@ -100,6 +100,7 @@ class Registration extends Basemodel {
         $biodata_data = array(
             'age' => Ais::resolve_age($dob),
             'date_of_birth' => $dob,
+            'othernames' => $data['othernames'],
             'tribe' => $data['tribe'],
             'form_no' => Ais::generate_receipt_no(1,8),
             'gender_id' => $data['gender_id'],

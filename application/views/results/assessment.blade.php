@@ -46,7 +46,7 @@
           @endforeach
         @else
             <tr>
-                <td colspan="6">No students found in this class!</td>
+                <td colspan="9">No students found in this class!</td>
             </tr>
         @endif
         </tbody>

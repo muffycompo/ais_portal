@@ -312,6 +312,18 @@ class Ais {
         $validate = preg_match($pattern, $number);
         if($validate){ return true;} else { return false;}
     }
+
+    public static function export_to_csv($name, $column_headers, $data){
+        $csv = new CSV();
+        $csv->columns($column_headers);
+        $csv->rows($data);
+        $t = $csv->to_download($name);
+        return $t;
+    }
+
+
+
+
     public static function send_email($from, $to, $subject, $body, $html = true){
         $email = new Postmark();
         $email->from_name($from);

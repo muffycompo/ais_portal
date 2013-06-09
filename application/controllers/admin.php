@@ -18,6 +18,10 @@ class Admin_Controller extends Base_Controller {
 		return View::make('admin.admissions_list',$v_data);
 	}
 
+	public function get_export_csv_list($export_type_id){
+        return Admin::csv_export($export_type_id);
+	}
+
 	public function get_applicants_list(){
         $v_data['applicants'] = Admin::applicants_list();
 		return View::make('admin.applicants_list',$v_data);

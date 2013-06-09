@@ -98,7 +98,7 @@ class Admin extends Basemodel {
     public static function applicants_list(){
         $applicants = DB::table('biodata')->left_join('users','biodata.user_id','=','users.id')
             ->where('biodata.reg_status','=',7)
-            ->get(array('users.id','users.firstname','users.surname','users.email','biodata.age','biodata.form_no','biodata.application_type_id'));
+            ->get(array('users.id','users.firstname','users.surname','biodata.othernames','users.email','biodata.age','biodata.form_no','biodata.application_type_id'));
         if($applicants){return $applicants;} else { return false;}
     }
 
@@ -106,9 +106,47 @@ class Admin extends Basemodel {
         $applicants = DB::table('official_use')->left_join('biodata','official_use.user_id','=','biodata.user_id')
             ->left_join('users','official_use.user_id','=','users.id')
             ->where('biodata.reg_status','=',8)
-            ->get(array('users.id','users.firstname','users.surname','official_use.admission_no','official_use.aic_id','official_use.admission_recommendation_id'));
+            ->get(array('users.id','users.firstname','users.surname','biodata.othernames','official_use.admission_no','official_use.aic_id','official_use.admission_recommendation_id'));
         if($applicants){return $applicants;} else { return false;}
     }
 
+    public static function csv_export($export_type_id){
+        switch ($export_type_id) {
+            case 1:
+                $column_header = array('Form No','Surname','First Name','Other Names','Email','Age','Application Type');
+                $data = array();
+                foreach (static::applicants_list() as $applicant) {
+                    $data[] = array(
+                        $applicant->form_no,
+                        $applicant->surname,
+                        $applicant->firstname,
+                        $applicant->othernames,
+                        $applicant->email,
+                        $applicant->age,
+                        Expand::application_type($applicant->application_type_id),
+                    );
+                }
+                return Ais::export_to_csv('ais_applicants_list_' . strtotime(date('Y')) . '.csv',$column_header,$data);
+                break;
+            case 2:
+                $column_header = array('Admission No','Surname','First Name','Other Names','Class Admitted into','Recommendation');
+                $data = array();
+                foreach (static::admissions_list() as $admission) {
+                    $data[] = array(
+                        $admission->admission_no,
+                        $admission->surname,
+                        $admission->firstname,
+                        $admission->othernames,
+                        $admission->aic_id,
+                        Expand::admission_recommendation($admission->admission_recommendation_id),
+                    );
+                }
+                return Ais::export_to_csv('ais_admissions_list_' . strtotime(date('Y')) . '.csv',$column_header,$data);
+                break;
+            default:
+                return '';
+                break;
+        }
+    }
 
 }
