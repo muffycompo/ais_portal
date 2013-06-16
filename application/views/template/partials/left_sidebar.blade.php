@@ -15,12 +15,13 @@
         </div>
 
         <div class="nav-collapse collapse leftmenu">
+        <?php $dashboard_nav = ($nav == 'dashboard')? 'class="current"' : '';  ?>
             <ul>
-                <li class="current">
+                <li {{ $dashboard_nav }}>
                 <a class="dashboard smronju" href="{{ URL::to_route('user_dashboard') }}" title="Dashboard"><span>Dashboard</span></a>
                 </li>
                 <!-- Navigation -->
-                {{ HTML::decode(Menu::navigation_links(Session::get('role_id'))) }}
+                {{ HTML::decode(Menu::navigation_links(Session::get('role_id'), $nav)) }}
             </ul>
         </div>
 

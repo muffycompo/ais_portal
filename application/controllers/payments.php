@@ -17,12 +17,10 @@ class Payments_Controller extends Base_Controller {
     }
 
 //    Controller Actions - GET
-    public function get_index(){
-        return View::make('payments.payment_dashboard');
-    }
 
     public function get_pins(){
         $v_data['pin_payments'] = Payment::all_pin_payments();
+        $v_data['nav'] = 'payment_nav';
         return View::make('payments.pins', $v_data);
     }
 
@@ -42,49 +40,59 @@ class Payments_Controller extends Base_Controller {
     }
 
     public function get_new_pin(){
-        return View::make('payments.new_pin');
+        $v_data['nav'] = 'payment_nav';
+        return View::make('payments.new_pin', $v_data);
     }
 
     public function get_new_fee(){
-        return View::make('payments.new_fee');
+        $v_data['nav'] = '';
+        return View::make('payments.new_fee', $v_data);
     }
 
     public function get_add_new_fee(){
-        return View::make('payments.add_new_fee');
+        $v_data['nav'] = 'payment_nav';
+        return View::make('payments.add_new_fee', $v_data);
     }
 
     public function get_edit_pin_payment($id){
         $v_data['pin_payment'] = Payment::pin_payment($id);
+        $v_data['nav'] = 'payment_nav';
         return View::make('payments.edit_pin_payment', $v_data);
     }
 
     public function get_edit_fee_payment($id){
         $v_data['fee_payment'] = Payment::fee_payment($id);
+        $v_data['nav'] = 'payment_nav';
         return View::make('payments.edit_fee_payment', $v_data);
     }
 
     public function get_edit_fee_schedule($id){
         $v_data['fee_schedule'] = Payment::edit_fee_schedule($id);
+        $v_data['nav'] = 'payment_nav';
         return View::make('payments.edit_fee_schedule', $v_data);
     }
 
     public function get_fees(){
         $v_data['fee_payments'] = Payment::all_fee_payments();
+        $v_data['nav'] = 'payment_nav';
         return View::make('payments.fees', $v_data);
     }
 
     public function get_student_fees(){
         $v_data['fee_payments'] = Payment::student_fee_payments();
+        $v_data['nav'] = 'payment_nav';
         return View::make('payments.student_fees', $v_data);
     }
 
     public function get_fees_schedule(){
-        return View::make('payments.fees_schedule');
+        $v_data['nav'] = 'payment_nav';
+        return View::make('payments.fees_schedule', $v_data);
     }
 
     public function get_fees_schedule_term($term_id){
         $v_data['classes'] = Setting::all_classes();
         $v_data['term_id'] = (int)$term_id;
+        $v_data['nav'] = 'payment_nav';
         return View::make('payments.fees_schedule_term', $v_data);
     }
 
@@ -93,6 +101,7 @@ class Payments_Controller extends Base_Controller {
         $v_data['term_id'] = $term_id;
         $v_data['class_id'] = $class_id;
         $v_data['total_amount'] = Payment::fee_schedule_amount($term_id, $class_id);
+        $v_data['nav'] = 'payment_nav';
         return View::make('payments.fees_schedule_class', $v_data);
     }
 

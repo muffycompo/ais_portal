@@ -17,12 +17,10 @@ class Results_Controller extends Base_Controller {
     }
 
 //    Controller Actions - GET
-    public function get_index(){
-        return View::make('results.result_dashboard');
-    }
 
     public function get_assessments(){
         $v_data['subjects'] = Result::teacher_subjects();
+        $v_data['nav'] = 'result_nav';
         return View::make('results.assessments', $v_data);
     }
 
@@ -31,6 +29,7 @@ class Results_Controller extends Base_Controller {
         $v_data['class_id'] = (int)$class_id;
         $v_data['term_id'] = (int)$term_id;
         $v_data['students'] = Result::result_report($v_data['subject_id'],$v_data['class_id'],$v_data['term_id']);
+       $v_data['nav'] = 'result_nav';
         return View::make('results.assessment', $v_data);
     }
 
@@ -46,6 +45,7 @@ class Results_Controller extends Base_Controller {
        $v_data['final_grade'] = Result::final_grade('',$term_id);
        $v_data['number_in_class'] = Result::registered_students_in_class($v_data['class_id'],true);
        $v_data['class_average'] = Result::result_class_average('',$term_id);
+       $v_data['nav'] = 'result_nav';
        return View::make('results.term_result', $v_data);
    }
 
@@ -55,6 +55,7 @@ class Results_Controller extends Base_Controller {
         $v_data['term_id'] = (int)$term_id;
         $v_data['user'] = User::show_user((int)$user_id);
         $v_data['assessments'] = Result::student_assessments((int)$user_id,(int)$subject_id,(int)$class_id,$term_id,true);
+       $v_data['nav'] = 'result_nav';
         return View::make('results.new_assessment', $v_data);
     }
 

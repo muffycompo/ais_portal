@@ -16,7 +16,7 @@
                     <ul class="breadcrumb">
                         Navigator <span class="divider">/</span>
                         <li>
-                            {{ HTML::image('webassets/img/icons/monitor.png') .'  '. HTML::link_to_route('user_dashboard','Dashboard') }} <span class="divider">/</span> {{ HTML::link_to_route('fee_payments','Fees Payments') }}
+                            {{ HTML::image('webassets/img/icons/monitor.png') .'  '. HTML::link_to_route('user_dashboard','Dashboard') }} <span class="divider">/</span> Fees Payments
                             <!--<span class="divider">/</span> -->
                         </li>
                     </ul>
@@ -74,7 +74,9 @@
                                                             <td>
                                                                 {{ HTML::decode(HTML::link('payments/fee_receipt/' . $payment->id, HTML::image('webassets/img/icons/notepad.png','Receipt',array('title'=>'Receipt')),array('class'=>'edit', 'target'=>'_blank'))) }}
                                                                 {{ HTML::decode(HTML::link('payments/edit_fee_payment/' . $payment->id, HTML::image('webassets/img/icons/pencil.png','Edit',array('title'=>'Edit')),array('class'=>'edit'))) }}
+                                                                @if(Session::get('role_id') == 5)
                                                                 {{ HTML::decode(HTML::link('payments/delete_fee_payment/' . $payment->id, HTML::image('webassets/img/icons/trash_can.png','Delete',array('title'=>'Delete')),array('class'=>'delete'))) }}
+                                                                @endif
                                                             </td>
                                                         </tr>
                                                       @endforeach

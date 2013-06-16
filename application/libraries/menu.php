@@ -9,27 +9,27 @@
 
 class Menu {
 
-    public static function navigation_links($role_id){
+    public static function navigation_links($role_id, $nav_trail = ''){
         switch ($role_id) {
                 case 1:
                     # Student
-                    return static::student_role();
+                    return static::student_role($nav_trail);
                     break;
                 case 2:
                     # Teacher
-                    return static::teacher_role();
+                    return static::teacher_role($nav_trail);
                     break;
                 case 3:
                     # Accountant
-                    return static::accountant_role();
+                    return static::accountant_role($nav_trail);
                     break;
                 case 4:
                     # Ecommerce
-                    return static::ecommerce_role();
+                    return static::ecommerce_role($nav_trail);
                     break;
                 case 5:
                     # Administrator
-                    return static::admin_role();
+                    return static::admin_role($nav_trail);
                     break;
                 default:
                     # Invalid
@@ -38,31 +38,44 @@ class Menu {
             }
     }
 
-    protected static function student_role(){
+    protected static function student_role($nav_trail){
         # Student
+        $biodata_nav = ($nav_trail == 'biodata_nav')? 'class="current"' : '';
+        $school_nav = ($nav_trail == 'school_nav')? 'class="current"' : '';
+        $parental_info_nav = ($nav_trail == 'parental_info_nav')? 'class="current"' : '';
+        $medical_record_nav = ($nav_trail == 'medical_record_nav')? 'class="current"' : '';
+        $upload_nav = ($nav_trail == 'upload_nav')? 'class="current"' : '';
+        $attestation_nav = ($nav_trail == 'attestation_nav')? 'class="current"' : '';
+
         $reg_status = Ais::registration_status();
         $display_menu = '';
         if($reg_status <= 6){
-            $display_menu .= '<li>'. HTML::link_to_route('biodata','<span>Bio-Data</span>','',array('class'=>'form')) . '</li>';
+            $display_menu .= '<li '.$biodata_nav.'>'. HTML::link_to_route('biodata','<span>Bio-Data</span>','',array('class'=>'form')) . '</li>';
             if($reg_status >= 2){
-                $display_menu .= '<li>'. HTML::link_to_route('schools_attended','<span>Schools Attended</span>','',array('class'=>'tables')) . '</li>';
+                $display_menu .= '<li '.$school_nav.'>'. HTML::link_to_route('schools_attended','<span>Schools Attended</span>','',array('class'=>'tables')) . '</li>';
             }
             if($reg_status >= 3){
-                $display_menu .= '<li>'. HTML::link_to_route('parent_info','<span>Parental Information</span>','',array('class'=>'chat')) . '</li>';
+                $display_menu .= '<li '.$parental_info_nav.'>'. HTML::link_to_route('parent_info','<span>Parental Information</span>','',array('class'=>'chat')) . '</li>';
             }
             if($reg_status >= 4){
-                $display_menu .= '<li>'. HTML::link_to_route('medical_record','<span>Medical Records</span>','',array('class'=>'charts')) . '</li>';
+                $display_menu .= '<li '.$medical_record_nav.'>'. HTML::link_to_route('medical_record','<span>Medical Records</span>','',array('class'=>'charts')) . '</li>';
             }
             if($reg_status >= 5){
-                $display_menu .= '<li>'. HTML::link_to_route('uploads','<span>Uploads</span>','',array('class'=>'wizard-form')) . '</li>';
+                $display_menu .= '<li '.$upload_nav.'>'. HTML::link_to_route('uploads','<span>Uploads</span>','',array('class'=>'wizard-form')) . '</li>';
             }
             if($reg_status == 6){
-                $display_menu .= '<li>'. HTML::link_to_route('attestation','<span>Attestation</span>','',array('class'=>'wizard-form')) . '</li>';
+                $display_menu .= '<li '.$attestation_nav.'>'. HTML::link_to_route('attestation','<span>Attestation</span>','',array('class'=>'wizard-form')) . '</li>';
             }
             return HTML::decode($display_menu);
         } elseif($reg_status == 9) {
+            $result_nav = ($nav_trail == 'result_nav')? 'class="current"' : '';
+            $payment_nav = ($nav_trail == 'payment_nav')? 'class="current"' : '';
+            $assignment_nav = ($nav_trail == 'assignment_nav')? 'class="current"' : '';
+            $club_nav = ($nav_trail == 'club_nav')? 'class="current"' : '';
+            $sport_nav = ($nav_trail == 'sport_nav')? 'class="current"' : '';
+            $shop_nav = ($nav_trail == 'shop_nav')? 'class="current"' : '';
             return '
-            <li>
+            <li '.$result_nav.'>
                 <a class="simple" href="javascript:void(0)" title="Results"><span>Results</span></a>
                 <ul class="dropdown">
                     <li>' . HTML::link('results/term_result/1','<span>First Term</span>',array('class'=>'simple smronju','title'=>'First Term'))  .'</li>
@@ -70,18 +83,30 @@ class Menu {
                     <li>' . HTML::link('results/term_result/3','<span>Third Term</span>',array('class'=>'simple smronju','title'=>'Third Term'))  .'</li>
                 </ul>'
             .'</li>
-            <li>'. HTML::link_to_route('student_fee_payments','<span>Payments</span>','',array('class'=>'form')) . '</li>
-            <li>'. HTML::link('#','<span>Assignments</span>',array('class'=>'tables')) . '</li>
-            <li>'. HTML::link('#','<span>Clubs</span>',array('class'=>'chat')) . '</li>
-            <li>'. HTML::link('#','<span>Sports</span>',array('class'=>'charts')) . '</li>
-            <li>'. HTML::link('#','<span>Shopping</span>',array('class'=>'wizard-form')) . '</li>';
+            <li '.$payment_nav.'>'. HTML::link_to_route('student_fee_payments','<span>Payments</span>','',array('class'=>'form')) . '</li>
+            <li '.$assignment_nav.'>'. HTML::link('#','<span>Assignments</span>',array('class'=>'tables')) . '</li>
+            <li '.$club_nav.'>'. HTML::link('#','<span>Clubs</span>',array('class'=>'chat')) . '</li>
+            <li '.$sport_nav.'>'. HTML::link('#','<span>Sports</span>',array('class'=>'charts')) . '</li>
+            <li '.$shop_nav.'>'. HTML::link('#','<span>Shopping</span>',array('class'=>'wizard-form')) . '</li>';
         }
         return '';
     }
 
-    protected static function admin_role(){
+    protected static function admin_role($nav_trail){
+        $payment_nav = ($nav_trail == 'payment_nav')? 'class="current"' : '';
+        $admission_nav = ($nav_trail == 'admission_nav')? 'class="current"' : '';
+        $class_nav = ($nav_trail == 'class_nav')? 'class="current"' : '';
+        $assignment_nav = ($nav_trail == 'assignment_nav')? 'class="current"' : '';
+        $staff_nav = ($nav_trail == 'staff_nav')? 'class="current"' : '';
+        $calendar_nav = ($nav_trail == 'calendar_nav')? 'class="current"' : '';
+        $shop_nav = ($nav_trail == 'shop_nav')? 'class="current"' : '';
+        $club_nav = ($nav_trail == 'club_nav')? 'class="current"' : '';
+        $sport_nav = ($nav_trail == 'sport_nav')? 'class="current"' : '';
+        $user_nav = ($nav_trail == 'user_nav')? 'class="current"' : '';
+        $setting_nav = ($nav_trail == 'setting_nav')? 'class="current"' : '';
+        $report_nav = ($nav_trail == 'report_nav')? 'class="current"' : '';
         return '
-            <li>
+            <li '.$payment_nav.'>
                 <a class="wizard-form" href="javascript:void(0)" title="Payments"><span>Payments</span></a>
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('fee_payments','<span>Fees Payments</span>','',array('class'=>'wizard-form smronju','title'=>'Fees Payments'))  .'</li>
@@ -96,28 +121,28 @@ class Menu {
                     </li>
                 </ul>'
             .'</li>
-            <li>
+            <li '.$admission_nav.'>
                 <a class="editor" href="javascript:void(0)" title="Admissions"><span>Admissions</span></a>
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('applicants_list','<span>Applicants List</span>','',array('class'=>'editor smronju','title'=>'Applicants List'))  .'</li>
                     <li>' . HTML::link_to_route('admissions_list','<span>Admissions List</span>','',array('class'=>'editor smronju','title'=>'Admissions List'))  .'</li>
                 </ul>'
             .'</li>
-            <li>'. HTML::link('#','<span>Classes</span>',array('class'=>'elements')) . '</li>
-            <li>'. HTML::link('#','<span>Assignments</span>',array('class'=>'tables')) . '</li>
-            <li>'. HTML::link('#','<span>Staff</span>',array('class'=>'media')) . '</li>
-            <li>'. HTML::link('#','<span>Calendar/Reminders</span>',array('class'=>'calendar')) . '</li>
-            <li>'. HTML::link('#','<span>Shop Inventory</span>',array('class'=>'barcode')) . '</li>
-            <li>'. HTML::link('#','<span>Clubs</span>',array('class'=>'chat')) . '</li>
-            <li>'. HTML::link('#','<span>Sports</span>',array('class'=>'charts')) . '</li>
-            <li>
+            <li '.$class_nav.'>'. HTML::link('#','<span>Classes</span>',array('class'=>'elements')) . '</li>
+            <li '.$assignment_nav.'>'. HTML::link('#','<span>Assignments</span>',array('class'=>'tables')) . '</li>
+            <li '.$staff_nav.'>'. HTML::link('#','<span>Staff</span>',array('class'=>'media')) . '</li>
+            <li '.$calendar_nav.'>'. HTML::link('#','<span>Calendar/Reminders</span>',array('class'=>'calendar')) . '</li>
+            <li '.$shop_nav.'>'. HTML::link('#','<span>Shop Inventory</span>',array('class'=>'barcode')) . '</li>
+            <li '.$club_nav.'>'. HTML::link('#','<span>Clubs</span>',array('class'=>'chat')) . '</li>
+            <li '.$sport_nav.'>'. HTML::link('#','<span>Sports</span>',array('class'=>'charts')) . '</li>
+            <li '.$user_nav.'>
                <a class="users" href="javascript:void(0)" title="Users"><span>Users</span></a>
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('users','<span>Admin</span>','',array('class'=>'users smronju','title'=>'Admin'))  .'</li>
                     <li>' . HTML::link_to_route('students','<span>Students</span>','',array('class'=>'users smronju','title'=>'Students List'))  .'</li>
                 </ul>'
             .'</li>
-            <li>
+            <li '.$setting_nav.'>
                 <a class="grid" href="javascript:void(0)" title="Portal Settings"><span>Portal Settings</span></a>
                 <ul class="dropdown">
                      <li>' . HTML::link_to_route('teachers','<span>Teachers</span>','',array('class'=>'grid smronju','title'=>'Teachers'))  .'</li>
@@ -125,7 +150,7 @@ class Menu {
                     <li>' . HTML::link_to_route('ais_classes','<span>Classes</span>','',array('class'=>'grid smronju','title'=>'Classes'))  .'</li>
                 </ul>'
             .'</li>
-            <li>
+            <li '.$report_nav.'>
                 <a class="list" href="javascript:void(0)" title="Reports"><span>Reports</span></a>
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('session_broadsheet','<span>Results Broadsheets</span>','',array('class'=>'list smronju','title'=>'Results Broadsheets'))  .'</li
@@ -133,34 +158,41 @@ class Menu {
             .'</li>';
     }
 
-    protected static function teacher_role(){
+    protected static function teacher_role($nav_trail){
+       $result_nav = ($nav_trail == 'result_nav')? 'class="current"' : '';
+       $class_nav = ($nav_trail == 'class_nav')? 'class="current"' : '';
         return '
-            <li>
+            <li '.$result_nav.'>
                 <a class="simple" href="javascript:void(0)" title="Results"><span>Results</span></a>
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('assessments','<span>Assessments</span>','',array('class'=>'simple smronju','title'=>'Assessments'))  .'</li>
                 </ul>'
             .'</li>
-            <li>'. HTML::link('#','<span>Classes</span>',array('class'=>'elements')) . '</li>';
+            <li '.$class_nav.'>'. HTML::link('#','<span>Classes</span>',array('class'=>'elements')) . '</li>';
     }
 
-    protected static function ecommerce_role(){
+    protected static function ecommerce_role($nav_trail){
+        $shop_nav = ($nav_trail == 'shop_nav')? 'class="current"' : '';
+        $sale_nav = ($nav_trail == 'sale_nav')? 'class="current"' : '';
         return '
-            <li>'. HTML::link('#','<span>Sales</span>',array('class'=>'chat')) . '</li>
-            <li>'. HTML::link('#','<span>Shop Inventory</span>',array('class'=>'barcode')) . '</li>';
+            <li '.$sale_nav.'>'. HTML::link('#','<span>Sales</span>',array('class'=>'chat')) . '</li>
+            <li '.$shop_nav.'>'. HTML::link('#','<span>Shop Inventory</span>',array('class'=>'barcode')) . '</li>';
     }
 
-    protected static function accountant_role(){
+    protected static function accountant_role($nav_trail){
+        $payment_nav = ($nav_trail == 'payment_nav')? 'class="current"' : '';
+        $staff_nav = ($nav_trail == 'staff_nav')? 'class="current"' : '';
+        $report_nav = ($nav_trail == 'report_nav')? 'class="current"' : '';
         return '
-            <li>
+            <li '.$payment_nav.'>
                 <a class="form" href="javascript:void(0)" title="Payments"><span>Payments</span></a>
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('fee_payments','<span>Fees Payments</span>','',array('class'=>'form smronju','title'=>'Fees Payments'))  .'</li>
                     <li>' . HTML::link_to_route('pin_payments','<span>PIN Payments</span>','',array('class'=>'form smronju','title'=>'PIN Payments'))  .'</li>
                 </ul>'
             .'</li>
-            <li>'. HTML::link('#','<span>Staff</span>',array('class'=>'media')) . '</li>
-            <li>'. HTML::link('#','<span>Reports</span>',array('class'=>'list')) . '</li>';
+            <li '.$staff_nav.'>'. HTML::link('#','<span>Staff</span>',array('class'=>'media')) . '</li>
+            <li '.$report_nav.'>'. HTML::link('#','<span>Reports</span>',array('class'=>'list')) . '</li>';
     }
 
     public static function entrance_exam_instructions(){

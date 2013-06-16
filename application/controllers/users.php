@@ -20,11 +20,13 @@ class Users_Controller extends Base_Controller {
 //    Controller Actions - GET
     public function get_index(){
         $v_data['users'] = User::all_admin_users();
+        $v_data['nav'] = 'user_nav';
         return View::make('users.userlist',$v_data);
     }
 
     public function get_students(){
         $v_data['users'] = User::all_students();
+        $v_data['nav'] = 'user_nav';
         return View::make('users.studentlist',$v_data);
     }
 
@@ -37,11 +39,13 @@ class Users_Controller extends Base_Controller {
     }
 
     public function get_dashboard(){
-        return View::make('users.dashboard');
+        $v_data['nav'] = 'dashboard';
+        return View::make('users.dashboard', $v_data);
     }
 
     public function get_profile(){
         $v_data['user'] = User::user_profile();
+        $v_data['nav'] = 'user_nav';
         return View::make('users.profile', $v_data);
     }
 
@@ -50,16 +54,19 @@ class Users_Controller extends Base_Controller {
     }
 
     public function get_new_user(){
-        return View::make('users.new_user');
+        $v_data['nav'] = '';
+        return View::make('users.new_user', $v_data);
     }
 
     public function get_edit_user($id){
         $v_data['user'] = User::show_user($id);
+        $v_data['nav'] = 'user_nav';
         return View::make('users.edit_user', $v_data);
     }
 
     public function get_edit_profile($id){
         $v_data['user'] = User::show_user($id);
+        $v_data['nav'] = 'user_nav';
         return View::make('users.edit_profile', $v_data);
     }
 
@@ -189,22 +196,5 @@ class Users_Controller extends Base_Controller {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-//    public function get_generate_hash(){
-//        $password = Hash::make('admin');
-//
-//        return Response::json($password,200);
-//    }
 
 }

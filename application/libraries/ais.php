@@ -427,48 +427,4 @@ class Ais {
             </div>';
     }
 
-
-
-    public static function results_dashboard_links($role_id){
-        switch ($role_id) {
-            case 1:
-                # Student
-                return '
-                <p>Current Academic Session: <strong>'.Expand::academic_session(Ais::active_academic_session()).'</strong></p>
-                <p>'. HTML::link('results/term_result/1','First Term') . '</p>
-                <p>'. HTML::link('results/term_result/2','Second Term') . '</p>
-                <p>'. HTML::link('results/term_result/3','Third Term') . '</p>';
-                break;
-            case 2:
-                # Teacher
-                return '
-                <p>'. HTML::link_to_route('assessments','Assessments') . '</p>';
-                break;
-            case 5:
-                # Administrator
-                return '
-                <!--<p>'. HTML::link('#','Result per Class') . '</p>
-                <p>'. HTML::link('#','Result per Subject') . '</p>-->';
-                break;
-            default:
-                # Invalid
-                return '';
-                break;
-        }
-    }
-
-    public static function reports_dashboard_links($role_id){
-        switch ($role_id) {
-            case 5:
-                # Administrator
-                return '
-                <p>'. HTML::link_to_route('session_broadsheet','Results Broadsheets') . '</p>';
-                break;
-            default:
-                # Invalid
-                return '';
-                break;
-        }
-    }
-
 }

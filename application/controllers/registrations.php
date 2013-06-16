@@ -20,20 +20,24 @@ class Registrations_Controller extends Base_Controller {
     public function get_biodata(){
         $v_data['user_meta'] = Registration::user_meta();
         $v_data['biodata'] = Registration::user_biodata();
+        $v_data['nav'] = 'biodata_nav';
         return View::make('registrations.biodata', $v_data);
     }
 
     public function get_schools_attended(){
         $v_data['schools'] = Registration::schools_attended();
+        $v_data['nav'] = 'school_nav';
         return View::make('registrations.schools_attended', $v_data);
     }
 
     public function get_new_school(){
-        return View::make('registrations.new_school');
+        $v_data['nav'] = 'school_nav';
+        return View::make('registrations.new_school',$v_data);
     }
 
    public function get_edit_school($id){
        $v_data['school'] = Registration::show_school($id);
+       $v_data['nav'] = 'school_nav';
        return View::make('registrations.edit_new_school', $v_data);
     }
 
@@ -48,21 +52,25 @@ class Registrations_Controller extends Base_Controller {
 
     public function get_parent_info(){
         $v_data['parent'] = Registration::show_parent_info();
+        $v_data['nav'] = 'parental_info_nav';
         return View::make('registrations.parent_info', $v_data);
     }
 
     public function get_medical_record(){
         $v_data['medical'] = Registration::show_medical_record();
+        $v_data['nav'] = 'medica_record_nav';
         return View::make('registrations.medical_record', $v_data);
     }
 
    public function get_uploads(){
        $v_data['docs'] = Registration::supporting_documents();
+       $v_data['nav'] = 'upload_nav';
         return View::make('registrations.uploads', $v_data);
     }
 
    public function get_attestation(){
-        return View::make('registrations.attestation');
+       $v_data['nav'] = 'attestation_nav';
+        return View::make('registrations.attestation', $v_data);
     }
 
    public function get_print_application($id = ''){

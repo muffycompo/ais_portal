@@ -9,14 +9,10 @@ class Reports_Controller extends Base_Controller {
         $this->filter('before','auth');
     }
 
-	public function get_index()
-	{
-		return View::make('reports.report_dashboard');
-	}
-
     public function get_session_broadsheet()
     {
         $v_data['sessions'] = Report::all_academic_sessions();
+        $v_data['nav'] = 'report_nav';
         return View::make('reports/session_broadsheet', $v_data);
     }
 
@@ -25,6 +21,7 @@ class Reports_Controller extends Base_Controller {
         $v_data['session_id'] = (int) $session_id;
         $v_data['term_id'] = (int) $term_id;
         $v_data['classes'] = Setting::all_classes();
+        $v_data['nav'] = 'report_nav';
         return View::make('reports/classes_broadsheet', $v_data);
     }
 
@@ -37,6 +34,7 @@ class Reports_Controller extends Base_Controller {
         $v_data['subjects_offered'] = Report::registered_subjects_per_class($class_id,$term_id,$session_id);
         $v_data['subjects_total'] = Report::report_subject_total($class_id,$term_id, $session_id);
         $v_data['students'] = Report::reports_student_biodata($class_id);
+        $v_data['nav'] = 'report_nav';
         return View::make('reports/broadsheet', $v_data);
     }
 

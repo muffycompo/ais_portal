@@ -9,12 +9,9 @@ class Admin_Controller extends Base_Controller {
         $this->filter('before','auth');
     }
 
-	public function get_admissions(){
-		return View::make('admin.admissions_dashboard');
-	}
-
 	public function get_admissions_list(){
         $v_data['admissions'] = Admin::admissions_list();
+        $v_data['nav'] = 'admission_nav';
 		return View::make('admin.admissions_list',$v_data);
 	}
 
@@ -24,11 +21,13 @@ class Admin_Controller extends Base_Controller {
 
 	public function get_applicants_list(){
         $v_data['applicants'] = Admin::applicants_list();
+        $v_data['nav'] = 'admission_nav';
 		return View::make('admin.applicants_list',$v_data);
 	}
 
 	public function get_official_use($id){
         $v_data['user'] = User::show_user((int)$id);
+        $v_data['nav'] = 'admission_nav';
 		return View::make('admin.official_use',$v_data);
 	}
 

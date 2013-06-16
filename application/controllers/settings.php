@@ -16,46 +16,51 @@ class Settings_Controller extends Base_Controller {
     }
 
 //    Controller Actions - GET
-    public function get_index(){
-        return View::make('settings.setting_dashboard');
-    }
 
     public function get_teachers(){
         $v_data['teachers'] = Setting::all_teachers();
+        $v_data['nav'] = 'setting_nav';
         return View::make('settings.teachers',$v_data);
     }
 
     public function get_subjects(){
         $v_data['subjects'] = Setting::all_subjects();
+        $v_data['nav'] = 'setting_nav';
         return View::make('settings.subjects',$v_data);
     }
 
     public function get_classes(){
         $v_data['classes'] = Setting::all_classes();
+        $v_data['nav'] = 'setting_nav';
         return View::make('settings.classes',$v_data);
     }
 
     public function get_new_subject(){
-        return View::make('settings.new_subject');
+        $v_data['nav'] = 'setting_nav';
+        return View::make('settings.new_subject', $v_data);
     }
 
     public function get_new_class(){
-        return View::make('settings.new_class');
+        $v_data['nav'] = 'setting_nav';
+        return View::make('settings.new_class', $v_data);
     }
 
     public function get_edit_class($class_id){
         $v_data['classes'] = Setting::show_class($class_id);
+        $v_data['nav'] = 'setting_nav';
         return View::make('settings.edit_class',$v_data);
     }
 
     public function get_edit_subject($subject_id){
         $v_data['subject'] = Setting::show_subject($subject_id);
+        $v_data['nav'] = 'setting_nav';
         return View::make('settings.edit_subject', $v_data);
     }
 
     public function get_assign_subject($id){
         $v_data['teacher'] = Setting::show_teacher((int) $id);
         $v_data['subjects'] = Setting::assigned_teacher_subjects((int) $id);
+        $v_data['nav'] = 'setting_nav';
         return View::make('settings.assign_subject',$v_data);
     }
 
@@ -71,6 +76,7 @@ class Settings_Controller extends Base_Controller {
     public function get_assign_class($id){
         $v_data['teacher'] = Setting::show_teacher((int) $id);
         $v_data['classes'] = Setting::assigned_teacher_class((int) $id, true);
+        $v_data['nav'] = 'setting_nav';
         return View::make('settings.assign_class',$v_data);
     }
 

@@ -16,7 +16,7 @@
                     <ul class="breadcrumb">
                         Navigator <span class="divider">/</span>
                         <li>
-                            {{ HTML::image('webassets/img/icons/monitor.png') .'  '. HTML::link_to_route('user_dashboard','Dashboard') }} <span class="divider">/</span> {{ HTML::link_to_route('fee_payments','Fees Payments') }}
+                            {{ HTML::image('webassets/img/icons/monitor.png') .'  '. HTML::link_to_route('user_dashboard','Dashboard') }} <span class="divider">/</span> Edit Fee Payment
                             <!--<span class="divider">/</span> -->
                         </li>
                     </ul>
