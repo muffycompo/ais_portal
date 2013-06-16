@@ -105,7 +105,7 @@ class User extends Basemodel {
         $new_signup = DB::table('users')->insert($signup_data);
         if( $new_signup ) {
             // Notify Via Email and SMS
-            //$gsm_no = $data['gsm_no'],
+            $gsm_no = Ais::gsm_no_formatter($data['gsm_no']);
             $user_email = Str::lower($data['email']);
             $email_body = 'Thank you <strong>'.$signup_data['firstname'] .' '. $signup_data['surname'].'</strong> for choosing Ah-Rahman International School, Kindly use your credentials below to login:<br>email: <strong>'.$user_email.'</strong><br>password: <strong>'.$data['password'].'</strong><br><br> Ah-Rahman International School.';
             Ais::send_email('AIS Portal',$user_email,'AIS Portal Signup Credentials',$email_body);
@@ -113,7 +113,7 @@ class User extends Basemodel {
             // Update PIN Usage
             //'pin_no' => ,
             static::update_pin($data['pin_no']);
-            $signup_data['gsm_no'] = $data['gsm_no'];
+            $signup_data['gsm_no'] = $gsm_no;
             return $signup_data;
         } else {
             return false;

@@ -144,7 +144,7 @@ class Ais {
 
 
     public static function generate_receipt_no($number_to_gen = '', $receipt_no_length = '', $prefix = ''){
-       $num_to_gen = (! empty($number_to_gen))? $number_to_gen : 10;
+       $num_to_gen = (! empty($number_to_gen))? $number_to_gen : 1;
        $length = (! empty($receipt_no_length))? $receipt_no_length : 6;
 
        for($i = 1; $i <= (int) $num_to_gen; $i++){
@@ -184,7 +184,7 @@ class Ais {
     public static function resolve_age($date_of_birth){
         date_default_timezone_set('Africa/Lagos');
         list($Y,$m,$d) = explode("-",$date_of_birth);
-        $age = ( date("md") < $m.$d ? date("Y")-$Y-1 : date("Y")-$Y );
+        $age = (date("md") < $m.$d) ? (date("Y") - $Y - 1) : (date("Y") - $Y);
         return $age;
     }
 
@@ -200,9 +200,9 @@ class Ais {
         }
     }
 
-    public static function passport_image(){
-        $user_id = Session::get('user_id');
-        $role_id = Session::get('role_id');
+    public static function passport_image($id = ''){
+        $user_id = !empty($id)? (int)$id : Session::get('user_id');
+        $role_id = !empty($id)? static::resolve_userrole_userid($user_id) : Session::get('role_id');
         $img_dir = 'uploads/' . $user_id .'/passport/';
         $abs_path = dirname(dirname(dirname(__FILE__))) . DS . 'public' . DS . 'uploads' . DS . $user_id . DS .'passport' . DS;
         $files = glob($abs_path . $user_id.'_passport.*');
@@ -256,6 +256,11 @@ class Ais {
         if($user) {return $user->user_id;} else { return '';}
     }
 
+    public static function resolve_userrole_userid($user_id){
+        $user = DB::table('users')->where('id','=',$user_id)->first(array('role_id'));
+        if($user) {return $user->role_id;} else { return '';}
+    }
+
     public static function resolve_admission_no_from_userid($user_id){
         $user = DB::table('official_use')->where('user_id','=',$user_id)->first(array('admission_no'));
         if($user) {return $user->admission_no;} else { return '';}
@@ -307,9 +312,10 @@ class Ais {
 
     public static function check_gsm_number($number)
     {
+
         // Validate GSM numbers
         $pattern = '/^0[78][01]\d{8}$/';
-        $validate = preg_match($pattern, $number);
+        $validate = preg_match($pattern, static::gsm_no_formatter($number));
         if($validate){ return true;} else { return false;}
     }
 
@@ -321,7 +327,13 @@ class Ais {
         return $t;
     }
 
-
+    public static function gsm_no_formatter($n){
+        // Format number if it is greater than 11
+        $n1 = str_replace('(','',$n);
+        $n2 = str_replace(')','',$n1);
+        $number = preg_replace('/\s+/', '', $n2);
+        return $number;
+    }
 
 
     public static function send_email($from, $to, $subject, $body, $html = true){
@@ -409,119 +421,13 @@ class Ais {
         } // format_to_currency
 
     public static function message_format($text, $css_class){
-        return '<p class="'.$css_class.'">'.$text.'</p>';
+        return '<div class="alert alert-' . $css_class .'">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            ' . $text . '
+            </div>';
     }
 
 
-
-
-
-
-
-
-
-
-
-
-    public static function dashboard_links_by_role($role_id){
-        switch ($role_id) {
-            case 1:
-                # Student
-                $reg_status = static::registration_status();
-                if($reg_status <= 6){
-                    $display_menu = '<p>Complete your application by filling the forms in order:</p>';
-                    $display_menu .= '<p>'. HTML::link_to_route('biodata','A - Form A - Biodata') . '</p>';
-                    if($reg_status >= 2){
-                        $display_menu .= '<p>'. HTML::link_to_route('schools_attended','B - Form A - Schools Attended') . '</p>';
-                    }
-                    if($reg_status >= 3){
-                        $display_menu .= '<p>'. HTML::link_to_route('parent_info','C - Form A - Parental Information') . '</p>';
-                    }
-                    if($reg_status >= 4){
-                        $display_menu .= '<p>'. HTML::link_to_route('medical_record','D - Form B - Medical Records') . '</p>';
-                    }
-                    if($reg_status >= 5){
-                        $display_menu .= '<p>'. HTML::link_to_route('uploads','E - Upload Passport &amp; Supporting Documents') . '</p>';
-                    }
-                    if($reg_status == 6){
-                        $display_menu .= '<p>'. HTML::link_to_route('attestation','F - Attestation') . '</p>';
-                    }
-                    return $display_menu;
-                } elseif($reg_status == 7 || $reg_status == 8){
-                    $display_menu = '
-                    <p>Your Application is being processed. At this time, you can only print the completed form ' . HTML::link_to_route('print_application','here','',array('target'=>'_blank')) . '.</p>
-                    <h4>Examination Guidelines</h4>
-                    <p>1 - Applicants will be tested in the following subjects:</p>
-                    <ul>
-                    	<li>Mathematics</li>
-                    	<li>English Language</li>
-                    	<li>Social Studies</li>
-                    	<li>Arabic</li>
-                    	<li>Science</li>
-                    	<li>Quran</li>
-                    </ul>
-                    <p>2 - Applicants are expected to come along with their pencil, ball pen and erasers</p>
-                    <p>3 - Examination commences at 10:00 AM and ends 1:00 PM</p>';
-                    return $display_menu;
-                } elseif($reg_status == 9) {
-                    return '
-                    <p>'. HTML::link_to_route('user_profile','Profile') . '</p>
-                <p>'. HTML::link_to_route('results','Results') . '</p>
-                    <p>'. HTML::link_to_route('student_fee_payments','Payments') . '</p>
-                    <p>'. HTML::link('#','Assignments') . '</p>
-                    <p>'. HTML::link('#','Clubs') . '</p>
-                    <p>'. HTML::link('#','Sports') . '</p>
-                    <p>'. HTML::link('#','Shopping') . '</p>';
-                }
-                break;
-            case 2:
-                # Teacher
-                return '
-                <p>'. HTML::link_to_route('user_profile','Profile') . '</p>
-                <p>'. HTML::link_to_route('results','Results') . '</p>
-                <p>'. HTML::link('#','Classes') . '</p>';
-                break;
-            case 3:
-                # Accountant
-                return '
-                <p>'. HTML::link_to_route('user_profile','Profile') . '</p>
-                <p>'. HTML::link_to_route('admin_payments','Payments') . '</p>
-                <p>'. HTML::link('#','Staff') . '</p>
-                <p>'. HTML::link('#','Reports') . '</p>';
-                break;
-            case 4:
-                # Ecommerce
-                return '
-                <p>'. HTML::link_to_route('user_profile','Profile') . '</p>
-                <p>'. HTML::link('#','Sales') . '</p>
-                <p>'. HTML::link('#','Shop Inventory') . '</p>';
-                break;
-            case 5:
-                # Administrator
-                return '
-                <p>'. HTML::link_to_route('user_profile','Profile') . '</p>
-                <p>'. HTML::link_to_route('results','Results') . '</p>
-                <p>'. HTML::link_to_route('admin_payments','Payments') . '</p>
-                <p>'. HTML::link_to_route('admissions','Admissions') . '</p>
-                <p>'. HTML::link('#','Classes') . '</p>
-                <p>'. HTML::link('#','Assignments') . '</p>
-                <p>'. HTML::link('#','Staff') . '</p>
-                <p>'. HTML::link('#','Sales') . '</p>
-                <p>'. HTML::link('#','Calendar/Reminders') . '</p>
-                <p>'. HTML::link('#','Shop Inventory') . '</p>
-                <p>'. HTML::link('#','Clubs') . '</p>
-                <p>'. HTML::link('#','Sports') . '</p>
-                <p>'. HTML::link('#','Shopping') . '</p>
-                <p>'. HTML::link_to_route('users','Users') . '</p>
-                <p>'. HTML::link_to_route('settings','Portal Settings') . '</p>
-                <p>'. HTML::link_to_route('reports','Reports') . '</p>';
-                break;
-            default:
-                # Invalid
-                return '';
-                break;
-        }
-    }
 
     public static function results_dashboard_links($role_id){
         switch ($role_id) {
@@ -541,8 +447,8 @@ class Ais {
             case 5:
                 # Administrator
                 return '
-                <p>'. HTML::link('#','Result per Class') . '</p>
-                <p>'. HTML::link('#','Result per Subject') . '</p>';
+                <!--<p>'. HTML::link('#','Result per Class') . '</p>
+                <p>'. HTML::link('#','Result per Subject') . '</p>-->';
                 break;
             default:
                 # Invalid
@@ -556,7 +462,7 @@ class Ais {
             case 5:
                 # Administrator
                 return '
-                <p>'. HTML::link_to_route('session_broadsheet','Broadsheets Report') . '</p>';
+                <p>'. HTML::link_to_route('session_broadsheet','Results Broadsheets') . '</p>';
                 break;
             default:
                 # Invalid

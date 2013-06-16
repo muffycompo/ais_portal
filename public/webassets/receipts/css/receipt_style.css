@@ -1,0 +1,46 @@
+/*
+	 CSS-Tricks Example
+	 by Chris Coyier
+	 http://css-tricks.com
+*/
+
+* { margin: 0; padding: 0; }
+body { font: 14px/1.4 Georgia, serif; }
+#page-wrap { width: 800px; margin: 0 auto; }
+hr { border:none; height:1px; background-color: black; margin-bottom: 15px;}
+table { border-collapse: collapse; }
+table td, table th { border: 1px solid black; padding: 5px; }
+
+#header { height: 15px; width: 100%; margin: 20px 0; background: #222; text-align: center; color: white; font: bold 15px Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; }
+
+#address { width: 250px; height: 150px; float: left; }
+#customer { overflow: hidden; }
+
+#logo { text-align: center; margin-top: 25px; border: 1px solid #fff; margin-bottom: 15px;}
+#logoctr { display: none; }
+#logo:hover #logoctr, #logo.edit #logoctr { display: block; text-align: right; line-height: 25px; background: #eee; padding: 0 5px; }
+#logohelp { text-align: left; display: none; font-style: italic; padding: 10px 5px;}
+#logohelp input { margin-bottom: 5px; }
+
+
+#meta { margin-top: 1px; width: 300px; float: right; }
+#meta td { text-align: right;  }
+#meta td.meta-head { text-align: left; background: #eee; }
+
+#passport_meta { margin-top: 1px; float: right;}
+#passport_meta td { text-align: right;  }
+
+#items { clear: both; width: 100%; margin: 30px 0 0 0; border: 1px solid black; }
+#items th { background: #eee; }
+#items tr.item-row td { border: 0; vertical-align: top; }
+#items td.description { width: 300px; }
+#items td.item-name { width: 175px; }
+#items td.total-line { border-right: 0; text-align: right; }
+#items td.total-value { border-left: 0; padding: 10px; }
+#items td.balance { background: #eee; }
+#items td.blank { border: 0; }
+
+#terms { text-align: center; margin: 20px 0 0 0; }
+#terms h5 { text-transform: uppercase; font: 13px Helvetica, Sans-Serif; letter-spacing: 10px; border-bottom: 1px solid black; padding: 0 0 8px 0; margin: 0 0 8px 0; }
+
+#instructions li { margin: 10px 0 10px 20px; }

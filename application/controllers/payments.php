@@ -63,6 +63,11 @@ class Payments_Controller extends Base_Controller {
         return View::make('payments.edit_fee_payment', $v_data);
     }
 
+    public function get_edit_fee_schedule($id){
+        $v_data['fee_schedule'] = Payment::edit_fee_schedule($id);
+        return View::make('payments.edit_fee_schedule', $v_data);
+    }
+
     public function get_fees(){
         $v_data['fee_payments'] = Payment::all_fee_payments();
         return View::make('payments.fees', $v_data);
@@ -90,6 +95,16 @@ class Payments_Controller extends Base_Controller {
         $v_data['total_amount'] = Payment::fee_schedule_amount($term_id, $class_id);
         return View::make('payments.fees_schedule_class', $v_data);
     }
+
+    public function get_delete_fee_schedule($id){
+         $delete_schedule = Payment::delete_fee_schecule($id);
+        if($delete_schedule){
+            return Redirect::back()->with('message',Ais::message_format('Fee schedule deleted successfully!','success'))->with_input();
+        } else {
+            return Redirect::back()->with('message',Ais::message_format('An error occurred while deleting the fee schedule, please try again!','error'))->with_input();
+        }
+     }
+
 
 
 
@@ -159,6 +174,20 @@ class Payments_Controller extends Base_Controller {
                 return Redirect::back()->with('message',Ais::message_format('An error occurred while updating the payment, please try again!','error'));
             } else {
                 return Redirect::to_route('fee_payments');
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
+
+   public function post_edit_fee_schedule(){
+        $validate = Payment::edit_fee_schedule_validation(Input::all());
+        if( $validate === true ){
+            $pin_payment = Payment::add_new_fee(Input::all());
+            if( $pin_payment === false ){
+                return Redirect::back()->with('message',Ais::message_format('An error occurred while updating the fee schedule, please try again!','error'));
+            } else {
+                return Redirect::to('payments/class_fee_schedule/' . Input::get('term_id') . '/' . Input::get('class_id'))->with('message',Ais::message_format('Fee schedule updated successfully!','success'));
             }
         } else {
             return Redirect::back()->with_errors($validate)->with_input();

@@ -65,13 +65,13 @@ class Registrations_Controller extends Base_Controller {
         return View::make('registrations.attestation');
     }
 
-   public function get_print_application(){
-       $user_id = Session::get('user_id');
+   public function get_print_application($id = ''){
+       $user_id = !empty($id)? (int)$id : Session::get('user_id');
        $v_data['user'] = User::show_user($user_id);
-       $v_data['schools'] = Registration::schools_attended();
-       $v_data['biodata'] = Registration::user_biodata();
-       $v_data['parent_info'] = Registration::show_parent_info();
-       $v_data['medical'] = Registration::show_medical_record();
+       $v_data['schools'] = Registration::schools_attended($user_id);
+       $v_data['biodata'] = Registration::user_biodata($user_id);
+       $v_data['parent_info'] = Registration::show_parent_info($user_id);
+       $v_data['medical'] = Registration::show_medical_record($user_id);
         return View::make('registrations.print_application', $v_data);
     }
 
@@ -93,7 +93,7 @@ class Registrations_Controller extends Base_Controller {
             if( $biodata === false ){
                 return Redirect::back()->with('message',Ais::message_format('An error occurred while saving your Bio-Data, please try again!','error'))->with_input();
             } else {
-                return Redirect::to_route('user_dashboard')->with('message',Ais::message_format('Your Bio-Data has been saved successfully','success'));
+                return Redirect::back()->with('message',Ais::message_format('Your Bio-Data has been saved successfully','success'));
             }
         } else {
             return Redirect::back()->with_errors($validate)->with_input();
@@ -135,7 +135,7 @@ class Registrations_Controller extends Base_Controller {
             if( $parent === false ){
                 return Redirect::back()->with('message',Ais::message_format('An error occurred while saving your Parental Information, please try again!','error'))->with_input();
             } else {
-                return Redirect::to_route('user_dashboard')->with('message',Ais::message_format('Your Parental Information has been saved successfully','success'));
+                return Redirect::back()->with('message',Ais::message_format('Your Parental Information has been saved successfully','success'));
             }
         } else {
             return Redirect::back()->with_errors($validate)->with_input();
@@ -149,7 +149,7 @@ class Registrations_Controller extends Base_Controller {
             if( $parent === false ){
                 return Redirect::back()->with('message',Ais::message_format('An error occurred while saving your Medical Record, please try again!','error'))->with_input();
             } else {
-                return Redirect::to_route('user_dashboard')->with('message',Ais::message_format('Your Medical Record has been saved successfully','success'));
+                return Redirect::back()->with('message',Ais::message_format('Your Medical Record has been saved successfully','success'));
             }
         } else {
             return Redirect::back()->with_errors($validate)->with_input();

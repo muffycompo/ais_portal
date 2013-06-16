@@ -137,7 +137,7 @@ class Admin extends Basemodel {
                         $admission->surname,
                         $admission->firstname,
                         $admission->othernames,
-                        $admission->aic_id,
+                        Expand::classes($admission->aic_id),
                         Expand::admission_recommendation($admission->admission_recommendation_id),
                     );
                 }

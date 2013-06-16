@@ -96,7 +96,7 @@ class Setting extends Basemodel {
     }
 
     public static function edit_class($data){
-        $class_array = array('class_name' => Str::upper($data['class_name']));
+        $class_array = array('class_name' => Str::title($data['class_name']));
         $class = DB::table('classes')->where('id','=',$data['class_id'])->update($class_array);
         if($class){
             return $class;
@@ -151,8 +151,12 @@ class Setting extends Basemodel {
         }
     }
 
-    public static function all_classes(){
-        $classes = DB::table('classes')->get();
+    public static function all_classes($paginate = false, $per_page = 10){
+        if($paginate){
+            $classes = DB::table('classes')->paginate($per_page);
+        } else {
+            $classes = DB::table('classes')->get();
+        }
         if( $classes ){
             return $classes;
         } else {
@@ -193,7 +197,7 @@ class Setting extends Basemodel {
             $subject_title = '';
             if( $formatted ){
                 foreach($teacher_subjects as $subject){
-                    $subject_title .= ', ' .Expand::subject($subject->subject_id) . ' ( '.Expand::classes($subject->class_id).' )';
+                    $subject_title .= ',&nbsp;' .Expand::subject($subject->subject_id) . '('.Expand::classes($subject->class_id).')';
                 }
                 return substr($subject_title,1);
             } else {
@@ -211,7 +215,7 @@ class Setting extends Basemodel {
             $class_title = '';
             if( $formatted ){
                 foreach($teacher_classes as $class){
-                    $class_title .= ', ' .Expand::classes($class->class_id);
+                    $class_title .= ',&nbsp;' .Expand::classes($class->class_id);
                 }
                 return substr($class_title,1);
             } else {

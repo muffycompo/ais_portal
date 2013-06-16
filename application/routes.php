@@ -58,6 +58,7 @@ Route::post('payments/new_fee', array('uses'=>'payments@new_fee'));
 Route::post('payments/add_new_fee', array('uses'=>'payments@add_new_fee'));
 Route::post('payments/edit_pin_payment', array('uses'=>'payments@edit_pin_payment'));
 Route::post('payments/edit_fee_payment', array('uses'=>'payments@edit_fee_payment'));
+Route::post('payments/edit_fee_schedule', array('uses'=>'payments@edit_fee_schedule'));
 
 
 //    Registrations Controller - GET
@@ -71,7 +72,7 @@ Route::get('registrations/medical_record', array('as'=>'medical_record', 'uses'=
 Route::get('registrations/uploads', array('as'=>'uploads', 'uses'=>'registrations@uploads'));
 Route::get('registrations/delete_docs/(:any)', array('as'=>'delete_docs', 'uses'=>'registrations@delete_docs'));
 Route::get('registrations/attestation', array('as'=>'attestation', 'uses'=>'registrations@attestation'));
-Route::get('registrations/print_application', array('as'=>'print_application', 'uses'=>'registrations@print_application'));
+Route::get('registrations/print_application/(:num?)', array('as'=>'print_application', 'uses'=>'registrations@print_application'));
 
 
 //    Registrations Controller - POST

@@ -74,7 +74,14 @@ class Registration extends Basemodel {
     }
 
    public static function medical_record_validation($input){
-        return static::validation($input, static::$medical_record_rules);
+       $rules = static::$medical_record_rules;
+       if($input['allergic_reaction'] == 'yes'){
+           $rules['allergic_details'] = 'required';
+       }
+       if($input['disability'] == 'yes'){
+           $rules['disability_details'] = 'required';
+       }
+        return static::validation($input, $rules);
     }
 
    public static function upload_photo_validation($input){
@@ -138,11 +145,11 @@ class Registration extends Basemodel {
            'father_occupation' => Str::words($data['father_occupation']),
            'father_religion' => Str::words($data['father_religion']),
            'residential_address' => Str::words($data['residential_address']),
-           'father_phone_no' => $data['father_phone_no'],
+           'father_phone_no' => Ais::gsm_no_formatter($data['father_phone_no']),
            'mother_name' => Str::title($data['mother_name']),
            'mother_occupation' => Str::words($data['mother_occupation']),
            'mother_religion' => Str::words($data['mother_religion']),
-           'mother_phone_no' => $data['father_phone_no'],
+           'mother_phone_no' => Ais::gsm_no_formatter($data['father_phone_no']),
         );
         $check_parent_info_exist = DB::table('parental_information')->where('user_id','=',$user_id)->count();
         if($check_parent_info_exist == 1){
@@ -169,7 +176,7 @@ class Registration extends Basemodel {
             'hospital_name' => Str::title($data['hospital_name']),
             'hospital_address' => $data['hospital_address'],
             'doctor_name' => Str::title($data['doctor_name']),
-            'doctor_phone_no' => $data['doctor_phone_no'],
+            'doctor_phone_no' => Ais::gsm_no_formatter($data['doctor_phone_no']),
             'child_file_no' => $data['child_file_no'],
             'blood_group' => $data['blood_group'],
             'genotype' => $data['genotype'],
@@ -267,20 +274,20 @@ class Registration extends Basemodel {
     }
 
 //  Secondary DB Queries
-    public static function user_biodata(){
-        $user_id = Session::get('user_id');
+    public static function user_biodata($id = ''){
+        $user_id = !empty($id)? (int)$id : Session::get('user_id');
         $biodata = DB::table('biodata')->where('user_id','=',$user_id)->first();
         if($biodata){return $biodata;} else { return false;}
     }
 
-   public static function user_meta(){
-        $user_id = Session::get('user_id');
+   public static function user_meta($id = ''){
+       $user_id = !empty($id)? (int)$id : Session::get('user_id');
         $usermeta = DB::table('users')->where('id','=',$user_id)->first(array('firstname','surname'));
         if($usermeta){return $usermeta;} else { return false;}
     }
 
-    public static function schools_attended(){
-        $user_id = Session::get('user_id');
+    public static function schools_attended($id = ''){
+        $user_id = !empty($id)? (int)$id : Session::get('user_id');
         $schools = DB::table('schools_attended')->where('user_id','=',$user_id)->get();
         if( $schools ){
             return $schools;
@@ -289,8 +296,8 @@ class Registration extends Basemodel {
         }
     }
 
-   public static function show_parent_info(){
-       $user_id = Session::get('user_id');
+   public static function show_parent_info($id = ''){
+       $user_id = !empty($id)? (int)$id : Session::get('user_id');
        $parents = DB::table('parental_information')->where('user_id','=',$user_id)->first();
         if( $parents ){
             return $parents;
@@ -308,8 +315,8 @@ class Registration extends Basemodel {
         }
     }
 
-    public static function show_medical_record(){
-        $user_id = Session::get('user_id');
+    public static function show_medical_record($id = ''){
+        $user_id = !empty($id)? (int)$id : Session::get('user_id');
         $medical_record = DB::table('medical_records')->where('user_id','=',$user_id)->first();
         if( $medical_record ){
             return $medical_record;

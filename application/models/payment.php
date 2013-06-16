@@ -13,7 +13,7 @@ class Payment extends Basemodel {
     private static $pin_payment_rules = array(
         'firstname' => 'required|min:3',
         'surname' => 'required|min:3',
-        'amount' => 'numeric',
+        'amount' => 'required|numeric',
     );
 
     private static $fee_payment_rules = array(
@@ -52,6 +52,10 @@ class Payment extends Basemodel {
         return static::validation($input, static::$add_fee_payment_rules);
     }
 
+   public static function edit_fee_schedule_validation($input){
+        return static::validation($input, static::$add_fee_payment_rules);
+    }
+
    public static function edit_pin_payment_validation($input){
         return static::validation($input, static::$pin_payment_rules);
     }
@@ -76,7 +80,7 @@ class Payment extends Basemodel {
             'applicant_firstname' => Str::title($data['firstname']),
             'applicant_surname' => Str::title($data['surname']),
             'amount' => $data['amount'],
-            'receipt_no' => Ais::generate_receipt_no(1,8,'AR-'),
+            'receipt_no' => Ais::generate_receipt_no(1,8),
             'payment_date' => Ais::current_date(),
             'accountant' => Ais::resolve_name($user_id),
             'pin_id' => Ais::get_pin_id(),
@@ -115,16 +119,21 @@ class Payment extends Basemodel {
     }
 
     public static function add_new_fee($data){
-        $new_fee_data = array(
+        $fee_data = array(
             'amount' => $data['paid_amount'],
             'payment_category_id' => $data['payment_category_id'],
             'class_id' => $data['class_id'],
             'term_id' => $data['term_id'],
             'recurring_payment' => $data['recurring_payment'],
         );
-        $new_fee = DB::table('schedule_of_fees')->insert($new_fee_data);
-        if( $new_fee ) {
-            return $new_fee;
+        if(isset($data['fee_schedule_id'])) {
+            $fee = DB::table('schedule_of_fees')->where('id','=',$data['fee_schedule_id'])->update($fee_data);
+        } else {
+            $fee = DB::table('schedule_of_fees')->insert($fee_data);
+        }
+
+        if( $fee ) {
+            return $fee;
         } else {
             return false;
         }
@@ -171,6 +180,11 @@ class Payment extends Basemodel {
 //  DB Deletes
     public static function delete_user($user_id){
         $delete = DB::table('users')->where('id','=',$user_id)->delete();
+        if( $delete ){ return true; } else { return false; }
+    }
+
+    public static function delete_fee_schecule($id){
+        $delete = DB::table('schedule_of_fees')->where('id','=',$id)->delete();
         if( $delete ){ return true; } else { return false; }
     }
 
@@ -229,6 +243,15 @@ class Payment extends Basemodel {
             return array_merge($fee_payments, $user);
         } else {
             return false;
+        }
+    }
+
+   public static function edit_fee_schedule($fee_schedule_id){
+       $fee_schedule = DB::table('schedule_of_fees')->where('id','=',$fee_schedule_id)->first();
+        if( $fee_schedule ){
+            return $fee_schedule;
+        } else {
+            return null;
         }
     }
 

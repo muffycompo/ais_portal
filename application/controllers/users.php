@@ -94,7 +94,7 @@ class Users_Controller extends Base_Controller {
         if( $validate === true ){
             $login = User::authenticate_user(Input::all());
             if( $login === false ){
-                return Redirect::back()->with('message','Email/Password combination is invalid!')->with_input();
+                return Redirect::back()->with('message',Ais::message_format('Email/Password combination is invalid!','error'))->with_input();
             } else {
                 return Redirect::to_route('user_dashboard');
             }

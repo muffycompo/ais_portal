@@ -1,77 +1,106 @@
-@layout('template.layout')
+<!DOCTYPE html>
 
-@section('content')
+<head>
+	<title>Application Form</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{ HTML::style('webassets/receipts/css/receipt_style.css') }}
+    {{ HTML::style('webassets/receipts/css/print.css',array('media'=>'print')) }}
+</head>
 
-<div class="home">
-    <table class="ais_table">
-        <tbody>
-            <tr>
-                <td>Passport Photograph</td>
-                <td>{{ HTML::image(Ais::passport_image(),'Passport Photo') }}</td>
-            </tr>
-            <tr>
-                <td>Application Type</td>
-                <td><strong>{{ Expand::application_type($biodata->application_type_id) }}</strong></td>
-            </tr>
-            <tr>
-                <td>First Name</td>
-                <td><strong>{{ $user->firstname }}</strong></td>
-            </tr>
-            <tr>
-                <td>Surname</td>
-                <td><strong>{{ $user->surname }}</strong></td>
-            </tr>
-            <tr>
-                <td>Age</td>
-                <td><strong>{{ $biodata->age }} years</strong></td>
-            </tr>
-            <tr>
-                <td>Date of Birth</td>
-                <td><strong>{{ Ais::reverse_db_date($biodata->date_of_birth) }}</strong></td>
-            </tr>
-            <tr>
-                <td>Sex</td>
-                <td><strong>{{ Expand::gender($biodata->gender_id) }}</strong></td>
-            </tr>
-            <tr>
-                <td>State of Origin</td>
-                <td><strong>{{ Expand::state($biodata->state_id) }}</strong></td>
-            </tr>
-            <tr>
-                <td>Nationality</td>
-                <td><strong>{{ Expand::nationality($biodata->nationality_id) }}</strong></td>
-            </tr>
-            <tr>
-                <td>Tribe</td>
-                <td><strong>{{ $biodata->tribe }}</strong></td>
-            </tr>
-            <tr>
-                <td>Last Class</td>
-                <td><strong>{{ expand::classes($biodata->last_class_id) }}</strong></td>
-            </tr>
-            <tr>
-                <td>Class Seeking admission into</td>
-                <td><strong>{{ expand::classes($biodata->csai_id) }}</strong></td>
-            </tr>
-        </tbody>
-    </table>
+<body>
 
+	<div id="page-wrap">
+		<div id="identity">
+            <div id="logo">
+              {{ HTML::image('webassets/receipts/images/logo.png','Logo') }}
+            </div>
 
-	<h3>Schools Attended</h3>
-    <table class="ais_table">
-        <thead>
-            <tr>
-                <th>Name of School</th>
-                <th>Class (From)</th>
-                <th>Class (To)</th>
-                <th>Date (From)</th>
-                <th>Date (To)</th>
-            </tr>
-        </thead>
-        <tbody>
+		</div>
+
+		<div style="clear:both"></div>
+		<hr />
+		<div id="customer">
+            <table id="passport_meta">
+                <tr>
+                    <td><div class="ta">{{ HTML::image(Ais::passport_image($user->id),'Passport Photo') }}</div></td>
+                </tr>
+            </table>
+
+		</div>
+
+		<table id="items">
+
+		  <tr>
+		      <th colspan="5">BIO DATA</th>
+		  </tr>
+
+		  <tr>
+		      <td colspan="5">&nbsp;</td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">Form Number:</td>
+		      <td class="description"><strong>123456</strong></td>
+		      <td class="item-name">Application Type</td>
+		      <td class="description" colspan="2" nowrap><strong>{{ Expand::application_type($biodata->application_type_id) }}</strong></td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">First Name:</td>
+		      <td class="description"><strong>{{ $user->firstname }}</strong></td>
+		      <td class="item-name">Surname</td>
+		      <td class="description" colspan="2" nowrap><strong>{{ $user->surname }}</strong></td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">Other Names:</td>
+		      <td class="description"><strong>{{ $biodata->othernames }}</strong></td>
+		      <td class="item-name">Age</td>
+		      <td class="description" colspan="2" nowrap><strong>{{ $biodata->age }}</strong></td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">Date of Birth:</td>
+		      <td class="description"><strong>{{ Ais::reverse_db_date($biodata->date_of_birth) }}</strong></td>
+		      <td class="item-name">Sex:</td>
+		      <td class="description" colspan="2" nowrap><strong>{{ Expand::gender($biodata->gender_id) }}</strong></td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">State of Origin:</td>
+		      <td class="description"><strong>{{ Expand::state($biodata->state_id) }}</strong></td>
+		      <td class="item-name">Nationality:</td>
+		      <td class="description" colspan="2" nowrap><strong>{{ Expand::nationality($biodata->nationality_id) }}</strong></td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">Tribe:</td>
+		      <td class="description"><strong>{{ $biodata->tribe }}</strong></td>
+		      <td class="item-name">Last Class:</td>
+		      <td class="description" colspan="2" nowrap><strong>{{ Expand::classes($biodata->last_class_id) }}</strong></td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">Class Applied for:</td>
+		      <td class="description" colspan="4"><strong>{{ Expand::classes($biodata->csai_id) }}</strong></td>
+		  </tr>
+
+          <tr>
+		      <th colspan="5">SCHOOLS ATTENDED</th>
+		  </tr>
+		  <tr>
+		      <td colspan="5">&nbsp;</td>
+		  </tr>
+          <tr class="item-row">
+            <th>Name of School</th>
+            <th>Class (From)</th>
+            <th>Class (To)</th>
+            <th>Date (From)</th>
+            <th>Date (To)</th>
+          </tr>
         @if(! is_null($schools) && is_array($schools) )
           @foreach($schools as $school)
-            <tr>
+            <tr class="item-row">
                 <td>{{ $school->school_name }}</td>
                 <td>{{ expand::classes($school->class_from_id) }}</td>
                 <td>{{ expand::classes($school->class_to_id) }}</td>
@@ -79,106 +108,101 @@
                 <td>{{ $school->year_to }}</td>
             </tr>
           @endforeach
-        @else
-            <tr>
-                <td colspan="6">No Schools found!</td>
-            </tr>
         @endif
-        </tbody>
-    </table>
 
-    <h3>Parental Information</h3>
-    <table class="ais_table">
-        <tbody>
-            <tr>
-                <td>Father&apos;s Name</td>
-                <td><strong>{{ $parent_info->father_name }}</strong></td>
-            </tr>
-            <tr>
-                <td>Occupation</td>
-                <td><strong>{{ $parent_info->father_occupation }}</strong></td>
-            </tr>
-            <tr>
-                <td>Religion</td>
-                <td><strong>{{ Expand::religion($parent_info->father_religion) }}</strong></td>
-            </tr>
-            <tr>
-                <td>Residential Address</td>
-                <td><strong>{{ $parent_info->residential_address }}</strong></td>
-            </tr>
-            <tr>
-                <td>Phone Number</td>
-                <td><strong>{{ $parent_info->father_phone_no }}</strong></td>
-            </tr>
-            <tr>
-                <td>Mother&apos;s Name</td>
-                <td><strong>{{ $parent_info->mother_name }}</strong></td>
-            </tr>
-            <tr>
-                <td>Occupation</td>
-                <td><strong>{{ $parent_info->mother_occupation }}</strong></td>
-            </tr>
-            <tr>
-                <td>Religion</td>
-                <td><strong>{{ Expand::religion($parent_info->mother_religion) }}</strong></td>
-            </tr>
-            <tr>
-                <td>Phone Number</td>
-                <td><strong>{{ $parent_info->mother_phone_no }}</strong></td>
-            </tr>
-        </tbody>
-    </table>
+          <tr>
+		      <th colspan="5">PARENTAL INFORMATION</th>
+		  </tr>
+		  <tr>
+		      <td colspan="5">&nbsp;</td>
+		  </tr>
 
-    <h3>Medical Record</h3>
-    <table class="ais_table">
-        <tbody>
-            <tr>
-                <td>Hospital Name</td>
-                <td><strong>{{ $medical->hospital_name }}</strong></td>
-            </tr>
-            <tr>
-                <td>Hospital Address</td>
-                <td><strong>{{ $medical->hospital_address }}</strong></td>
-            </tr>
-            <tr>
-                <td>Name of Family Doctor</td>
-                <td><strong>{{ $medical->doctor_name }}</strong></td>
-            </tr>
-            <tr>
-                <td>Phone Number</td>
-                <td><strong>{{ $medical->doctor_phone_no }}</strong></td>
-            </tr>
-            <tr>
-                <td>Child File Number</td>
-                <td><strong>{{ $medical->child_file_no }}</strong></td>
-            </tr>
-            <tr>
-                <td>Blood Group</td>
-                <td><strong>{{ $medical->blood_group }}</strong></td>
-            </tr>
-            <tr>
-                <td>Genotype</td>
-                <td><strong>{{ $medical->genotype }}</strong></td>
-            </tr>
-            <tr>
-                <td>Allergic Reaction?</td>
-                <td><strong>{{ $medical->allergic_reaction }}</strong></td>
-            </tr>
-            <tr>
-                <td>Indicate if any Allergic Reaction</td>
-                <td><strong>{{ $medical->allergic_details }}</strong></td>
-            </tr>
-            <tr>
-                <td>Does your child have any mental or physical disability?</td>
-                <td><strong>{{ $medical->disability }}</strong></td>
-            </tr>
-            <tr>
-                <td>Specify if any</td>
-                <td><strong>{{ $medical->disability_details }}</strong></td>
-            </tr>
-        </tbody>
-    </table>
+		  <tr class="item-row">
+		      <td class="item-name">Father&apos;s Full Name:</td>
+		      <td class="description"><strong>{{ $parent_info->father_name }}</strong></td>
+		      <td class="item-name">Occupation:</td>
+		      <td class="description" colspan="2" nowrap><strong>{{ $parent_info->father_occupation }}</strong></td>
+		  </tr>
 
-</div>
-@endsection
+		  <tr class="item-row">
+		      <td class="item-name">Religion:</td>
+		      <td class="description"><strong>{{ Expand::religion($parent_info->father_religion) }}</strong></td>
+		      <td class="item-name">Phone Number:</td>
+		      <td class="description" colspan="2" nowrap><strong>{{ $parent_info->father_phone_no }}</strong></td>
+		  </tr>
 
+		  <tr class="item-row">
+		      <td class="item-name">Residential Address:</td>
+		      <td class="description" colspan="4"><strong>{{ $parent_info->residential_address }}</strong></td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">Mother&apos;s Full Name:</td>
+		      <td class="description"><strong>{{ $parent_info->mother_name }}</strong></td>
+		      <td class="item-name">Occupation:</td>
+		      <td class="description" colspan="2" nowrap><strong>{{ $parent_info->mother_occupation }}</strong></td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">Religion:</td>
+		      <td class="description"><strong>{{ Expand::religion($parent_info->mother_religion) }}</strong></td>
+		      <td class="item-name">Phone Number:</td>
+		      <td class="description" colspan="2" nowrap><strong>{{ $parent_info->mother_phone_no }}</strong></td>
+		  </tr>
+
+          <tr>
+		      <th colspan="5">MEDICAL RECORD</th>
+		  </tr>
+		  <tr>
+		      <td colspan="5">&nbsp;</td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">Hospital Name:</td>
+		      <td class="description" colspan="4"><strong>{{ $medical->hospital_name }}</strong></td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">Hospital Address:</td>
+		      <td class="description" colspan="4"><strong>{{ $medical->hospital_address }}</strong></td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">Name of Family Doctor:</td>
+		      <td class="description"><strong>{{ $medical->doctor_name }}</strong></td>
+		      <td class="item-name">Phone Number:</td>
+		      <td class="description" colspan="2" nowrap><strong>{{ $medical->doctor_phone_no }}</strong></td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">Child File Number:</td>
+		      <td class="description"><strong>{{ $medical->child_file_no }}</strong></td>
+		      <td class="item-name">Blood Group:</td>
+		      <td class="description" colspan="2" nowrap><strong>{{ $medical->blood_group }}</strong></td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">Genotype:</td>
+		      <td class="description"><strong>{{ $medical->genotype }}</strong></td>
+		      <td class="item-name">Allergic Reaction?:</td>
+		      <td class="description" colspan="2" nowrap><strong>{{ $medical->allergic_reaction }}</strong></td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">Indicate if any Allergic Reaction:</td>
+		      <td class="description" colspan="4"><strong>{{ !empty($medical->allergic_details)? $medical->allergic_details : 'N/A' }}</strong></td>
+		  </tr>
+
+		  <tr class="item-row">
+		      <td class="item-name">Does your child have any mental or physical disability?:</td>
+		      <td class="description"><strong>{{ $medical->disability }}</strong></td>
+		      <td class="item-name">Specify Any:</td>
+		      <td class="description" colspan="2" nowrap><strong>{{ !empty($medical->disability_details)? $medical->disability_details : 'N/A' }}</strong></td>
+		  </tr>
+
+
+	</div>
+
+</body>
+
+</html>
