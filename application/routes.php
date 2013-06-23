@@ -149,10 +149,11 @@ Route::post('admin/official_use', array('uses'=>'admin@official_use'));
 Route::get('events/calendar', array('as' => 'calendars', 'uses'=>'events@calendar'));
 Route::get('events/reminder', array('as' => 'reminders', 'uses'=>'events@reminder'));
 Route::get('events/new_event', array('as' => 'new_event', 'uses'=>'events@new_event'));
+Route::get('events/events_feed', array('as' => 'events_feed', 'uses'=>'events@events_feed'));
 
 
 //    Events Controller - POST
-
+Route::post('events/new_event', array('uses'=>'events@new_event'));
 
 
 

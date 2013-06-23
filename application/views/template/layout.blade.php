@@ -16,6 +16,7 @@
     {{ HTML::style('webassets/css/validationEngine.jquery.css') }}
     {{ HTML::style('webassets/css/chosen.css') }}
     {{ HTML::style('webassets/css/datepicker.css') }}
+    {{ HTML::style('webassets/css/datetimepicker.css') }}
     {{ HTML::style('webassets/css/wizard_form.css') }}
     {{ HTML::style('webassets/css/ie.css') }}
     {{ HTML::style('webassets/css/fullcalendar.css') }}
@@ -62,6 +63,7 @@
 {{ HTML::script('webassets/js/jquery.vticker-min.js') }}
 {{ HTML::script('webassets/js/calendarPicker.js') }}
 {{ HTML::script('webassets/js/ui/datepicker.js') }}
+{{ HTML::script('webassets/js/bootstrap-datetimepicker.min.js') }}
 {{ HTML::script('webassets/js/upload/load-image.min.js') }}
 {{ HTML::script('webassets/js/upload/image-gallery.min.js') }}
 {{ HTML::script('webassets/js/jquery.simpleWeather.js') }}
@@ -73,5 +75,11 @@
 {{ HTML::script('webassets/js/header.js?v1') }}
 {{ HTML::script('webassets/js/sidebar.js') }}
 {{ HTML::script('webassets/js/custom.js') }}
+
+<script type="text/javascript">
+    $(function() {
+        $( "#ais-sidebar-calendar" ).datepicker().css({marginBottom:'20px'});
+    });
+</script>
 </body>
 </html>

@@ -42,7 +42,7 @@
                                             <div class="utopia-widget-content">
                                                 <div class="row-fluid">
                                                     <div class="span9 utopia-form-freeSpace">
-                                                        {{ Form::open('users/new_event','POST',array('class'=>'form-horizontal')) }}
+                                                        {{ Form::open('events/new_event','POST',array('class'=>'form-horizontal')) }}
                                                             <fieldset>
 
                                                                 {{ $errors->has('event_title')? '<div class="control-group error">' : '<div class="control-group">' }}
@@ -71,18 +71,18 @@
                                                                     </div>
                                                                 </div>
 
-                                                                {{ $errors->has('state_date')? '<div class="control-group error">' : '<div class="control-group">' }}
-                                                                    {{ Form::label('state_date','Start Date:',array('class'=>'control-label')) }}
+                                                                {{ $errors->has('start_date')? '<div class="control-group error">' : '<div class="control-group">' }}
+                                                                    {{ Form::label('start_date','Start Date:',array('class'=>'control-label')) }}
                                                                     <div class="controls">
-                                                                        {{ Form::input('text','state_date',Input::old('state_date'),array('id'=>'state_date','class'=>'span6 input-fluid')) }}
-                                                                        {{ $errors->first('state_date','<span class="help-inline">:message</span>') }}
+                                                                        {{ Form::input('text','start_date',Input::old('start_date'),array('id'=>'start_date','class'=>'span6 input-fluid ais_datetime')) }}
+                                                                        {{ $errors->first('start_date','<span class="help-inline">:message</span>') }}
                                                                     </div>
                                                                 </div>
 
                                                                 {{ $errors->has('end_date')? '<div id="ais_allday_check" class="control-group error">' : '<div id="ais_allday_check" class="control-group">' }}
                                                                     {{ Form::label('end_date','End Date:',array('class'=>'control-label')) }}
                                                                     <div class="controls">
-                                                                        {{ Form::input('text','end_date',Input::old('end_date'),array('id'=>'end_date','class'=>'span6 input-fluid')) }}
+                                                                        {{ Form::input('text','end_date',Input::old('end_date'),array('id'=>'end_date','class'=>'span6 input-fluid ais_datetime')) }}
                                                                         {{ $errors->first('end_date','<span class="help-inline">:message</span>') }}
                                                                     </div>
                                                                 </div>
@@ -105,7 +105,7 @@
 
                                                                 <div class="control-group">
                                                                     <div class="controls inline">
-                                                                    {{ Form::button('Add', array('class'=>'btn btn-info span3')) }} {{ HTML::link('#', 'Cancel',array('class'=>'btn btn-danger span3')) }}
+                                                                    {{ Form::button('Add', array('class'=>'btn btn-info span3')) }} {{ HTML::link_to_route('calendars', 'Cancel','',array('class'=>'btn btn-danger span3')) }}
                                                                     </div>
                                                                 </div>
 
@@ -151,12 +151,35 @@ $(document).ready(function(){
         }
     });
     studentCheck.change(function(){
-        if(studentCheck.val() == 2){
-            studentClass.hide();
-        } else {
+        if(studentCheck.val() == 1){
             studentClass.show();
+        } else {
+            studentClass.hide();
         }
     });
+
+    // Datetime Picker Related
+    $('#start_date').datetimepicker({
+        format: 'yyyy-mm-dd hh:ii:ss',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1
+    });
+    $('#end_date').datetimepicker({
+        format: 'yyyy-mm-dd hh:ii:ss',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1
+    });
+
 });
 </script>
 @endsection

@@ -2,7 +2,7 @@
     <div class="row-fluid">
         <div class="span12">
 
-            <div id="utopia-dashboard-datepicker">
+            <div id="ais-sidebar-calendar">
 
             </div>
 
