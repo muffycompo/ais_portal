@@ -113,6 +113,14 @@ class Ais {
         return Form::select($name, $options, $selected, $attributes);
     }
 
+   public static function event_group_dropdown($name, $selected = null, $attributes = array()){
+        $opts = DB::table('event_group')->get();
+        foreach($opts as $opt){
+            $options[$opt->id] = $opt->event_group_name;
+        }
+        return Form::select($name, $options, $selected, $attributes);
+    }
+
    public static function recurring_dropdown($name, $selected = null, $attributes = array()){
         $options = array(
             '1' => 'Termly',

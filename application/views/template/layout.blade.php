@@ -18,6 +18,8 @@
     {{ HTML::style('webassets/css/datepicker.css') }}
     {{ HTML::style('webassets/css/wizard_form.css') }}
     {{ HTML::style('webassets/css/ie.css') }}
+    {{ HTML::style('webassets/css/fullcalendar.css') }}
+    {{ HTML::style('webassets/css/calendarPicker.css') }}
 
     {{ HTML::script('webassets/js/jquery.min.js') }}
 
@@ -37,7 +39,9 @@
         }
       </style>
     <![endif]-->
-
+    {{ HTML::style('webassets/css/custom.css') }}
+    <!-- TODO: Is there a better way? -->
+    {{ HTML::script('webassets/js/fullcalendar.js') }}
 </head>
 
 <body>
@@ -56,6 +60,7 @@
 {{ HTML::script('webassets/js/tables.js') }}
 {{ HTML::script('webassets/js/jquery.sparkline.js') }}
 {{ HTML::script('webassets/js/jquery.vticker-min.js') }}
+{{ HTML::script('webassets/js/calendarPicker.js') }}
 {{ HTML::script('webassets/js/ui/datepicker.js') }}
 {{ HTML::script('webassets/js/upload/load-image.min.js') }}
 {{ HTML::script('webassets/js/upload/image-gallery.min.js') }}
@@ -68,13 +73,5 @@
 {{ HTML::script('webassets/js/header.js?v1') }}
 {{ HTML::script('webassets/js/sidebar.js') }}
 {{ HTML::script('webassets/js/custom.js') }}
-
-<script type="text/javascript">
-
-    $(function() {
-        $( "#utopia-dashboard-datepicker" ).datepicker().css({marginBottom:'20px'});
-    });
-
-</script>
 </body>
 </html>

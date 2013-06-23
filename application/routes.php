@@ -145,6 +145,15 @@ Route::get('admin/approve_admission/(:num)', array('as' => 'approve_admission', 
 Route::post('admin/official_use', array('uses'=>'admin@official_use'));
 
 
+//    Events Controller - GET
+Route::get('events/calendar', array('as' => 'calendars', 'uses'=>'events@calendar'));
+Route::get('events/reminder', array('as' => 'reminders', 'uses'=>'events@reminder'));
+Route::get('events/new_event', array('as' => 'new_event', 'uses'=>'events@new_event'));
+
+
+//    Events Controller - POST
+
+
 
 
 //    Laravel Related

@@ -17,7 +17,7 @@
                         <div class="user-panel header-divider">
                             <div class="user-info">
                                 {{ HTML::image('webassets/img/icons/user.png','Avatar') }}
-                                <a href="javascript:void(0)">Portal User</a>
+                                <a href="javascript:void(0)">AIS Portal User</a>
                             </div>
 
                             <div class="user-dropbox">

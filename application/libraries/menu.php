@@ -98,7 +98,7 @@ class Menu {
         $class_nav = ($nav_trail == 'class_nav')? 'class="current"' : '';
         $assignment_nav = ($nav_trail == 'assignment_nav')? 'class="current"' : '';
         $staff_nav = ($nav_trail == 'staff_nav')? 'class="current"' : '';
-        $calendar_nav = ($nav_trail == 'calendar_nav')? 'class="current"' : '';
+        $event_nav = ($nav_trail == 'calendar_nav')? 'class="current"' : '';
         $shop_nav = ($nav_trail == 'shop_nav')? 'class="current"' : '';
         $club_nav = ($nav_trail == 'club_nav')? 'class="current"' : '';
         $sport_nav = ($nav_trail == 'sport_nav')? 'class="current"' : '';
@@ -131,7 +131,13 @@ class Menu {
             <li '.$class_nav.'>'. HTML::link('#','<span>Classes</span>',array('class'=>'elements')) . '</li>
             <li '.$assignment_nav.'>'. HTML::link('#','<span>Assignments</span>',array('class'=>'tables')) . '</li>
             <li '.$staff_nav.'>'. HTML::link('#','<span>Staff</span>',array('class'=>'media')) . '</li>
-            <li '.$calendar_nav.'>'. HTML::link('#','<span>Calendar/Reminders</span>',array('class'=>'calendar')) . '</li>
+            <li '.$event_nav.'>
+            <a class="calendar" href="javascript:void(0)" title="Events"><span>Events</span></a>
+                <ul class="dropdown">
+                    <li>' . HTML::link_to_route('calendars','<span>Calendar</span>','',array('class'=>'calendar smronju','title'=>'Calendar'))  .'</li>
+                    <li>' . HTML::link_to_route('reminders','<span>Reminder</span>','',array('class'=>'calendar smronju','title'=>'Reminder'))  .'</li>
+                </ul>'
+            . '</li>
             <li '.$shop_nav.'>'. HTML::link('#','<span>Shop Inventory</span>',array('class'=>'barcode')) . '</li>
             <li '.$club_nav.'>'. HTML::link('#','<span>Clubs</span>',array('class'=>'chat')) . '</li>
             <li '.$sport_nav.'>'. HTML::link('#','<span>Sports</span>',array('class'=>'charts')) . '</li>
