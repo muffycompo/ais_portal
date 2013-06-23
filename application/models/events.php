@@ -13,15 +13,16 @@ class Events extends Basemodel {
     private static $new_event_rules = array(
         'event_title' => 'required|min:3|max:160',
         'event_url' => 'url',
-        'start_date' => 'required|date_format:yyyy-mm-dd hh\\:ii\\:ss',
+        'start_date' => 'required|date_format:Y-m-d H\\:i\\:s',
         'event_for_group_id' => 'required',
     );
+
     //  Validation
     public static function new_event_validation($input){
         $validation_rules = static::$new_event_rules;
         // If Event is All Day
         if(!isset($input['all_day']) || $input['all_day'] != 1){
-            $validation_rules['end_date'] = 'required|date_format:yyyy-mm-dd hh\\:ii\\:ss';
+            $validation_rules['end_date'] = 'required|date_format:Y-m-d H\\:i\\:s';
         }
         // If Event is for students
         if($input['event_for_group_id'] == 1){
