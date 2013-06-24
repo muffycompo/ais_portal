@@ -115,6 +115,10 @@ class Ais {
 
    public static function event_group_dropdown($name, $selected = null, $attributes = array()){
         $opts = DB::table('event_group')->get();
+        $role_id = Session::get('role_id');
+       if($role_id == 2){
+           return Form::select($name, array('1'=>'Students'), $selected, $attributes);
+       }
         foreach($opts as $opt){
             $options[$opt->id] = $opt->event_group_name;
         }
@@ -247,10 +251,15 @@ class Ais {
         return (!empty($term))? $term->id : 1;
     }
 
-    public static function is_class_teacher($user_id, $class_id){
-        $count = DB::table('teachers_and_classes')->where('user_id','=',$user_id)
-            ->where('class_id','=',$class_id)
-            ->count();
+    public static function is_class_teacher($user_id, $class_id = ''){
+       if(empty($class_id)){
+            $count = DB::table('teachers_and_classes')->where('user_id','=',$user_id)->count();
+        } else {
+            $count = DB::table('teachers_and_classes')->where('user_id','=',$user_id)
+                        ->where('class_id','=',$class_id)
+                        ->count();
+        }
+
         if($count == 1){ return true;} else { return false;}
     }
 
@@ -284,6 +293,12 @@ class Ais {
         }
         $user = DB::table('biodata')->where('user_id','=',$user_id)->first(array('current_class_id'));
         if($user) {return $user->current_class_id;} else { return '';}
+
+    }
+
+    public static function resolve_classid_from_teacher_userid($user_id){
+        $user = DB::table('teachers_and_classes')->where('user_id','=',$user_id)->first(array('class_id'));
+        if($user) {return $user->class_id;} else { return '';}
 
     }
 

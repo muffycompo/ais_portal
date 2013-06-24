@@ -143,6 +143,10 @@ $(document).ready(function(){
     var allDayCheck = $('#ais_allday_check');
     var studentCheck = $("select#event_for_group_id");
     var studentClass = $("#ais_student_class");
+
+    if(allDay.is(':checked')){allDayCheck.hide();}
+    if(studentCheck.val() == 1){studentClass.show();}
+
     allDay.on('click',function(){
         if(allDay.is(':checked')){
             allDayCheck.hide();

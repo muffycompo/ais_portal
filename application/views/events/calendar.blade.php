@@ -32,11 +32,14 @@
                                 {{ HTML::image('webassets/img/icons/calendar.png','',array('class'=>'utopia-widget-icon')) }}
                                 <span>Calendar</span>
                             </div>
-
+                            @include('template.partials.notification')
                             <div class="utopia-widget-content">
-                                {{ HTML::link_to_route('new_event','New Event','',array('class'=>'btn btn-info')) }} {{ HTML::link('#','Event List',array('class'=>'btn btn-warning')) }}
+                            <?php $role_id = Session::get('role_id'); ?>
+                                @if(($role_id == 2 && Ais::is_class_teacher(Session::get('user_id'))) || $role_id >= 5)
+                                    {{ HTML::link_to_route('new_event','New Event','',array('class'=>'btn btn-info')) }} {{ HTML::link('#','Event List',array('class'=>'btn btn-warning')) }}
+                                @endif
                                 <div id="ais_calendar" class="utopia-calendar-day">
-                                <!-- TODO: This will eventually be replaced by the jQuery Calendar Plugin  -->
+                                <!-- TODO: This will eventually be populated by the jQuery Calendar Plugin  -->
                                 </div>
                             </div>
                         </section>
@@ -62,8 +65,7 @@ $(document).ready(function(){
 
     $('#ais_calendar').fullCalendar({
         header:{
-            //left:'prev,next today',
-            left:'',
+            left:'prev,next today',
             center:'title',
             right: 'month,agendaWeek,agendaDay'
         },

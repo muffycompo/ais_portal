@@ -46,6 +46,7 @@ class Menu {
         $medical_record_nav = ($nav_trail == 'medical_record_nav')? 'class="current"' : '';
         $upload_nav = ($nav_trail == 'upload_nav')? 'class="current"' : '';
         $attestation_nav = ($nav_trail == 'attestation_nav')? 'class="current"' : '';
+        $event_nav = ($nav_trail == 'event_nav')? 'class="current"' : '';
 
         $reg_status = Ais::registration_status();
         $display_menu = '';
@@ -84,6 +85,13 @@ class Menu {
                 </ul>'
             .'</li>
             <li '.$payment_nav.'>'. HTML::link_to_route('student_fee_payments','<span>Payments</span>','',array('class'=>'form')) . '</li>
+            <li '.$event_nav.'>
+            <a class="calendar" href="javascript:void(0)" title="Events"><span>Events</span></a>
+                <ul class="dropdown">
+                    <li>' . HTML::link_to_route('calendars','<span>Calendar</span>','',array('class'=>'calendar smronju','title'=>'Calendar'))  .'</li>
+                    <li>' . HTML::link_to_route('reminders','<span>Reminder</span>','',array('class'=>'calendar smronju','title'=>'Reminder'))  .'</li>
+                </ul>'
+            . '</li>
             <li '.$assignment_nav.'>'. HTML::link('#','<span>Assignments</span>',array('class'=>'tables')) . '</li>
             <li '.$club_nav.'>'. HTML::link('#','<span>Clubs</span>',array('class'=>'chat')) . '</li>
             <li '.$sport_nav.'>'. HTML::link('#','<span>Sports</span>',array('class'=>'charts')) . '</li>
@@ -167,6 +175,7 @@ class Menu {
     protected static function teacher_role($nav_trail){
        $result_nav = ($nav_trail == 'result_nav')? 'class="current"' : '';
        $class_nav = ($nav_trail == 'class_nav')? 'class="current"' : '';
+       $event_nav = ($nav_trail == 'event_nav')? 'class="current"' : '';
         return '
             <li '.$result_nav.'>
                 <a class="simple" href="javascript:void(0)" title="Results"><span>Results</span></a>
@@ -174,7 +183,14 @@ class Menu {
                     <li>' . HTML::link_to_route('assessments','<span>Assessments</span>','',array('class'=>'simple smronju','title'=>'Assessments'))  .'</li>
                 </ul>'
             .'</li>
-            <li '.$class_nav.'>'. HTML::link('#','<span>Classes</span>',array('class'=>'elements')) . '</li>';
+            <li '.$class_nav.'>'. HTML::link('#','<span>Classes</span>',array('class'=>'elements')) . '</li>
+            <li '.$event_nav.'>
+            <a class="calendar" href="javascript:void(0)" title="Events"><span>Events</span></a>
+                <ul class="dropdown">
+                    <li>' . HTML::link_to_route('calendars','<span>Calendar</span>','',array('class'=>'calendar smronju','title'=>'Calendar'))  .'</li>
+                    <li>' . HTML::link_to_route('reminders','<span>Reminder</span>','',array('class'=>'calendar smronju','title'=>'Reminder'))  .'</li>
+                </ul>'
+            . '</li>';
     }
 
     protected static function ecommerce_role($nav_trail){
@@ -189,6 +205,7 @@ class Menu {
         $payment_nav = ($nav_trail == 'payment_nav')? 'class="current"' : '';
         $staff_nav = ($nav_trail == 'staff_nav')? 'class="current"' : '';
         $report_nav = ($nav_trail == 'report_nav')? 'class="current"' : '';
+        $event_nav = ($nav_trail == 'event_nav')? 'class="current"' : '';
         return '
             <li '.$payment_nav.'>
                 <a class="form" href="javascript:void(0)" title="Payments"><span>Payments</span></a>
@@ -198,6 +215,13 @@ class Menu {
                 </ul>'
             .'</li>
             <li '.$staff_nav.'>'. HTML::link('#','<span>Staff</span>',array('class'=>'media')) . '</li>
+            <li '.$event_nav.'>
+            <a class="calendar" href="javascript:void(0)" title="Events"><span>Events</span></a>
+                <ul class="dropdown">
+                    <li>' . HTML::link_to_route('calendars','<span>Calendar</span>','',array('class'=>'calendar smronju','title'=>'Calendar'))  .'</li>
+                    <li>' . HTML::link_to_route('reminders','<span>Reminder</span>','',array('class'=>'calendar smronju','title'=>'Reminder'))  .'</li>
+                </ul>'
+            . '</li>
             <li '.$report_nav.'>'. HTML::link('#','<span>Reports</span>',array('class'=>'list')) . '</li>';
     }
 

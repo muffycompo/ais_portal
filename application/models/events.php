@@ -21,7 +21,7 @@ class Events extends Basemodel {
     public static function new_event_validation($input){
         $validation_rules = static::$new_event_rules;
         // If Event is All Day
-        if(!isset($input['all_day']) || $input['all_day'] != 1){
+        if(!isset($input['all_day'])){
             $validation_rules['end_date'] = 'required|date_format:Y-m-d H\\:i\\:s';
         }
         // If Event is for students
@@ -39,9 +39,10 @@ class Events extends Basemodel {
             'event_for_group_id' => $data['event_for_group_id'],
         );
         if($data['event_for_group_id'] == 1){$event_data['student_class_id'] = $data['student_class_id'];}
-        if(!isset($data['all_day']) || $data['all_day'] != 1){
-            $event_data['all_day'] = $data['all_day'];
+        if(!isset($data['all_day'])){
             $event_data['end_date'] = $data['end_date'];
+        } else {
+            $event_data['all_day'] = $data['all_day'];
         }
         $event = DB::table('events')->insert($event_data);
         if($event){
@@ -77,7 +78,7 @@ class Events extends Basemodel {
 
     protected static function students_calendar_events(){
         $user_id = Session::get('user_id');
-        $class_id = Ais::resolve_classid_from_userid($user_id);
+        $class_id = (Ais::resolve_classid_from_userid($user_id) == '')? Ais::resolve_classid_from_teacher_userid($user_id) : Ais::resolve_classid_from_userid($user_id);
         $events = DB::table('events')->where('event_for_group_id','=',1)->where('student_class_id','=',$class_id)->get();
         if($events){
             return $events;
@@ -107,5 +108,16 @@ class Events extends Basemodel {
         }
 
     }
+
+    // MySQL Event Scheduler: ais_event_cleaner
+    // DELETE FROM events WHERE CURDATE() > DATE(end_date) OR (CURDATE() > DATE(start_date) AND all_day = 1)
+    // Every 3 Hours
+    // =================
+//    CREATE EVENT `ais_event_cleaner`
+//    ON SCHEDULE EVERY 3 HOUR STARTS '2013-06-24 01:01:52'
+//    ON COMPLETION NOT PRESERVE
+//    ENABLE
+//    DO
+//    DELETE FROM events WHERE CURDATE() > DATE(end_date) OR (CURDATE() > DATE(start_date) AND all_day = 1);
 
 }
