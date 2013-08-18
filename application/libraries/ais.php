@@ -49,12 +49,27 @@ class Ais {
         return Form::select($name, $options, $selected, $attributes);
     }
 
-   public static function class_dropdown($name, $selected = null, $attributes = array()){
-        $opts = DB::table('classes')->get();
-        foreach($opts as $opt){
-            $options[$opt->id] = $opt->class_name;
-        }
-        return Form::select($name, $options, $selected, $attributes);
+   public static function class_dropdown($name, $selected = null, $attributes = array(), $check_role = false){
+       $options = array();
+       if($check_role && (Session::get('role_id') == 2)){
+          $user_id = Session::get('user_id');
+          $opt = DB::table('teachers_and_classes')->where('user_id','=',$user_id)->first(array('class_id'));
+          if(is_null($opt)){
+              return Form::select($name, $options, $selected, $attributes);
+          } else {
+              $options[$opt->class_id] = Expand::classes($opt->class_id);
+              return Form::select($name, $options, $selected, $attributes);
+          }
+
+
+       } else {
+           $opts = DB::table('classes')->get();
+           foreach($opts as $opt){
+               $options[$opt->id] = $opt->class_name;
+           }
+           return Form::select($name, $options, $selected, $attributes);
+       }
+
     }
 
    public static function application_type_dropdown($name, $selected = null, $attributes = array()){
@@ -97,12 +112,27 @@ class Ais {
         return Form::select($name, $options, $selected, $attributes);
     }
 
-   public static function subject_dropdown($name, $selected = null, $attributes = array()){
-        $opts = DB::table('subjects')->get();
-        foreach($opts as $opt){
-            $options[$opt->id] = $opt->subject_name;
-        }
-        return Form::select($name, $options, $selected, $attributes);
+   public static function subject_dropdown($name, $selected = null, $attributes = array(), $check_role = false){
+       $options = array();
+      if($check_role && (Session::get('role_id') == 2)){
+         $user_id = Session::get('user_id');
+         $opts = DB::table('teachers_and_subjects')->where('user_id','=',$user_id)->get(array('subject_id'));
+         if(is_null($opts)){
+             return Form::select($name, $options, $selected, $attributes);
+         } else {
+             foreach($opts as $opt){
+                 $options[$opt->subject_id] = Expand::subject($opt->subject_id);
+             }
+             return Form::select($name, $options, $selected, $attributes);
+         }
+      } else {
+          $opts = DB::table('subjects')->get();
+          foreach($opts as $opt){
+              $options[$opt->id] = $opt->subject_name;
+          }
+          return Form::select($name, $options, $selected, $attributes);
+      }
+
     }
 
    public static function religion_dropdown($name, $selected = null, $attributes = array()){
@@ -129,6 +159,23 @@ class Ais {
         $options = array(
             '1' => 'Termly',
             '2' => 'Annually'
+        );
+        return Form::select($name, $options, $selected, $attributes);
+    }
+
+   public static function assignment_note_dropdown($name, $selected = null, $attributes = array()){
+        $options = array(
+            '1' => 'Note',
+            '2' => 'Assignment'
+        );
+        return Form::select($name, $options, $selected, $attributes);
+    }
+
+   public static function attendance_type_dropdown($name, $selected = null, $attributes = array()){
+        $options = array(
+            '1' => 'Present',
+            '2' => 'Absent',
+            '3' => 'Absent with Reason'
         );
         return Form::select($name, $options, $selected, $attributes);
     }
@@ -186,6 +233,12 @@ class Ais {
         $d = explode('-',$date);
 
         return $d[2] .'/' . $d[1] . '/' . $d[0];
+    }
+
+    public static function reverse_db_datetime_to_date($datetime, $time = false){
+        $d = strtotime($datetime);
+        if($time){ return date('d/m/Y H:i:s', $d); }
+        return date('d/m/Y', $d);
     }
 
     public static function reverse_slash_date($date){
@@ -268,6 +321,84 @@ class Ais {
         if($count == 1){ return true;} else { return false;}
     }
 
+    public static function has_submitted_assignment($assignment_id){
+        $user_id = Session::get('user_id');
+        $count = DB::table('assignment_submissions')->where('user_id','=',$user_id)->where('assignment_id','=',$assignment_id)->count();
+        if($count == 1){ return true;} else { return false;}
+    }
+
+    public static function payment_balance(){
+        if(Session::get('role_id') == 1){
+            $user_id = Session::get('user_id');
+            $class_id = static::resolve_classid_from_userid($user_id);
+            $term_id = static::active_term();
+            static::student_status($user_id); // ensure students are either flagged as current or new
+            $status = static::check_student_status($user_id);
+            $fee_schedule = static::fee_schedule_per_class($class_id, $term_id, $status);
+            $payment = static::has_payment($user_id,$class_id, $term_id);
+            $balance = $fee_schedule - $payment;
+
+            if($balance > 0){
+                $message = '
+                <div class="alert alert-error">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <h4 class="alert-heading">Payment Balance!</h4>
+                    You currently have an outstanding balance of <strong>N' . number_format($balance) .'</strong> to pay. You will only be allowed to sit for Exams when we receive your complete payment(s)!
+                </div>';
+                return $message; // balance remaining
+            } else {
+                $message = '
+                <div class="alert alert-warning">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <h4 class="alert-heading">Over Payment!</h4>
+                    You have overpaid you fees by <strong>N'. number_format(abs($balance)) .'</strong>
+                </div>';
+                return $message; // overpayment
+            }
+
+        } else {
+            return false;
+        }
+    }
+
+    public static function student_status($user_id){
+        $admission_no = static::resolve_admission_no_from_userid($user_id);
+        $count = DB::table('results')->where('admission_no','=',$admission_no)
+                ->where('published','=',2)
+                ->count();
+        if($count > 0){
+            // set status to current student
+            $status = DB::table('biodata')->where('user_id','=',$user_id)->update(array('student_status'=> 2));
+        } else {
+            // set status to new student
+            $status = DB::table('biodata')->where('user_id','=',$user_id)->update(array('student_status'=> 1));
+        }
+        if($status){ return true; } else { return false; }
+    }
+
+    public static function check_student_status($user_id){
+        $check = DB::table('biodata')->where('user_id','=',$user_id)->first(array('student_status'));
+        if($check){ return $check->student_status ;} else { return ''; }
+    }
+
+    public static function fee_schedule_per_class($class_id, $term_id, $student_status = ''){
+        $status = empty($student_status)? 2 : $student_status;
+        $schedule_amount = DB::table('schedule_of_fees')->where('class_id','=',$class_id)
+                ->where('term_id','=',$term_id)
+                ->where('status','=',$status) // Fix this when student flag is created (1 - new student, 2 - current student)
+                ->sum('amount');
+        return $schedule_amount;
+    }
+
+    public static function has_payment($user_id, $class_id, $term_id){
+        $admission_no = static::resolve_admission_no_from_userid($user_id);
+        $payment = DB::table('payments')->where('admission_no','=',$admission_no)
+                ->where('class_id','=',$class_id)
+                ->where('term_id','=',$term_id)
+                ->sum('paid_amount');
+        if(is_null($payment)){ return 0; } else { return $payment; }
+    }
+
     public static function resolve_userid_from_admission_no($admission_no){
         $user = DB::table('official_use')->where('admission_no','=',$admission_no)->first(array('user_id'));
         if($user) {return $user->user_id;} else { return '';}
@@ -312,13 +443,11 @@ class Ais {
         return $class;
     }
 
-    public static function student_total_score($subject_id,$class_id,$term_id,$session_id , $user_id)
-    {
+    public static function student_total_score($subject_id,$class_id,$term_id,$session_id , $user_id){
         return Report::subject_total_score($subject_id,$class_id,$term_id, $session_id, $user_id);
     }
 
-    public static function total_score_per_class($class_id, $term_id, $session_id)
-    {
+    public static function total_score_per_class($class_id, $term_id, $session_id){
         return Report::student_position_per_class($class_id, $term_id, $session_id);
     }
 
@@ -326,15 +455,13 @@ class Ais {
         return Report::average_promotion($average, $user_id, $class_id, $term_id, $session_id);
     }
 
-    public static function resolve_subject_id($subject_name)
-    {
+    public static function resolve_subject_id($subject_name){
         $subject_name = Str::title($subject_name);
         $subject = DB::table('subjects')->where('subject_name','=',$subject_name)->first('id');
         if($subject) { return $subject->id; } else { return 1; }
     }
 
-    public static function check_gsm_number($number)
-    {
+    public static function check_gsm_number($number){
 
         // Validate GSM numbers
         $pattern = '/^0[78][01]\d{8}$/';
@@ -426,6 +553,30 @@ class Ais {
         }
 
         return $res;
+    }
+
+    public static function days_left($date, $tick = false){
+        date_default_timezone_set('Africa/Lagos');
+        $date1 = strtotime($date);
+        $date2 = time();
+        $date_diff = ($date1 - $date2);
+        $days = ($date_diff / (60*60*24))%365; // Number of days
+        $hours = ($date_diff/(60*60))%24; // Number of hours
+        $minutes = ($date_diff/60)%60; // Number of minutes
+        if($tick){
+            if($days < 0 || $hours < 0 || $minutes < 0){
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if($days < 0 || $hours < 0 || $minutes < 0){
+                return abs($days) . ' days '.abs($hours).' hours '.abs($minutes).' minutes passed';
+            } else {
+                return $days . ' days '.$hours.' hours '.$minutes.' minutes left';
+            }
+        }
+
     }
 
     public static function format_to_currency($number, $kobo = 1) { // kobo: 0=never, 1=if needed, 2=always

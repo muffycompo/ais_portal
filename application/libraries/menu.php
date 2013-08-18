@@ -89,10 +89,9 @@ class Menu {
             <a class="calendar" href="javascript:void(0)" title="Events"><span>Events</span></a>
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('calendars','<span>Calendar</span>','',array('class'=>'calendar smronju','title'=>'Calendar'))  .'</li>
-                    <li>' . HTML::link_to_route('reminders','<span>Reminder</span>','',array('class'=>'calendar smronju','title'=>'Reminder'))  .'</li>
                 </ul>'
             . '</li>
-            <li '.$assignment_nav.'>'. HTML::link('#','<span>Assignments</span>',array('class'=>'tables')) . '</li>
+            <li '.$assignment_nav.'>' . HTML::link_to_route('assignments','<span>Assignments</span>','',array('class'=>'tables'))  .'</li>
             <li '.$club_nav.'>'. HTML::link('#','<span>Clubs</span>',array('class'=>'chat')) . '</li>
             <li '.$sport_nav.'>'. HTML::link('#','<span>Sports</span>',array('class'=>'charts')) . '</li>
             <li '.$shop_nav.'>'. HTML::link('#','<span>Shopping</span>',array('class'=>'wizard-form')) . '</li>';
@@ -136,6 +135,15 @@ class Menu {
                     <li>' . HTML::link_to_route('admissions_list','<span>Admissions List</span>','',array('class'=>'editor smronju','title'=>'Admissions List'))  .'</li>
                 </ul>'
             .'</li>
+            <li '.$setting_nav.'>
+            <a class="grid" href="javascript:void(0)" title="Portal Settings"><span>Portal Settings</span></a>
+            <ul class="dropdown">
+                 <li>' . HTML::link_to_route('teachers','<span>Teachers</span>','',array('class'=>'grid smronju','title'=>'Teachers'))  .'</li>
+                <li>' . HTML::link_to_route('ais_subjects','<span>Subjects</span>','',array('class'=>'grid smronju','title'=>'Subjects'))  .'</li>
+                <li>' . HTML::link_to_route('ais_classes','<span>Classes</span>','',array('class'=>'grid smronju','title'=>'Classes'))  .'</li>
+                <li>' . HTML::link_to_route('questions','<span>Questions</span>','',array('class'=>'grid smronju','title'=>'Questions'))  .'</li>
+            </ul>'
+        .'</li>
             <li '.$class_nav.'>'. HTML::link('#','<span>Classes</span>',array('class'=>'elements')) . '</li>
             <li '.$assignment_nav.'>'. HTML::link('#','<span>Assignments</span>',array('class'=>'tables')) . '</li>
             <li '.$staff_nav.'>'. HTML::link('#','<span>Staff</span>',array('class'=>'media')) . '</li>
@@ -143,7 +151,7 @@ class Menu {
             <a class="calendar" href="javascript:void(0)" title="Events"><span>Events</span></a>
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('calendars','<span>Calendar</span>','',array('class'=>'calendar smronju','title'=>'Calendar'))  .'</li>
-                    <li>' . HTML::link_to_route('reminders','<span>Reminder</span>','',array('class'=>'calendar smronju','title'=>'Reminder'))  .'</li>
+                    <li>' . HTML::link_to_route('notifications','<span>Notification</span>','',array('class'=>'calendar smronju','title'=>'Reminder'))  .'</li>
                 </ul>'
             . '</li>
             <li '.$shop_nav.'>'. HTML::link('#','<span>Shop Inventory</span>',array('class'=>'barcode')) . '</li>
@@ -154,14 +162,6 @@ class Menu {
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('users','<span>Admin</span>','',array('class'=>'users smronju','title'=>'Admin'))  .'</li>
                     <li>' . HTML::link_to_route('students','<span>Students</span>','',array('class'=>'users smronju','title'=>'Students List'))  .'</li>
-                </ul>'
-            .'</li>
-            <li '.$setting_nav.'>
-                <a class="grid" href="javascript:void(0)" title="Portal Settings"><span>Portal Settings</span></a>
-                <ul class="dropdown">
-                     <li>' . HTML::link_to_route('teachers','<span>Teachers</span>','',array('class'=>'grid smronju','title'=>'Teachers'))  .'</li>
-                    <li>' . HTML::link_to_route('ais_subjects','<span>Subjects</span>','',array('class'=>'grid smronju','title'=>'Subjects'))  .'</li>
-                    <li>' . HTML::link_to_route('ais_classes','<span>Classes</span>','',array('class'=>'grid smronju','title'=>'Classes'))  .'</li>
                 </ul>'
             .'</li>
             <li '.$report_nav.'>
@@ -181,6 +181,8 @@ class Menu {
                 <a class="simple" href="javascript:void(0)" title="Results"><span>Results</span></a>
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('assessments','<span>Assessments</span>','',array('class'=>'simple smronju','title'=>'Assessments'))  .'</li>
+                    <li>' . HTML::link_to_route('assignments','<span>Assignments</span>','',array('class'=>'simple smronju','title'=>'Assignments'))  .'</li>
+                    <li>' . HTML::link_to_route('questions','<span>Questions</span>','',array('class'=>'simple smronju','title'=>'Questions'))  .'</li>
                 </ul>'
             .'</li>
             <li '.$class_nav.'>'. HTML::link('#','<span>Classes</span>',array('class'=>'elements')) . '</li>
@@ -188,7 +190,7 @@ class Menu {
             <a class="calendar" href="javascript:void(0)" title="Events"><span>Events</span></a>
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('calendars','<span>Calendar</span>','',array('class'=>'calendar smronju','title'=>'Calendar'))  .'</li>
-                    <li>' . HTML::link_to_route('reminders','<span>Reminder</span>','',array('class'=>'calendar smronju','title'=>'Reminder'))  .'</li>
+                    <li>' . HTML::link_to_route('notifications','<span>Notification</span>','',array('class'=>'calendar smronju','title'=>'Reminder'))  .'</li>
                 </ul>'
             . '</li>';
     }
@@ -219,7 +221,6 @@ class Menu {
             <a class="calendar" href="javascript:void(0)" title="Events"><span>Events</span></a>
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('calendars','<span>Calendar</span>','',array('class'=>'calendar smronju','title'=>'Calendar'))  .'</li>
-                    <li>' . HTML::link_to_route('reminders','<span>Reminder</span>','',array('class'=>'calendar smronju','title'=>'Reminder'))  .'</li>
                 </ul>'
             . '</li>
             <li '.$report_nav.'>'. HTML::link('#','<span>Reports</span>',array('class'=>'list')) . '</li>';

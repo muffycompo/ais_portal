@@ -20,6 +20,8 @@
                             <!--<span class="divider">/</span> -->
                         </li>
                     </ul>
+
+                    {{ Ais::payment_balance() }}
                 </div>
             </div>
 

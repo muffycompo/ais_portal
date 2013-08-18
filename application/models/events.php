@@ -32,11 +32,13 @@ class Events extends Basemodel {
     }
 
     public static function new_event($data){
+        $user_id = Session::get('user_id');
         $event_data = array(
             'event_title' => Str::title($data['event_title']),
             'event_url' => Str::lower($data['event_url']),
             'start_date' => $data['start_date'],
             'event_for_group_id' => $data['event_for_group_id'],
+            'user_id' => $user_id,
         );
         if($data['event_for_group_id'] == 1){$event_data['student_class_id'] = $data['student_class_id'];}
         if(!isset($data['all_day'])){
@@ -52,15 +54,51 @@ class Events extends Basemodel {
         }
     }
 
-    public static function calendar_events(){
+    public static function edit_event($data){
+        $user_id = Session::get('user_id');
+        $event_data = array(
+            'event_title' => Str::title($data['event_title']),
+            'event_url' => Str::lower($data['event_url']),
+            'start_date' => $data['start_date'],
+            'event_for_group_id' => $data['event_for_group_id'],
+            'user_id' => $user_id,
+        );
+        if($data['event_for_group_id'] == 1){$event_data['student_class_id'] = $data['student_class_id'];}
+        if(!isset($data['all_day'])){
+            $event_data['end_date'] = $data['end_date'];
+        } else {
+            $event_data['all_day'] = $data['all_day'];
+        }
+        $event = DB::table('events')->where('id','=', $data['event_id'])->update($event_data);
+        if($event){
+            return $event;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public static function show_event($event_id){
+        $event = DB::table('events')->where('id','=',$event_id)->first();
+        if($event){ return $event; } else { return null; }
+    }
+
+    public static function delete_event($event_id){
+        $delete = DB::table('events')->delete($event_id);
+        if($delete){ return true; } else { return false; }
+    }
+
+    public static function calendar_events($list = false){
         $all_events = static::all_calendar_events();
         $student_events = static::students_calendar_events();
         if(!is_null($all_events) && !is_null($student_events)){
             $events = array_merge($all_events,$student_events);
+            if($list){ return $events; }
             return static::format_for_calendar($events);
         } elseif(!is_null($all_events)){
+            if($list){ return $all_events; }
             return static::format_for_calendar($all_events);
         } elseif(!is_null($student_events)){
+            if($list){ return $student_events; }
             return static::format_for_calendar($student_events);
         } else {
             return array();
@@ -68,7 +106,12 @@ class Events extends Basemodel {
     }
 
     protected static function all_calendar_events(){
-        $events = DB::table('events')->where('event_for_group_id','!=',1)->get();
+        $role_id = Session::get('role_id');
+        if($role_id == 1 || $role_id == 2){
+            $events = DB::table('events')->where('event_for_group_id','!=',1)->get();
+        } else {
+            $events = DB::table('events')->get();
+        }
         if($events){
             return $events;
         } else {

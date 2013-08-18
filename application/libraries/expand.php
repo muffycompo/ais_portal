@@ -74,6 +74,11 @@ class Expand {
         return $opts->religion_name;
     }
 
+    public static function event_group($id){
+        $opts = DB::table('event_group')->where('id','=',$id)->first(array('event_group_name'));
+        return $opts->event_group_name;
+    }
+
     public static function term_name($term_id){
         switch ($term_id) {
             case 1:
@@ -103,6 +108,42 @@ class Expand {
                 return '';
                 break;
         }
+    }
+
+    public static function assignment_note($id){
+        switch ($id) {
+            case 1:
+                return 'Note';
+                break;
+           case 2:
+                return 'Assignment';
+                break;
+            default:
+                return '';
+                break;
+        }
+    }
+
+    public static function attendance_type($id){
+        switch ($id) {
+            case 1:
+                return 'Present';
+                break;
+           case 2:
+                return 'Absent';
+                break;
+           case 3:
+                return 'Absent with Reason';
+                break;
+            default:
+                return '';
+                break;
+        }
+    }
+
+    public static function assignment_title($assignment_id){
+        $title = DB::table('assignments_and_notes')->where('id','=',$assignment_id)->first(array('title'));
+        if(!is_null($title)){ return $title->title; } else { return ''; }
     }
 
     public static function ca_exam_score($id, $subject_id, $class_id, $term_id, $type){

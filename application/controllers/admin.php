@@ -27,6 +27,7 @@ class Admin_Controller extends Base_Controller {
 
 	public function get_official_use($id){
         $v_data['user'] = User::show_user((int)$id);
+        $v_data['user_id'] = (int)$id;
         $v_data['nav'] = 'admission_nav';
 		return View::make('admin.official_use',$v_data);
 	}

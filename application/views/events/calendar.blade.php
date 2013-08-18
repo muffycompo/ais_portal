@@ -36,7 +36,7 @@
                             <div class="utopia-widget-content">
                             <?php $role_id = Session::get('role_id'); ?>
                                 @if(($role_id == 2 && Ais::is_class_teacher(Session::get('user_id'))) || $role_id >= 5)
-                                    {{ HTML::link_to_route('new_event','New Event','',array('class'=>'btn btn-info')) }} {{ HTML::link('#','Event List',array('class'=>'btn btn-warning')) }}
+                                    {{ HTML::link_to_route('new_event','New Event','',array('class'=>'btn btn-info')) }} {{ HTML::link_to_route('event_list','Event List','',array('class'=>'btn btn-warning')) }}
                                 @endif
                                 <div id="ais_calendar" class="utopia-calendar-day">
                                 <!-- TODO: This will eventually be populated by the jQuery Calendar Plugin  -->

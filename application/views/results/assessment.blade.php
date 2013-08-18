@@ -41,6 +41,7 @@
                                             </div>
                                             @include('template.partials.notification')
                                             <div class="utopia-widget-content">
+                                            <p>{{ HTML::link_to_route('attendance_list','Attendance List',array($subject_id, $class_id, $term_id),array('class'=>'btn btn-info')) }}</p>
                                                 <table class="table datatable-nosort table-striped table-bordered">
                                                     <thead>
                                                     <?php $sn = 1; ?>
@@ -80,6 +81,7 @@
                                                                       {{ HTML::decode(HTML::link('results/publish_result/' . $student['student_id'] .'/' . $subject_id. '/' .$class_id . '/' . $term_id, HTML::image('webassets/img/icons/redo.png','Publish',array('title'=>'Publish')),array('class'=>'edit'))) }}
                                                                     @endif
                                                                 @endif
+                                                                {{ HTML::decode(HTML::link_to_route('attendance', HTML::image('webassets/img/icons/notepad.png','Mark Attendance',array('title'=>'Mark Attendance')),array($student['student_id'], $subject_id, $class_id, $term_id),array('class'=>'edit'))) }}
                                                             </td>
                                                         </tr>
                                                       @endforeach

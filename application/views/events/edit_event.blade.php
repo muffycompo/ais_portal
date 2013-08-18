@@ -16,7 +16,7 @@
                     <ul class="breadcrumb">
                         Navigator <span class="divider">/</span>
                         <li>
-                            {{ HTML::image('webassets/img/icons/monitor.png') .'  '. HTML::link_to_route('user_dashboard','Dashboard') }} <span class="divider">/</span> New Event
+                            {{ HTML::image('webassets/img/icons/monitor.png') .'  '. HTML::link_to_route('user_dashboard','Dashboard') }} <span class="divider">/</span> Edit Event
                             <!--<span class="divider">/</span> -->
                         </li>
                     </ul>
@@ -36,19 +36,19 @@
                                         <section class="utopia-widget">
                                             <div class="utopia-widget-title">
                                                 {{ HTML::image('webassets/img/icons/paragraph_justify.png','',array('class'=>'utopia-widget-icon')) }}
-                                                <span>New Event</span>
+                                                <span>Editing Event</span>
                                             </div>
                                             @include('template.partials.notification')
                                             <div class="utopia-widget-content">
                                                 <div class="row-fluid">
                                                     <div class="span9 utopia-form-freeSpace">
-                                                        {{ Form::open('events/new_event','POST',array('class'=>'form-horizontal')) }}
+                                                        {{ Form::open('events/edit_event','POST',array('class'=>'form-horizontal')) }}
                                                             <fieldset>
 
                                                                 {{ $errors->has('event_title')? '<div class="control-group error">' : '<div class="control-group">' }}
                                                                     {{ Form::label('event_title','Event Title:',array('class'=>'control-label')) }}
                                                                     <div class="controls">
-                                                                        {{ Form::input('text','event_title',Input::old('event_title'),array('id'=>'event_title','class'=>'span6 input-fluid')) }}
+                                                                        {{ Form::input('text','event_title',isset($event->event_title)? $event->event_title : Input::old('event_title'),array('id'=>'event_title','class'=>'span6 input-fluid')) }}
                                                                         {{ $errors->first('event_title','<span class="help-inline">:message</span>') }}
                                                                     </div>
                                                                 </div>
@@ -56,7 +56,7 @@
                                                                 {{ $errors->has('event_url')? '<div class="control-group error">' : '<div class="control-group">' }}
                                                                     {{ Form::label('event_url','Event URL:',array('class'=>'control-label')) }}
                                                                     <div class="controls">
-                                                                        {{ Form::input('text','event_url',Input::old('event_url'),array('id'=>'event_url','class'=>'span6 input-fluid')) }}
+                                                                        {{ Form::input('text','event_url',isset($event->event_url)? $event->event_url : Input::old('event_url'),array('id'=>'event_url','class'=>'span6 input-fluid')) }}
                                                                         {{ $errors->first('event_url','<span class="help-inline">:message</span>') }}
                                                                     </div>
                                                                 </div>
@@ -65,7 +65,7 @@
                                                                     {{ Form::label('all_day','',array('class'=>'control-label')) }}
                                                                     <div class="controls">
                                                                         <label class="checkbox">
-                                                                         {{ Form::checkbox('all_day',1,'',array('id'=>'ais_allday')) }} All Day Event
+                                                                         {{ Form::checkbox('all_day',1,(isset($event->all_day) && $event->all_day == 1)? true : false,array('id'=>'ais_allday')) }} All Day Event
                                                                         </label>
                                                                         {{ $errors->first('all_day','<span class="help-inline">:message</span>') }}
                                                                     </div>
@@ -74,7 +74,7 @@
                                                                 {{ $errors->has('start_date')? '<div class="control-group error">' : '<div class="control-group">' }}
                                                                     {{ Form::label('start_date','Start Date:',array('class'=>'control-label')) }}
                                                                     <div class="controls">
-                                                                        {{ Form::input('text','start_date',Input::old('start_date'),array('id'=>'start_date','class'=>'span6 input-fluid ais_datetime')) }}
+                                                                        {{ Form::input('text','start_date',isset($event->start_date)? $event->start_date : Input::old('start_date'),array('id'=>'start_date','class'=>'span6 input-fluid ais_datetime')) }}
                                                                         {{ $errors->first('start_date','<span class="help-inline">:message</span>') }}
                                                                     </div>
                                                                 </div>
@@ -82,7 +82,7 @@
                                                                 {{ $errors->has('end_date')? '<div id="ais_allday_check" class="control-group error">' : '<div id="ais_allday_check" class="control-group">' }}
                                                                     {{ Form::label('end_date','End Date:',array('class'=>'control-label')) }}
                                                                     <div class="controls">
-                                                                        {{ Form::input('text','end_date',Input::old('end_date'),array('id'=>'end_date','class'=>'span6 input-fluid ais_datetime')) }}
+                                                                        {{ Form::input('text','end_date',isset($event->end_date)? $event->end_date : Input::old('end_date'),array('id'=>'end_date','class'=>'span6 input-fluid ais_datetime')) }}
                                                                         {{ $errors->first('end_date','<span class="help-inline">:message</span>') }}
                                                                     </div>
                                                                 </div>
@@ -90,7 +90,7 @@
                                                                 <div class="control-group">
                                                                     {{ Form::label('event_for_group_id','Event Group:',array('class'=>'control-label')) }}
                                                                     <div class="controls">
-                                                                        {{ Ais::event_group_dropdown('event_for_group_id',Input::old('event_for_group_id'),array('id'=>'event_for_group_id','class'=>'span6 input-fluid')) }}
+                                                                        {{ Ais::event_group_dropdown('event_for_group_id',isset($event->event_for_group_id)? $event->event_for_group_id : Input::old('event_for_group_id'),array('id'=>'event_for_group_id','class'=>'span6 input-fluid')) }}
                                                                         {{ $errors->first('event_for_group_id','<span class="help-inline">:message</span>') }}
                                                                     </div>
                                                                 </div>
@@ -98,14 +98,15 @@
                                                                 <div id="ais_student_class" class="control-group">
                                                                     {{ Form::label('student_class_id','Students Class:',array('class'=>'control-label')) }}
                                                                     <div class="controls">
-                                                                        {{ Ais::class_dropdown('student_class_id',Input::old('role_id'),array('id'=>'role_id','class'=>'span6 input-fluid'), true) }}
+                                                                        {{ Ais::class_dropdown('student_class_id',isset($event->student_class_id)? $event->student_class_id : Input::old('role_id'),array('id'=>'role_id','class'=>'span6 input-fluid'), true) }}
                                                                         {{ $errors->first('student_class_id','<span class="help-inline">:message</span>') }}
+                                                                        {{ Form::hidden('event_id', $event->id) }}
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="control-group">
                                                                     <div class="controls inline">
-                                                                    {{ Form::button('Add', array('class'=>'btn btn-info span3')) }} {{ HTML::link_to_route('calendars', 'Cancel','',array('class'=>'btn btn-danger span3')) }}
+                                                                    {{ Form::button('Update', array('class'=>'btn btn-info span3')) }} {{ HTML::link_to_route('event_list', 'Cancel','',array('class'=>'btn btn-danger span3')) }}
                                                                     </div>
                                                                 </div>
 

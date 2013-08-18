@@ -93,10 +93,26 @@ Route::get('results/assessment/(:num)/(:num)/(:num)', array('as'=>'assessment', 
 Route::get('results/new_assessment/(:num)/(:num)/(:num)/(:num)', array('as'=>'new_assessment', 'uses'=>'results@new_assessment'));
 Route::get('results/unpublish_result/(:num)/(:num)/(:num)/(:num)', array('as'=>'unpublish_result', 'uses'=>'results@unpublish_result'));
 Route::get('results/publish_result/(:num)/(:num)/(:num)/(:num)', array('as'=>'publish_result', 'uses'=>'results@publish_result'));
+Route::get('results/questions', array('as'=>'questions', 'uses'=>'results@questions'));
+Route::get('results/assignments', array('as'=>'assignments', 'uses'=>'results@assignments'));
+Route::get('results/assignment_submissions', array('as'=>'assignment_submissions', 'uses'=>'results@assignment_submissions'));
+Route::get('results/new_question', array('as'=>'new_question', 'uses'=>'results@new_question'));
+Route::get('results/new_assignment', array('as'=>'new_assignment', 'uses'=>'results@new_assignment'));
+Route::get('results/assignment_score/(:num)/(:num)/(:num)', array('as'=>'assignment_score', 'uses'=>'results@assignment_score'));
+Route::get('results/new_assignment_submission/(:num)', array('as'=>'new_assignment_submission', 'uses'=>'results@new_assignment_submission'));
+Route::get('results/delete_question/(:num)/(:any)', array('as'=>'delete_question', 'uses'=>'results@delete_question'));
+Route::get('results/delete_assignment/(:num)/(:any)', array('as'=>'delete_assignment', 'uses'=>'results@delete_assignment'));
+Route::get('results/attendance/(:num)/(:num)/(:num)/(:num)', array('as'=>'attendance', 'uses'=>'results@attendance'));
+Route::get('results/attendance_list/(:num)/(:num)/(:num)', array('as'=>'attendance_list', 'uses'=>'results@attendance_list'));
 
 //    Results Controller - POST
 Route::post('results', array('as'=>'results', 'uses'=>'results@index'));
 Route::post('results/new_assessment', array('as'=>'new_assessment', 'uses'=>'results@new_assessment'));
+Route::post('results/new_question', array('uses'=>'results@new_question'));
+Route::post('results/new_assignment', array('uses'=>'results@new_assignment'));
+Route::post('results/new_assignment_submission', array('uses'=>'results@new_assignment_submission'));
+Route::post('results/assignment_score', array('uses'=>'results@assignment_score'));
+Route::post('results/attendance', array('uses'=>'results@attendance'));
 
 //    Settings Controller - GET
 Route::get('settings', array('as'=>'settings', 'uses'=>'settings@index'));
@@ -147,13 +163,17 @@ Route::post('admin/official_use', array('uses'=>'admin@official_use'));
 
 //    Events Controller - GET
 Route::get('events/calendar', array('as' => 'calendars', 'uses'=>'events@calendar'));
-Route::get('events/reminder', array('as' => 'reminders', 'uses'=>'events@reminder'));
+Route::get('events/notification', array('as' => 'notifications', 'uses'=>'events@notification'));
 Route::get('events/new_event', array('as' => 'new_event', 'uses'=>'events@new_event'));
+Route::get('events/edit_event/(:num)', array('as' => 'edit_event', 'uses'=>'events@edit_event'));
+Route::get('events/delete_event/(:num)', array('as' => 'delete_event', 'uses'=>'events@delete_event'));
 Route::get('events/events_feed', array('as' => 'events_feed', 'uses'=>'events@events_feed'));
+Route::get('events/event_list', array('as' => 'event_list', 'uses'=>'events@event_list'));
 
 
 //    Events Controller - POST
 Route::post('events/new_event', array('uses'=>'events@new_event'));
+Route::post('events/edit_event', array('uses'=>'events@edit_event'));
 
 
 

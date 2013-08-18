@@ -22,6 +22,25 @@ class Result extends Basemodel {
         'score' => 'required|numeric|max:60',
     );
 
+    private static $new_question_rules = array(
+        'question_title' => 'required|min:3|max:255',
+        'question_file' => 'required|mimes:pdf,doc,docx',
+    );
+
+    private static $new_assignment_rules = array(
+        'title' => 'required|min:3|max:255',
+        'an_file' => 'required|mimes:pdf,doc,docx',
+    );
+
+    private static $new_assignment_submission_rules = array(
+        'final_submission' => 'accepted',
+        'assignment_file' => 'required|mimes:pdf,doc,docx',
+    );
+
+    private static $assignment_score_rules = array(
+        'score' => 'required|max:100|min:0',
+    );
+
 
 //  Validation
     public static function new_fa_assessment_validation($input){
@@ -34,6 +53,31 @@ class Result extends Basemodel {
 
     public static function new_exam_assessment_validation($input){
         return static::validation($input, static::$new_exam_assessment_rules);
+    }
+
+    public static function new_question_validation($input){
+        return static::validation($input, static::$new_question_rules);
+    }
+
+    public static function new_assignment_validation($input){
+        if($input['an_type'] == 2){ static::$new_assignment_rules['submission_deadline'] = 'required|date_format:Y-m-d H\\:i\\:s'; }
+        return static::validation($input, static::$new_assignment_rules);
+    }
+
+    public static function new_assignment_submission_validation($input){
+        return static::validation($input, static::$new_assignment_submission_rules);
+    }
+
+    public static function assignment_score_validation($input){
+        return static::validation($input, static::$assignment_score_rules);
+    }
+
+    public static function attendance_validation($input){
+        if($input['attendance_type_id'] == 3){
+            return static::validation($input, array('attendance_reason'=>'required|min:3'));
+        } else {
+            return true;
+        }
     }
 
 //  DB Inserts
@@ -441,6 +485,240 @@ class Result extends Basemodel {
             return 0;
         }
     }
+
+  public static function new_question($data){
+    $user_id = Session::get('user_id');
+    $abs_path = '/uploads/questions_bank';
+    $user_upload_dir = path('public') . DS .$abs_path;
+    $ext = explode('.', File::extension($data['question_file']['name']));
+    $filename = strtolower(str_replace(' ', '_', $data['question_title'])) . '.' . $ext[0];
+    if(!file_exists($user_upload_dir)){
+        mkdir($user_upload_dir,0777,true);
+    }
+    // Upload file to folder
+    $upload = Input::upload('question_file', $user_upload_dir, $filename);
+    if($upload){
+        // Insert DB Records
+        $new_question = array(
+            'user_id' => $user_id,
+            'class_id' => $data['class_id'],
+            'subject_id' => $data['subject_id'],
+            'question_title' => Str::title($data['question_title']),
+            'question_file_path' => $abs_path . '/' . $filename,
+        );
+        $question = DB::table('questions_bank')->insert($new_question);
+        if($question){
+            return $question;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+  }
+
+  public static function new_assignment($data){
+    $user_id = Session::get('user_id');
+    $abs_path = '/uploads/assignments';
+    $user_upload_dir = path('public') . DS .$abs_path;
+    $ext = explode('.', File::extension($data['an_file']['name']));
+    $filename = strtolower(str_replace(' ', '_', $data['title'])) . '.' . $ext[0];
+    if(!file_exists($user_upload_dir)){
+        mkdir($user_upload_dir,0777,true);
+    }
+    // Upload file to folder
+    $upload = Input::upload('an_file', $user_upload_dir, $filename);
+    if($upload){
+        // Insert DB Records
+        $new_assignment = array(
+            'user_id' => $user_id,
+            'an_type' => $data['an_type'],
+            'class_id' => $data['class_id'],
+            'subject_id' => $data['subject_id'],
+            'title' => Str::title($data['title']),
+            'an_file_path' => $abs_path . '/' . $filename,
+        );
+        if($data['an_type'] == 2){ $new_assignment['submission_deadline'] = $data['submission_deadline']; }
+        $assignment = DB::table('assignments_and_notes')->insert($new_assignment);
+        if($assignment){
+            return $assignment;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+  }
+
+  public static function assignment_score($data){
+    $score = array('assignment_score' => $data['score'],);
+    $assignment = DB::table('assignment_submissions')->where('assignment_id','=',$data['assignment_id'])
+        ->where('user_id','=',$data['user_id'])
+        ->where('id','=',$data['submission_id'])
+        ->update($score);
+    if($assignment){
+        return $assignment;
+    } else {
+        return false;
+    }
+  }
+
+  public static function attendance($data){
+      date_default_timezone_set('Africa/Lagos');
+    $attendance = array(
+        'attendance_type_id' => $data['attendance_type_id'],
+        'user_id' => Session::get('user_id'),
+        'admission_no' => Ais::resolve_admission_no_from_userid($data['user_id']),
+        'attendance_date' => date('Y-m-d H:i:s'),
+        'term_id' => $data['term_id'],
+        'class_id' => $data['class_id'],
+        'subject_id' => $data['subject_id'],
+        'academic_session_id' => Ais::active_academic_session(),
+    );
+    if($data['attendance_type_id'] == 3){ $attendance['attendance_reason'] = $data['attendance_reason']; }
+    $result = DB::table('class_attendance')->insert($attendance);
+    if($result){
+        return $result;
+    } else {
+        return false;
+    }
+  }
+
+  public static function attendance_list($subject_id, $class_id, $term_id){
+    $role_id = Session::get('role_id');
+    $user_id = Session::get('user_id');
+    $academic_session_id = Ais::active_academic_session();
+    if($role_id == 1){
+        $admission_no = Ais::resolve_admission_no_from_userid($user_id);
+        $query = 'SELECT class_attendance.*, COUNT(admission_no) AS attendance_count
+            FROM class_attendance
+            WHERE admission_no = ?
+            AND class_id = ?
+            AND term_id = ?
+            AND subject_id = ?
+            AND academic_session_id = ?
+            GROUP BY admission_no';
+        $attendance = DB::query($query, array($admission_no, $class_id, $term_id, $subject_id, $academic_session_id));
+    } elseif($role_id == 2){
+        $query = 'SELECT class_attendance.*, COUNT(admission_no) AS attendance_count
+            FROM class_attendance
+            WHERE user_id = ?
+            AND class_id = ?
+            AND term_id = ?
+            AND subject_id = ?
+            AND academic_session_id = ?
+            GROUP BY admission_no';
+        $attendance = DB::query($query, array($user_id, $class_id, $term_id, $subject_id, $academic_session_id));
+    } else {
+        $query = 'SELECT class_attendance.*, COUNT(admission_no) AS attendance_count
+            FROM class_attendance
+            WHERE class_id = ?
+            AND term_id = ?
+            AND subject_id = ?
+            AND academic_session_id = ?
+            GROUP BY admission_no';
+        $attendance = DB::query($query, array($class_id, $term_id, $subject_id, $academic_session_id));
+    }
+    if($attendance){ return $attendance ;} else { return null; }
+  }
+
+  public static function new_assignment_submission($data){
+    $user_id = Session::get('user_id');
+    $abs_path = '/uploads/assignments/submissions/' . $user_id;
+    $user_upload_dir = path('public') . DS .$abs_path;
+    $ext = explode('.', File::extension($data['assignment_file']['name']));
+    $filename = strtolower(str_replace(' ', '_', 'assignment_submission_' .time() .'_'. $user_id . '_' . $data['assignment_id'])) . '.' . $ext[0];
+    if(!file_exists($user_upload_dir)){
+        mkdir($user_upload_dir,0777,true);
+    }
+    // Upload file to folder
+    $upload = Input::upload('assignment_file', $user_upload_dir, $filename);
+    if($upload){
+        // Insert DB Records
+        date_default_timezone_set('Africa/lagos');
+        $new_assignment = array(
+            'user_id' => $user_id,
+            'assignment_id' => $data['assignment_id'],
+            'submission_date' => date('Y-m-d H:i:s'),
+            'assignment_file_path' => $abs_path . '/' . $filename,
+        );
+        $assignment = DB::table('assignment_submissions')->insert($new_assignment);
+        if($assignment){
+            return $assignment;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+  }
+
+  public static function all_questions(){
+      $user_id = Session::get('user_id');
+      if(Session::get('role_id') == 2){
+          $questions = DB::table('questions_bank')->where('user_id','=',$user_id)->get();
+      } else {
+          $questions = DB::table('questions_bank')->get();
+      }
+      return $questions;
+  }
+
+  public static function all_assignments(){
+      $user_id = Session::get('user_id');
+      if(Session::get('role_id') == 2){
+          $assignments = DB::table('assignments_and_notes')->where('user_id','=',$user_id)->get();
+      } elseif(Session::get('role_id') == 1){
+          $class_id = Ais::resolve_classid_from_userid($user_id);
+          $assignments = DB::table('assignments_and_notes')->where('class_id','=',$class_id)->get();
+      } else {
+          $assignments = DB::table('assignments_and_notes')->get();
+      }
+      return $assignments;
+  }
+
+  public static function all_assignment_submissions(){
+      $user_id = Session::get('user_id');
+      if(Session::get('role_id') == 1){
+          $assignments = DB::table('assignment_submissions')->where('user_id','=',$user_id)->get();
+      } else {
+          $assignments = DB::table('assignment_submissions')
+              ->join('assignments_and_notes', 'assignment_submissions.assignment_id', '=', 'assignments_and_notes.id')
+              ->where('assignments_and_notes.user_id','=',$user_id)
+              ->get(array('assignment_submissions.*'));
+      }
+      return $assignments;
+  }
+
+   public static function delete_question($question_id, $question_name){
+      $dir = path('public') . DS . '/uploads/questions_bank/';
+      $status = File::delete($dir . base64_decode($question_name));
+      if($status == null){
+          return false;
+      } else {
+          $question = DB::table('questions_bank')->delete($question_id);
+          if($question){
+              return $question;
+          } else {
+              return false;
+          }
+      }
+   }
+
+   public static function delete_assignment($id, $file_name){
+      $dir = path('public') . DS . '/uploads/assignments/';
+      $status = File::delete($dir . base64_decode($file_name));
+      if($status == null){
+          return false;
+      } else {
+          $assignment = DB::table('assignments_and_notes')->delete($id);
+          if($assignment){
+              return $assignment;
+          } else {
+              return false;
+          }
+      }
+   }
+
 
 
 }

@@ -68,7 +68,7 @@ class Results_Controller extends Base_Controller {
        }
     }
 
-   public function get_unpublish_result($user_id, $subject_id, $class_id, $term_id){
+    public function get_unpublish_result($user_id, $subject_id, $class_id, $term_id){
         $publish = Result::unpublish_result($user_id, $subject_id, $class_id, $term_id);
        if( $publish === false ){
            return Redirect::back()->with('message',Ais::message_format('An error occurred while unpublishing the result, please try again!','error'));
@@ -76,6 +76,88 @@ class Results_Controller extends Base_Controller {
            return Redirect::back()->with('message',Ais::message_format('Result unpublished successfully!','error'));
        }
     }
+
+    public function get_questions(){
+        $v_data['nav'] = 'result_nav';
+        $v_data['questions'] = Result::all_questions();
+        return View::make('results.questions', $v_data);
+    }
+
+    public function get_new_question(){
+        $v_data['nav'] = 'result_nav';
+        return View::make('results.new_question', $v_data);
+    }
+
+    public function get_delete_question($id, $file_name){
+        $delete = Result::delete_question($id, $file_name);
+        if( $delete === false ){
+            return Redirect::back()->with('message',Ais::message_format('An error occurred while deleting the question, please try again!','error'));
+        } else {
+            return Redirect::back()->with('message',Ais::message_format('Question deleted successfully','success'));
+        }
+    }
+
+    public function get_assignments(){
+        $v_data['nav'] = (Session::get('role_id') == 2)? 'result_nav' : 'assignment_nav';
+        $v_data['assignments'] = Result::all_assignments();
+        return View::make('results.assignments', $v_data);
+    }
+
+    public function get_assignment_submissions(){
+        $v_data['nav'] = (Session::get('role_id') == 2)? 'result_nav' : 'assignment_nav';
+        $v_data['submissions'] = Result::all_assignment_submissions();
+        return View::make('results.assignment_submissions', $v_data);
+    }
+
+    public function get_assignment_score($user_id, $assignment_id, $submission_id){
+        $v_data['user_id'] = (int)$user_id;
+        $v_data['assignment_id'] = (int)$assignment_id;
+        $v_data['submission_id'] = (int)$submission_id;
+        $v_data['nav'] = (Session::get('role_id') == 2)? 'result_nav' : 'assignment_nav';
+        return View::make('results.assignment_score', $v_data);
+    }
+
+    public function get_new_assignment(){
+        $v_data['nav'] = 'result_nav';
+        return View::make('results.new_assignment', $v_data);
+    }
+
+    public function get_new_assignment_submission($id){
+        $v_data['nav'] = 'assignment_nav';
+        $v_data['assignment_id'] = (int)$id;
+        return View::make('results.new_assignment_submission', $v_data);
+    }
+
+    public function get_attendance($user_id, $subject_id, $class_id, $term_id){
+        $v_data['user_id'] = $user_id;
+        $v_data['subject_id'] = $subject_id;
+        $v_data['class_id'] = $class_id;
+        $v_data['term_id'] = $term_id;
+        $v_data['user'] = User::show_user($user_id);
+        $v_data['nav'] = 'result_nav';
+        return View::make('results.attendance', $v_data);
+    }
+
+    public function get_attendance_list($subject_id, $class_id, $term_id){
+        $v_data['subject_id'] = $subject_id;
+        $v_data['class_id'] = $class_id;
+        $v_data['term_id'] = $term_id;
+        $v_data['attendance'] = Result::attendance_list($subject_id, $class_id, $term_id);
+        $v_data['nav'] = (Session::get('role_id') == 2)? 'result_nav' : 'assignment_nav';
+        return View::make('results.attendance_list', $v_data);
+    }
+
+    public function get_delete_assignment($id, $file_name){
+        $delete = Result::delete_assignment($id, $file_name);
+        if( $delete === false ){
+            return Redirect::back()->with('message',Ais::message_format('An error occurred while deleting the assignment/note, please try again!','error'));
+        } else {
+            return Redirect::back()->with('message',Ais::message_format('Assignment/Note deleted successfully','success'));
+        }
+    }
+
+
+
 
 //    Controller Actions - POST
 
@@ -98,6 +180,78 @@ class Results_Controller extends Base_Controller {
         } else {
             return Redirect::back()->with_errors($validate)->with_input();
         }
+    }
+
+    public function post_new_question(){
+        $validate = Result::new_question_validation(Input::all());
+        if( $validate === true ){
+            $parent = Result::new_question(Input::all());
+            if( $parent === false ){
+                return Redirect::back()->with('message',Ais::message_format('An error occurred while uploading the question, please try again!','error'))->with_input();
+            } else {
+                return Redirect::to_route('questions')->with('message',Ais::message_format('Question Uploaded successfully','success'));
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
+
+    public function post_new_assignment(){
+        $validate = Result::new_assignment_validation(Input::all());
+        if( $validate === true ){
+            $parent = Result::new_assignment(Input::all());
+            if( $parent === false ){
+                return Redirect::back()->with('message',Ais::message_format('An error occurred while uploading the assignment/note, please try again!','error'))->with_input();
+            } else {
+                return Redirect::to_route('assignments')->with('message',Ais::message_format('Assignment/Note Uploaded successfully','success'));
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
+
+    public function post_new_assignment_submission(){
+        $validate = Result::new_assignment_submission_validation(Input::all());
+        if( $validate === true ){
+            $parent = Result::new_assignment_submission(Input::all());
+            if( $parent === false ){
+                return Redirect::back()->with('message',Ais::message_format('An error occurred while uploading the assignment, please try again!','error'))->with_input();
+            } else {
+                return Redirect::to_route('assignments')->with('message',Ais::message_format('Assignment Uploaded successfully','success'));
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
+
+    public function post_assignment_score(){
+        $validate = Result::assignment_score_validation(Input::all());
+        if( $validate === true ){
+            $parent = Result::assignment_score(Input::all());
+            if( $parent === false ){
+                return Redirect::back()->with('message',Ais::message_format('An error occurred while scoring the assignment, please try again!','error'))->with_input();
+            } else {
+                return Redirect::to_route('assignment_submissions')->with('message',Ais::message_format('Assignment Scored successfully','success'));
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
+
+    public function post_attendance(){
+        $validate = Result::attendance_validation(Input::all());
+        if( $validate === true ){
+            $parent = Result::attendance(Input::all());
+            $name = Ais::resolve_name(Input::get('user_id'));
+            if( $parent === false ){
+                return Redirect::back()->with('message',Ais::message_format('An error occurred while saving the attendance for '.$name.', please try again!','error'))->with_input();
+            } else {
+                return Redirect::to_route('assessment', array(Input::get('subject_id'), Input::get('class_id'), Input::get('term_id')))->with('message',Ais::message_format('Attendance for '.$name.' saved successfully','success'));
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+
     }
 
 }
