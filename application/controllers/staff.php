@@ -38,6 +38,15 @@ class Staff_Controller extends Base_Controller {
 
     }
 
+    public function get_staff_deduction($id){
+        // Show staff deductions + Form
+        $v_data['nav'] = 'staff_nav';
+        $v_data['staff'] = Staff::staff_details($id);
+        $v_data['deductions'] = Staff::staff_deduction($id);
+        return View::make('staff.staff_deduction',$v_data);
+
+    }
+
     public function get_delete_staff($id){
         // Delete Staff
        $delete = Staff::delete_staff($id);
@@ -55,20 +64,16 @@ class Staff_Controller extends Base_Controller {
         return View::make('staff.staff_details',$v_data);
     }
 
+    public function get_salary_payslip($id, $staff_id, $date){
+        // Show staff details
+        $v_data['nav'] = 'staff_nav';
+        $v_data['details'] = Staff::staff_details($staff_id);
+        $v_data['salary_amount'] = Staff::monthly_salary($id, $date);
+        return View::make('staff.staff_payslip',$v_data);
+    }
+
     public function get_staff_attendance(){
         // Show staff attendance List
-    }
-
-    public function get_staff_deduction(){
-        // Show staff deduction page
-    }
-
-    public function get_salary_payslip($id){
-        // Show staff Salary Payslip page
-    }
-
-    public function get_new_staff_attendance(){
-        // Show New staff attendance form
     }
 
     public function get_incentives(){
@@ -79,7 +84,7 @@ class Staff_Controller extends Base_Controller {
     }
 
     public function get_delete_incentive($id){
-        // Delete Staff
+        // Delete Staff Incentive
        $delete = Staff::delete_incentive($id);
        if( $delete === false ){
            return Redirect::back()->with('message',Ais::message_format('An error occurred while deleting the Incentive, please try again!','error'));
@@ -89,12 +94,22 @@ class Staff_Controller extends Base_Controller {
     }
 
     public function get_delete_salary($id){
-        // Delete Staff
+        // Delete Staff Salary
        $delete = Staff::delete_salary($id);
        if( $delete === false ){
            return Redirect::back()->with('message',Ais::message_format('An error occurred while deleting the Salary, please try again!','error'));
        } else {
            return Redirect::back()->with('message',Ais::message_format('Salary deleted successfully!','success'));
+       }
+    }
+
+    public function get_delete_deduction($id){
+        // Delete Staff Deduction
+       $delete = Staff::delete_deduction($id);
+       if( $delete === false ){
+           return Redirect::back()->with('message',Ais::message_format('An error occurred while deleting the Deduction, please try again!','error'));
+       } else {
+           return Redirect::back()->with('message',Ais::message_format('Deduction deleted successfully!','success'));
        }
     }
 
@@ -147,10 +162,6 @@ class Staff_Controller extends Base_Controller {
         // Post new staff attendance form values
     }
 
-    public function post_new_staff_deduction(){
-        // Post new staff deduction form values
-    }
-
     public function post_incentives(){
         // Post new staff incentives form values
         $validate = Staff::incentive_validation(Input::all());
@@ -175,6 +186,21 @@ class Staff_Controller extends Base_Controller {
                return Redirect::back()->with('message',Ais::message_format('An error occurred while adding the Salary, please try again!','error'));
            } else {
                return Redirect::back()->with('message',Ais::message_format('Salary added successfully!','success'));
+           }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
+
+    public function post_staff_deduction(){
+        // Post new staff incentives form values
+        $validate = Staff::staff_deduction_validation(Input::all());
+        if($validate === true){
+            $salary = Staff::deduction(Input::all());
+           if( $salary === false ){
+               return Redirect::back()->with('message',Ais::message_format('An error occurred while adding the Deduction, please try again!','error'));
+           } else {
+               return Redirect::back()->with('message',Ais::message_format('Deduction added successfully!','success'));
            }
         } else {
             return Redirect::back()->with_errors($validate)->with_input();

@@ -94,6 +94,11 @@ class Expand {
         return $opts->incentive_type_name;
     }
 
+    public static function deduction($id){
+        $opts = DB::table('deduction_types')->where('id','=',$id)->first(array('deduction_name'));
+        return $opts->deduction_name;
+    }
+
     public static function term_name($term_id){
         switch ($term_id) {
             case 1:

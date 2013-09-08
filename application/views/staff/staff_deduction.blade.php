@@ -16,7 +16,7 @@
                     <ul class="breadcrumb">
                         Navigator <span class="divider">/</span>
                         <li>
-                            {{ HTML::image('webassets/img/icons/monitor.png') .'  '. HTML::link_to_route('user_dashboard','Dashboard') }} <span class="divider">/</span> Staff Incentives
+                            {{ HTML::image('webassets/img/icons/monitor.png') .'  '. HTML::link_to_route('user_dashboard','Dashboard') }} <span class="divider">/</span> Staff Deduction
                             <!--<span class="divider">/</span> -->
                         </li>
                     </ul>
@@ -36,7 +36,7 @@
                                         <section class="utopia-widget">
                                             <div class="utopia-widget-title">
                                                 {{ HTML::image('webassets/img/icons/paragraph_justify.png','',array('class'=>'utopia-widget-icon')) }}
-                                                <span>Staff Incentives</span>
+                                                <span>Staff Deduction - {{ $staff->name .' [' .$staff->staff_no. ']' }}</span>
                                             </div>
                                             @include('template.partials.notification')
                                             <div class="utopia-widget-content">
@@ -49,24 +49,22 @@
                                                                     <?php $sn = 1; ?>
                                                                         <tr>
                                                                             <th>S/N</th>
-                                                                            <th>Incentive</th>
-                                                                            <th>Percentage(%)</th>
-                                                                            <th>Incentive Type</th>
-                                                                            <!--<th>Actions</th>-->
+                                                                            <th>Deduction Type</th>
+                                                                            <th>Deduction Date</th>
+                                                                            <th>Actions</th>
                                                                         </tr>
                                                                     </thead>
 
                                                                     <tbody>
-                                                                    @if(! is_null($incentives) && is_array($incentives) )
-                                                                      @foreach($incentives as $incentive)
+                                                                    @if(! is_null($deductions) && is_array($deductions) )
+                                                                      @foreach($deductions as $deduction)
                                                                         <tr>
                                                                             <td>{{ $sn++ }}</td>
-                                                                            <td>{{ $incentive->incentive_name }}</td>
-                                                                            <td>{{ $incentive->incentive_percentage }}</td>
-                                                                            <td>{{ Expand::incentive($incentive->incentive_type_id) }}</td>
-                                                                            <!--<td>
-                                                                                {{-- HTML::decode(HTML::link_to_route('delete_incentive', HTML::image('webassets/img/icons/trash_can.png','Delete',array('title'=>'Delete')),array($incentive->id), array('class'=>'delete'))) --}}
-                                                                            </td>-->
+                                                                            <td>{{ Expand::deduction($deduction->deduction_type_id) }}</td>
+                                                                            <td>{{ Ais::reverse_db_date($deduction->deduction_date) }}</td>
+                                                                            <td>
+                                                                                {{ HTML::decode(HTML::link_to_route('delete_deduction', HTML::image('webassets/img/icons/trash_can.png','Delete',array('title'=>'Delete')),array($deduction->id), array('class'=>'delete'))) }}
+                                                                            </td>
                                                                         </tr>
                                                                       @endforeach
                                                                     @endif
@@ -75,46 +73,35 @@
                                                                     <tfoot>
                                                                     <tr>
                                                                         <th>S/N</th>
-                                                                        <th>Incentive</th>
-                                                                        <th>Percentage(%)</th>
-                                                                        <th>Incentive Type</th>
-                                                                        <!--<th>Actions</th>-->
+                                                                        <th>Deduction Type</th>
+                                                                        <th>Deduction Date</th>
+                                                                        <th>Actions</th>
                                                                     </tr>
                                                                     </tfoot>
                                                                 </table>
                                                              </div>
                                                              <div class="span4 utopia-form-freeSpace">
-                                                                 {{ Form::open('staff/incentives','POST',array('class'=>'form-horizontal')) }}
+                                                                 {{ Form::open('staff/staff_deduction','POST',array('class'=>'form-horizontal')) }}
                                                                      <fieldset>
 
-                                                                         {{ $errors->has('incentive_name')? '<div class="control-group error">' : '<div class="control-group">' }}
-                                                                             {{ Form::label('incentive_name','Incentive Name:',array('class'=>'control-label')) }}
-                                                                             <div class="controls">
-                                                                                 {{ Form::input('text','incentive_name',Input::old('incentive_name'),array('id'=>'incentive_name','class'=>'span12 input-fluid')) }}
-                                                                                 {{ $errors->first('incentive_name','<span class="help-inline">:message</span>') }}
-                                                                             </div>
-                                                                         </div>
-
-                                                                         {{ $errors->has('incentive_percentage')? '<div class="control-group error">' : '<div class="control-group">' }}
-                                                                             {{ Form::label('incentive_percentage','Percentage(%):',array('class'=>'control-label')) }}
-                                                                             <div class="controls">
-                                                                                 {{ Form::input('text','incentive_percentage',Input::old('incentive_percentage'),array('id'=>'incentive_percentage','class'=>'span12 input-fluid')) }}
-                                                                                 {{ $errors->first('incentive_percentage','<span class="help-inline">:message</span>') }}
-                                                                             </div>
-                                                                         </div>
-
                                                                          <div class="control-group">
-                                                                             {{ Form::label('incentive_type','Incentive Type:',array('class'=>'control-label')) }}
+                                                                             {{ Form::label('deduction_type_id','Deduction Type:',array('class'=>'control-label')) }}
                                                                              <div class="controls">
-                                                                                 {{ Ais::incentive_type_dropdown('incentive_type',Input::old('incentive_type'),array('id'=>'incentive_type','class'=>'span12 input-fluid')) }}
+                                                                                 {{ Ais::deduction_type_dropdown('deduction_type_id',Input::old('deduction_type_id'),array('id'=>'deduction_type_id','class'=>'span12 input-fluid')) }}
                                                                              </div>
                                                                          </div>
+
+                                                                         {{ $errors->has('deduction_date')? '<div class="control-group error">' : '<div class="control-group">' }}
+                                                                             {{ Form::label('deduction_date','Deduction Date:',array('class'=>'control-label')) }}
+                                                                             <div class="controls">
+                                                                                 {{ Form::input('text','deduction_date',Input::old('deduction_date'),array('id'=>'deduction_date','class'=>'span12 input-fluid ais_dateonly')) }}
+                                                                                 {{ $errors->first('deduction_date','<span class="help-inline">:message</span>') }}
+                                                                             </div>
+                                                                         </div>
+                                                                         {{ Form::hidden('staff_id',$staff->id) }}
                                                                         <div class="control-group">
-                                                                            <!--<div class="controls inline">
-                                                                            {{ Form::button('Add', array('class'=>'btn btn-info span6')) }} {{ HTML::link_to_route('payroll','Cancel','',array('class'=>'btn btn-danger span6')) }}
-                                                                            </div>-->
                                                                             <div class="controls inline">
-                                                                            {{ HTML::link_to_route('payroll','Cancel','',array('class'=>'btn btn-danger span6')) }}
+                                                                            {{ Form::button('Add', array('class'=>'btn btn-info span6')) }} {{ HTML::link_to_route('payroll','Cancel','',array('class'=>'btn btn-danger span6')) }}
                                                                             </div>
                                                                         </div>
                                                                      </fieldset>
@@ -144,4 +131,19 @@
     </div>
 
     <!-- Maincontent end -->
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+     // Datetime Picker Related
+        $('#deduction_date').maodatepicker({
+            format: 'yyyy-mm-dd',
+            weekStart: 1,
+            autoclose: true,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+        });
+    });
+    </script>
+
 @endsection

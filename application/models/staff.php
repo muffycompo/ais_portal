@@ -40,6 +40,10 @@ class Staff extends Basemodel {
         'payment_date' => 'required|date_format:Y-m-d',
     );
 
+    private static $staff_deduction_rules = array(
+        'deduction_date' => 'required|date_format:Y-m-d',
+    );
+
     public static function new_user_validation($input){
         return static::validation($input, static::$new_staff_rules);
     }
@@ -58,6 +62,10 @@ class Staff extends Basemodel {
 
     public static function staff_salary_validation($input){
         return static::validation($input, static::$staff_salary_rules);
+    }
+
+    public static function staff_deduction_validation($input){
+        return static::validation($input, static::$staff_deduction_rules);
     }
 
     public static function staff_list()
@@ -83,6 +91,44 @@ class Staff extends Basemodel {
         $salaries = empty($id)?
             DB::table('salaries')->get() : DB::table('salaries')->where('staff_id','=', $id)->get();
         return !$salaries ? false : $salaries;
+    }
+
+    public static function staff_deduction($id = '')
+    {
+        $deductions = empty($id)?
+            DB::table('deductions')->get() : DB::table('deductions')->where('staff_id','=', $id)->get();
+        return !$deductions ? false : $deductions;
+    }
+
+    public static function monthly_salary($id, $date = 'now')
+    {
+        $payroll = new Payroll;
+        $staff_id = $payroll->staff_id_from_salary($id);
+        $basic_salary = $payroll->staff_basic_salary($id);
+        $bonus = $payroll->staff_bonus($id);
+        $deduction = $payroll->staff_deductions($staff_id,$date, $basic_salary);
+        $salary = array(
+            'basic_salary' => $basic_salary,
+            'bonus' => $bonus,
+            'designation_incentive' => $payroll->staff_designated_incentives($staff_id,$id),
+            'deductions' => $deduction,
+        );
+        $incentives = $payroll->staff_incentives($basic_salary);
+        $return = array_merge($salary, $incentives);
+
+        $deductions = 0;
+        foreach ($deduction as $k => $v) {
+            $deductions = $deductions + $v;
+        }
+
+        $total_salary = $payroll->pay_staff($id);
+        $total_deduction = $deductions;
+
+        $take_home_pay = $total_salary - $total_deduction;
+
+        $return['total_pay'] = $take_home_pay;
+
+        return $return;
     }
 
     public static function new_staff($data)
@@ -164,6 +210,24 @@ class Staff extends Basemodel {
         return $salary ? $salary : false;
     }
 
+    public static function deduction($data)
+    {
+        $staff_id = $data['staff_id'];
+        $staff_deduction = array(
+            'deduction_type_id' => $data['deduction_type_id'],
+            'staff_id' => $staff_id,
+            'deduction_date' => $data['deduction_date'],
+        );
+        $count = DB::table('deductions')->where('staff_id','=',$staff_id)->where('deduction_date','=',$data['deduction_date'])->count();
+        if($count > 0){
+            unset($staff_deduction['staff_id']);
+            $deduction = DB::table('deductions')->where('staff_id','=',$staff_id)->update($staff_deduction);
+        } else {
+            $deduction = DB::table('deductions')->insert($staff_deduction);
+        }
+        return $deduction ? $deduction : false;
+    }
+
     public static function staff_passport($data)
     {
         $staff_id = $data['staff_id'];
@@ -209,6 +273,12 @@ class Staff extends Basemodel {
     public static function delete_salary($id)
     {
         $delete = DB::table('salaries')->delete($id);
+        return $delete? $delete : false;
+    }
+
+    public static function delete_deduction($id)
+    {
+        $delete = DB::table('deductions')->delete($id);
         return $delete? $delete : false;
     }
 

@@ -65,7 +65,7 @@
                                                                             <td>{{ Ais::format_to_currency($salary->bonus) }}</td>
                                                                             <td>{{ Ais::reverse_db_date($salary->payment_date) }}</td>
                                                                             <td>
-                                                                                {{ HTML::decode(HTML::link_to_route('salary_payslip', HTML::image('webassets/img/icons/bill.png','Payslip',array('title'=>'Payslip')),array($salary->id), array('class'=>'edit'))) }}
+                                                                                {{ HTML::decode(HTML::link_to_route('salary_payslip', HTML::image('webassets/img/icons/bill.png','Payslip',array('title'=>'Payslip')),array($salary->id, $staff->id, strtotime($salary->payment_date)), array('class'=>'edit'))) }}
                                                                                 {{ HTML::decode(HTML::link_to_route('delete_salary', HTML::image('webassets/img/icons/trash_can.png','Delete',array('title'=>'Delete')),array($salary->id), array('class'=>'delete'))) }}
                                                                             </td>
                                                                         </tr>
