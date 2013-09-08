@@ -12,10 +12,11 @@
     {{ HTML::style('webassets/css/utopia-responsive.css') }}
     {{ HTML::style('webassets/css/ui-lightness/jquery-ui.css') }}
     {{ HTML::style('webassets/css/weather.css') }}
-    {{ HTML::style('webassets/gallery/modal.css') }}
+    {{-- HTML::style('webassets/gallery/modal.css') --}}
     {{ HTML::style('webassets/css/validationEngine.jquery.css') }}
     {{ HTML::style('webassets/css/chosen.css') }}
     {{ HTML::style('webassets/css/datepicker.css') }}
+    {{ HTML::style('webassets/css/maodatepicker.css') }}
     {{ HTML::style('webassets/css/datetimepicker.css') }}
     {{ HTML::style('webassets/css/wizard_form.css') }}
     {{ HTML::style('webassets/css/ie.css') }}
@@ -63,6 +64,7 @@
 {{ HTML::script('webassets/js/jquery.vticker-min.js') }}
 {{ HTML::script('webassets/js/calendarPicker.js') }}
 {{ HTML::script('webassets/js/ui/datepicker.js') }}
+{{ HTML::script('webassets/js/bootstrap-datepicker.js') }}
 {{ HTML::script('webassets/js/bootstrap-datetimepicker.min.js') }}
 {{ HTML::script('webassets/js/upload/load-image.min.js') }}
 {{ HTML::script('webassets/js/upload/image-gallery.min.js') }}

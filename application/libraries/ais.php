@@ -143,6 +143,38 @@ class Ais {
         return Form::select($name, $options, $selected, $attributes);
     }
 
+   public static function deduction_type_dropdown($name, $selected = null, $attributes = array()){
+        $opts = DB::table('deduction_types')->get();
+        foreach($opts as $opt){
+            $options[$opt->id] = $opt->deduction_name;
+        }
+        return Form::select($name, $options, $selected, $attributes);
+    }
+
+   public static function designations_dropdown($name, $selected = null, $attributes = array()){
+        $opts = DB::table('designations')->get();
+        foreach($opts as $opt){
+            $options[$opt->id] = $opt->designation_name;
+        }
+        return Form::select($name, $options, $selected, $attributes);
+    }
+
+   public static function incentive_type_dropdown($name, $selected = null, $attributes = array()){
+        $opts = DB::table('incentive_types')->get();
+        foreach($opts as $opt){
+            $options[$opt->id] = $opt->incentive_type_name;
+        }
+        return Form::select($name, $options, $selected, $attributes);
+    }
+
+   public static function bank_dropdown($name, $selected = null, $attributes = array()){
+        $opts = DB::table('banks')->get();
+        foreach($opts as $opt){
+            $options[$opt->id] = $opt->bank_name;
+        }
+        return Form::select($name, $options, $selected, $attributes);
+    }
+
    public static function event_group_dropdown($name, $selected = null, $attributes = array()){
         $opts = DB::table('event_group')->get();
         $role_id = Session::get('role_id');

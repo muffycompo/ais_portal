@@ -175,6 +175,40 @@ Route::get('events/event_list', array('as' => 'event_list', 'uses'=>'events@even
 Route::post('events/new_event', array('uses'=>'events@new_event'));
 Route::post('events/edit_event', array('uses'=>'events@edit_event'));
 
+// Staff Controller - GET
+Route::get('staff/payroll', array('as' => 'payroll', 'uses'=>'staff@index'));
+Route::get('staff/new_staff', array('as' => 'new_staff', 'uses'=>'staff@new_staff'));
+Route::get('staff/edit_staff/(:num)', array('as' => 'edit_staff', 'uses'=>'staff@edit_staff'));
+Route::get('staff/staff_salary/(:num?)', array('as' => 'staff_salary', 'uses'=>'staff@staff_salary'));
+Route::get('staff/staff_deduction/(:num?)', array('as' => 'staff_deduction', 'uses'=>'staff@staff_deduction'));
+Route::get('staff/delete_staff/(:num)', array('as' => 'delete_staff', 'uses'=>'staff@delete_staff'));
+Route::get('staff/staff_details/(:num)', array('as' => 'staff_details', 'uses'=>'staff@staff_details'));
+Route::get('staff/staff_attendance', array('as' => 'staff_attendance', 'uses'=>'staff@staff_attendance'));
+Route::get('staff/new_staff_attendance', array('as' => 'new_staff_attendance', 'uses'=>'staff@new_staff_attendance'));
+Route::get('staff/incentives', array('as' => 'incentives', 'uses'=>'staff@incentives'));
+Route::get('staff/salary_payslip', array('as' => 'salary_payslip', 'uses'=>'staff@salary_payslip'));
+Route::get('staff/delete_incentive/(:num)', array('as' => 'delete_incentive', 'uses'=>'staff@delete_incentive'));
+Route::get('staff/delete_salary/(:num)', array('as' => 'delete_salary', 'uses'=>'staff@delete_salary'));
+
+// Staff Controller - POST
+Route::post('staff/edit_staff', array('uses'=>'staff@edit_staff'));
+Route::post('staff/edit_staff_passport', array('uses'=>'staff@edit_staff_passport'));
+Route::post('staff/new_staff', array('uses'=>'staff@new_staff'));
+Route::post('staff/new_staff_attendance', array('uses'=>'staff@new_staff_attendance'));
+Route::post('staff/new_staff_deduction', array('uses'=>'staff@new_staff_deduction'));
+Route::post('staff/incentives', array('uses'=>'staff@incentives'));
+Route::post('staff/staff_salary', array('uses'=>'staff@staff_salary'));
+
+
+
+
+
+
+
+
+
+
+
 
 
 //    Laravel Related

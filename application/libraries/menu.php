@@ -146,7 +146,14 @@ class Menu {
         .'</li>
             <li '.$class_nav.'>'. HTML::link('#','<span>Classes</span>',array('class'=>'elements')) . '</li>
             <li '.$assignment_nav.'>'. HTML::link('#','<span>Assignments</span>',array('class'=>'tables')) . '</li>
-            <li '.$staff_nav.'>'. HTML::link('#','<span>Staff</span>',array('class'=>'media')) . '</li>
+            <li '.$staff_nav.'>
+                <a class="calendar" href="javascript:void(0)" title="Staff"><span>Staff</span></a>
+                <ul class="dropdown">
+                    <li>' . HTML::link_to_route('payroll','<span>Payroll</span>','',array('class'=>'calendar smronju','title'=>'Payroll'))  .'</li>
+                    <li>' . HTML::link_to_route('staff_attendance','<span>Attendance</span>','',array('class'=>'calendar smronju','title'=>'Attendance'))  .'</li>
+                </ul>
+                '
+            . '</li>
             <li '.$event_nav.'>
             <a class="calendar" href="javascript:void(0)" title="Events"><span>Events</span></a>
                 <ul class="dropdown">

@@ -79,6 +79,21 @@ class Expand {
         return $opts->event_group_name;
     }
 
+    public static function designation($id){
+        $opts = DB::table('designations')->where('id','=',$id)->first(array('designation_name'));
+        return $opts->designation_name;
+    }
+
+    public static function bank($id){
+        $opts = DB::table('banks')->where('id','=',$id)->first(array('bank_name'));
+        return $opts->bank_name;
+    }
+
+    public static function incentive($id){
+        $opts = DB::table('incentive_types')->where('id','=',$id)->first(array('incentive_type_name'));
+        return $opts->incentive_type_name;
+    }
+
     public static function term_name($term_id){
         switch ($term_id) {
             case 1:

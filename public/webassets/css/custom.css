@@ -1,1 +1,8 @@
 .utopia-calendar-day { height: 457px;}
+img.passport-image-border {
+    background-color: #444;
+    padding: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
