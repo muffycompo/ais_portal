@@ -48,57 +48,64 @@
                                                                  <p>Full Name: <strong>{{ $details->name }}</strong></p>
                                                                  <p>Designation: <strong>{{ Expand::designation($details->designation_id) }}</strong></p>
                                                                  <p>Bank: <strong>{{ Expand::bank($details->bank_id) }}</strong></p>
-                                                                 <h3>Salary</h3>
-                                                                 <table class="table">
-                                                                    <tr>
-                                                                        <td>Basic Salary</td>
-                                                                        <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['basic_salary']) }}</strong></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Medical</td>
-                                                                        <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['Medical']) }}</strong></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Transport</td>
-                                                                        <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['Transport']) }}</strong></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Housing</td>
-                                                                        <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['Housing']) }}</strong></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Pension</td>
-                                                                        <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['Pension']) }}</strong></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Designation Allowance</td>
-                                                                        <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['designation_incentive']) }}</strong></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Bonus</td>
-                                                                        <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['bonus']) }}</strong></td>
-                                                                    </tr>
-                                                                 </table>
-
-                                                                 <h3>Deductions</h3>
-                                                                 <table class="table">
-                                                                 @foreach($salary_amount['deductions'] as $k => $v)
-                                                                    <tr>
-                                                                        <td>{{ $k }}</td>
-                                                                        <td style="text-align: right;"><strong>{{ Ais::format_to_currency($v) }}</strong></td>
-                                                                    </tr>
-                                                                 @endforeach
-                                                                    <tr>
-                                                                         <td><strong>TOTAL</strong></td>
-                                                                         <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['total_pay']) }}</strong></td>
-                                                                     </tr>
-                                                                 </table>
-
                                                              </div>
                                                              <div class="span7 utopia-form-freeSpace">
                                                                 <p>
                                                                     {{ HTML::image('uploads/staff/' . $details->passport .'?' . time(),'Passport',array('class'=>'passport-image-border')) }}
                                                                 </p>
+                                                             </div>
+                                                         </div>
+                                                    </div>
+                                                    <div class="span7 utopia-form-freeSpace" style="margin-left: 0; margin-top: 0;">
+                                                         <div class="row-fluid">
+                                                             <div class="span12 utopia-form-freeSpace">
+                                                                 <h3>Salary</h3>
+                                                                  <table class="table">
+                                                                     <tr>
+                                                                         <td>Basic Salary</td>
+                                                                         <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['basic_salary']) }}</strong></td>
+                                                                     </tr>
+                                                                     <tr>
+                                                                         <td>Medical</td>
+                                                                         <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['Medical']) }}</strong></td>
+                                                                     </tr>
+                                                                     <tr>
+                                                                         <td>Transport</td>
+                                                                         <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['Transport']) }}</strong></td>
+                                                                     </tr>
+                                                                     <tr>
+                                                                         <td>Housing</td>
+                                                                         <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['Housing']) }}</strong></td>
+                                                                     </tr>
+                                                                     <tr>
+                                                                         <td>Pension</td>
+                                                                         <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['Pension']) }}</strong></td>
+                                                                     </tr>
+                                                                     <tr>
+                                                                         <td>Designation Allowance</td>
+                                                                         <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['designation_incentive']) }}</strong></td>
+                                                                     </tr>
+                                                                     <tr>
+                                                                         <td>Bonus</td>
+                                                                         <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['bonus']) }}</strong></td>
+                                                                     </tr>
+                                                                  </table>
+
+                                                                  <h3>Deductions</h3>
+                                                                  <table class="table">
+                                                                  @foreach($salary_amount['deductions'] as $k => $v)
+                                                                     <tr>
+                                                                         <td>{{ $k }}</td>
+                                                                         <td style="text-align: right;"><strong>{{ Ais::format_to_currency($v) }}</strong></td>
+                                                                     </tr>
+                                                                  @endforeach
+                                                                     <tr>
+                                                                          <td><strong>TOTAL</strong></td>
+                                                                          <td style="text-align: right;"><strong>{{ Ais::format_to_currency($salary_amount['total_pay']) }}</strong></td>
+                                                                      </tr>
+                                                                      <tr><td colspan="2">&nbsp;</td></tr>
+                                                                  </table>
+                                                                 <p>{{ HTML::link_to_route('staff_salary','Cancel',array($details->id),array('class'=>'btn btn-danger span3')) }}</p>
                                                              </div>
                                                          </div>
                                                     </div>
