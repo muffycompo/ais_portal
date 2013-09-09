@@ -368,23 +368,26 @@ class Ais {
             $status = static::check_student_status($user_id);
             $fee_schedule = static::fee_schedule_per_class($class_id, $term_id, $status);
             $payment = static::has_payment($user_id,$class_id, $term_id);
-            $balance = $fee_schedule - $payment;
+            $balance = $payment - $fee_schedule;
 
+            $registration_status = static::registration_status();
+            if($registration_status !== 9){ return false;}
             if($balance > 0){
-                $message = '
-                <div class="alert alert-error">
-                    <a class="close" data-dismiss="alert" href="#">×</a>
-                    <h4 class="alert-heading">Payment Balance!</h4>
-                    You currently have an outstanding balance of <strong>N' . number_format($balance) .'</strong> to pay. You will only be allowed to sit for Exams when we receive your complete payment(s)!
-                </div>';
-                return $message; // balance remaining
-            } else {
                 $message = '
                 <div class="alert alert-warning">
                     <a class="close" data-dismiss="alert" href="#">×</a>
                     <h4 class="alert-heading">Over Payment!</h4>
                     You have overpaid you fees by <strong>N'. number_format(abs($balance)) .'</strong>
                 </div>';
+                return $message; // balance remaining
+            } else {
+                $message = '
+                <div class="alert alert-error">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <h4 class="alert-heading">Payment Balance!</h4>
+                    You currently have an outstanding balance of <strong>N' . number_format(abs($balance)) .'</strong> to pay. You will only be allowed to sit for Exams when we receive your complete payment(s)!
+                </div>';
+
                 return $message; // overpayment
             }
 

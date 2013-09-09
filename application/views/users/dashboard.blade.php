@@ -43,7 +43,7 @@
                                             </div>
                                             @include('template.partials.notification')
                                             <div class="utopia-widget-content">
-                                                @if(Ais::registration_status() > 0 && Ais::registration_status() <= 6)
+                                                @if(Ais::registration_status() <= 6)
                                                 {{ Menu::registration_instructions() }}
                                                 @elseif(((Ais::registration_status() == 7) || (Ais::registration_status() == 8)) && (Session::get('role_id') == 1 ))
                                                 {{ Menu::entrance_exam_instructions() }}
