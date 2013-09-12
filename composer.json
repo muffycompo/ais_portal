@@ -1,0 +1,6 @@
+{
+    "require": {
+        "raveren/kint": "dev-master"
+    }
+
+}

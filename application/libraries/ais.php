@@ -233,7 +233,6 @@ class Ais {
         return $pin->id;
     }
 
-
     public static function generate_receipt_no($number_to_gen = '', $receipt_no_length = '', $prefix = ''){
        $num_to_gen = (! empty($number_to_gen))? $number_to_gen : 1;
        $length = (! empty($receipt_no_length))? $receipt_no_length : 6;

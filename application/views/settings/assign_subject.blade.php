@@ -65,7 +65,7 @@
                                                                         {{ Ais::term_dropdown('term_id',Input::old('term_id'),array('id'=>'term_id','class'=>'span6 input-fluid')) }}
                                                                     </div>
                                                                 </div>
-
+                                                                {{ Form::hidden('user_id',$teacher->id) }}
                                                                 <div class="control-group">
                                                                     <div class="controls inline">
                                                                     {{ Form::button('Assign', array('class'=>'btn btn-info span3')) }} {{ HTML::link_to_route('teachers','Cancel','',array('class'=>'btn btn-danger span3')) }}

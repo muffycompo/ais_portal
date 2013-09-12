@@ -60,6 +60,7 @@ Laravel\Autoloader::$aliases = $aliases;
 
 Autoloader::map(array(
 	'Base_Controller' => path('app').'controllers/base.php',
+	'Kint' => path('sys').'..\vendor\raveren\kint\Kint.class.php',
 ));
 
 /*
@@ -76,6 +77,7 @@ Autoloader::map(array(
 Autoloader::directories(array(
 	path('app').'models',
 	path('app').'libraries',
+    path('app').'vendor'
 ));
 
 /*
