@@ -215,11 +215,11 @@ Route::get('cron/event_cleaner',array('uses'=>'cron@event_cleaner'));
 
 
 //    Laravel Related
-//Event::listen('laravel.log', function($type, $message)
-//{
-//    $message = date('Y-m-d H:i:s').' '.mb_strtoupper($type).' - '.$message;
-//    File::append(path('storage').'logs/'.date('Y-m-d').'.log', $message);
-//});
+Event::listen('laravel.log', function($type, $message)
+{
+    $message = date('Y-m-d H:i:s').' '.mb_strtoupper($type).' - '.$message;
+    File::append(path('storage').'logs/'.date('Y-m-d').'.log', $message);
+});
 
 Event::listen('404', function()
 {
