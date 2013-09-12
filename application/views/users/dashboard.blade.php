@@ -48,7 +48,7 @@
                                                 @elseif(((Ais::registration_status() == 7) || (Ais::registration_status() == 8)) && (Session::get('role_id') == 1 ))
                                                 {{ Menu::entrance_exam_instructions() }}
                                                 @else
-                                                <p>This is your Dashboard, a landing page that shows related content based on your access role and level.</p>
+                                                <p>This is your Dashboard, a landing page that shows related content based on your access role.</p>
                                                 @endif
                                             </div>
                                         </section>
