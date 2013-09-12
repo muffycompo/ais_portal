@@ -13,7 +13,7 @@ class Users_Controller extends Base_Controller {
 
     public function __construct(){
         parent::__construct();
-        $this->filter('before','auth')->except(array('login','signup','signup_complete','forgot_password','password_confirmation','logout','demo'));
+        $this->filter('before','auth')->except(array('login','signup','signup_complete','forgot_password','password_confirmation','logout'));
         $this->filter('before','auth')->except(array('login','signup','forgot_password'))->on('post');
     }
 

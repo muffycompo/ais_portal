@@ -204,7 +204,8 @@ Route::post('staff/staff_salary', array('uses'=>'staff@staff_salary'));
 
 
 
-
+// Util Controller - GET
+Route::get('cron/event_cleaner',array('uses'=>'cron@event_cleaner'));
 
 
 
@@ -214,6 +215,13 @@ Route::post('staff/staff_salary', array('uses'=>'staff@staff_salary'));
 
 
 //    Laravel Related
+
+Event::listen('laravel.log', function($type, $message)
+{
+    $message = date('Y-m-d H:i:s').' '.mb_strtoupper($type).' - '.$message.' ['.$_SERVER["REQUEST_URI"].']';
+    File::append(path('storage').'logs/'.date('Y-m-d').'.log', $message);
+});
+
 Event::listen('404', function()
 {
 	return Response::error('404');
