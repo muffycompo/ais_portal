@@ -202,9 +202,7 @@ Route::post('staff/incentives', array('uses'=>'staff@incentives'));
 Route::post('staff/staff_salary', array('uses'=>'staff@staff_salary'));
 
 
-
-
-// Util Controller - GET
+// Cron Controller - GET
 Route::get('cron/event_cleaner',array('uses'=>'cron@event_cleaner'));
 
 
