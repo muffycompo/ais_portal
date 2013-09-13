@@ -27,7 +27,7 @@
     <div class="row-fluid">
         <div class="span12">
             <div class="utopia-login-message">
-                <h1>Welcome to Ah-Rahman International School Portal</h1>
+                <h1>Welcome to Ah-Rahman International Test School Portal</h1>
                 <p>Login below to gain access</p>
             </div>
         </div>
