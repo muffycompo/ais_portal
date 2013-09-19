@@ -53,7 +53,8 @@ class Ais {
        $options = array();
        if($check_role && (Session::get('role_id') == 2)){
           $user_id = Session::get('user_id');
-          $opt = DB::table('teachers_and_classes')->where('user_id','=',$user_id)->first(array('class_id'));
+//          $opt = DB::table('teachers_and_classes')->where('user_id','=',$user_id)->first(array('class_id'));
+          $opt = DB::table('teachers_and_subjects')->where('user_id','=',$user_id)->first(array('class_id'));
           if(is_null($opt)){
               return Form::select($name, $options, $selected, $attributes);
           } else {
@@ -463,6 +464,12 @@ class Ais {
 
     public static function resolve_classid_from_teacher_userid($user_id){
         $user = DB::table('teachers_and_classes')->where('user_id','=',$user_id)->first(array('class_id'));
+        if($user) {return $user->class_id;} else { return '';}
+
+    }
+
+    public static function resolve_classid_from_teacher_userid_for_subjects($user_id){
+        $user = DB::table('teachers_and_subjects')->where('user_id','=',$user_id)->first(array('class_id'));
         if($user) {return $user->class_id;} else { return '';}
 
     }

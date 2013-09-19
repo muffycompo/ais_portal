@@ -40,7 +40,7 @@
 
 		  <tr class="item-row">
 		      <td class="item-name">Form Number:</td>
-		      <td class="description"><strong>123456</strong></td>
+		      <td class="description"><strong>{{ $biodata->form_no }}</strong></td>
 		      <td class="item-name">Application Type</td>
 		      <td class="description" colspan="2" nowrap><strong>{{ Expand::application_type($biodata->application_type_id) }}</strong></td>
 		  </tr>

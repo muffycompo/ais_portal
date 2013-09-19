@@ -64,7 +64,7 @@ class Results_Controller extends Base_Controller {
        if( $publish === false ){
            return Redirect::back()->with('message',Ais::message_format('An error occurred while publishing the result, please try again!','error'));
        } else {
-           return Redirect::back()->with('message',Ais::message_format('Result published successfully!','error'));
+           return Redirect::back()->with('message',Ais::message_format('Result published successfully!','success'));
        }
     }
 
@@ -73,7 +73,7 @@ class Results_Controller extends Base_Controller {
        if( $publish === false ){
            return Redirect::back()->with('message',Ais::message_format('An error occurred while unpublishing the result, please try again!','error'));
        } else {
-           return Redirect::back()->with('message',Ais::message_format('Result unpublished successfully!','error'));
+           return Redirect::back()->with('message',Ais::message_format('Result unpublished successfully!','success'));
        }
     }
 
