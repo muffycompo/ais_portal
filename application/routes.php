@@ -130,6 +130,22 @@ Route::get('settings/delete_subject/(:num)', array('as'=>'delete_subject', 'uses
 Route::get('settings/teacher/(:num)/assign_class', array('as'=>'assign_class', 'uses'=>'settings@assign_class'));
 Route::get('settings/unassign_subject/(:num)/(:num)/(:num)/(:num)', array('as'=>'unassign_subject', 'uses'=>'settings@unassign_subject'));
 
+Route::get('settings/manage_banks', array('as' => 'manage_banks', 'uses'=>'settings@manage_banks'));
+Route::get('settings/manage_app_type', array('as' => 'manage_app_type', 'uses'=>'settings@manage_app_type'));
+Route::get('settings/manage_app_pin', array('as' => 'manage_app_pin', 'uses'=>'settings@manage_app_pin'));
+Route::get('settings/manage_aca_session', array('as' => 'manage_aca_session', 'uses'=>'settings@manage_aca_session'));
+Route::get('settings/manage_aca_term', array('as' => 'manage_aca_term', 'uses'=>'settings@manage_aca_term'));
+Route::get('settings/manage_payment_categories', array('as' => 'manage_payment_categories', 'uses'=>'settings@manage_payment_categories'));
+Route::get('settings/active_session/(:num)', array('as' => 'active_session', 'uses'=>'settings@active_session'));
+Route::get('settings/active_term/(:num)', array('as' => 'active_term', 'uses'=>'settings@active_term'));
+
+Route::get('settings/delete_bank/(:num)', array('as' => 'delete_bank', 'uses'=>'settings@delete_bank'));
+Route::get('settings/delete_app_type/(:num)', array('as' => 'delete_app_type', 'uses'=>'settings@delete_app_type'));
+Route::get('settings/delete_aca_session/(:num)', array('as' => 'delete_aca_session', 'uses'=>'settings@delete_aca_session'));
+Route::get('settings/delete_app_pin/(:num)', array('as' => 'delete_app_pin', 'uses'=>'settings@delete_app_pin'));
+Route::get('settings/delete_payment_category/(:num)', array('as' => 'delete_payment_category', 'uses'=>'settings@delete_payment_category'));
+
+
 //    Settings Controller - POST
 Route::post('settings', array('uses'=>'settings@index'));
 Route::post('settings/assign_subject', array('uses'=>'settings@assign_subject'));
@@ -138,6 +154,14 @@ Route::post('settings/edit_subject', array('uses'=>'settings@edit_subject'));
 Route::post('settings/assign_class', array('uses'=>'settings@assign_class'));
 Route::post('settings/new_class', array('uses'=>'settings@new_class'));
 Route::post('settings/edit_class', array('uses'=>'settings@edit_class'));
+    
+Route::post('settings/manage_banks', array('uses'=>'settings@manage_banks'));
+Route::post('settings/manage_app_type', array('uses'=>'settings@manage_app_type'));
+Route::post('settings/manage_app_pin', array('uses'=>'settings@manage_app_pin'));
+Route::post('settings/manage_aca_session', array('uses'=>'settings@manage_aca_session'));
+Route::post('settings/manage_aca_term', array('uses'=>'settings@manage_aca_term'));
+Route::post('settings/manage_payment_categories', array('uses'=>'settings@manage_payment_categories'));
+
 
 //    Reports Controller - GET
 Route::get('reports', array('as'=>'reports', 'uses'=>'reports@index'));
@@ -160,7 +184,6 @@ Route::get('admin/approve_admission/(:num)', array('as' => 'approve_admission', 
 
 //    Admin Controller - POST
 Route::post('admin/official_use', array('uses'=>'admin@official_use'));
-
 
 //    Events Controller - GET
 Route::get('events/calendar', array('as' => 'calendars', 'uses'=>'events@calendar'));
@@ -200,6 +223,8 @@ Route::post('staff/staff_attendance', array('uses'=>'staff@staff_attendance'));
 Route::post('staff/staff_deduction', array('uses'=>'staff@staff_deduction'));
 Route::post('staff/incentives', array('uses'=>'staff@incentives'));
 Route::post('staff/staff_salary', array('uses'=>'staff@staff_salary'));
+
+
 
 
 // Cron Controller - GET

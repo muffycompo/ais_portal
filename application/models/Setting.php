@@ -24,6 +24,26 @@ class Setting extends Basemodel {
         'class_name' => 'required|min:3',
     );
 
+    private static $banks_rules = array(
+        'bank_name' => 'required|min:3',
+    );
+
+    private static $app_type_rules = array(
+        'type_name' => 'required|min:3',
+    );
+
+    private static $aca_session_rules = array(
+        'academic_session' => 'required|min:3',
+    );
+
+    private static $payment_categories_rules = array(
+        'payment_name' => 'required|min:3',
+    );
+
+    private static $app_pin_rules = array(
+        'number_to_generate' => 'required|numeric|min:1',
+    );
+
 
 //  Validation
     public static function pin_payment_validation($input){
@@ -36,6 +56,26 @@ class Setting extends Basemodel {
 
     public static function new_subject_validation($input){
         return static::validation($input, static::$new_subject_rules);
+    }
+
+    public static function banks_validation($input){
+        return static::validation($input, static::$banks_rules);
+    }
+
+    public static function app_type_validation($input){
+        return static::validation($input, static::$app_type_rules);
+    }
+
+    public static function aca_session_validation($input){
+        return static::validation($input, static::$aca_session_rules);
+    }
+
+    public static function payment_categories_validation($input){
+        return static::validation($input, static::$payment_categories_rules);
+    }
+
+    public static function app_pin_validation($input){
+        return static::validation($input, static::$app_pin_rules);
     }
 
 //  DB Inserts
@@ -80,6 +120,71 @@ class Setting extends Basemodel {
         $subject = DB::table('subjects')->insert($subject_array);
         if($subject){
             return $subject;
+        } else {
+            return false;
+        }
+    }
+
+    public static function new_bank($data){
+        $array = array('bank_name' => Str::title($data['bank_name']));
+        $bank = DB::table('banks')->insert($array);
+        if($bank){
+            return $bank;
+        } else {
+            return false;
+        }
+    }
+
+    public static function new_app_type($data){
+        $array = array('type_name' => Str::title($data['type_name']));
+        $app_type = DB::table('application_type')->insert($array);
+        if($app_type){
+            return $app_type;
+        } else {
+            return false;
+        }
+    }
+
+    public static function new_aca_session($data){
+        $array = array(
+            'academic_session' => Str::upper($data['academic_session']),
+            'active_session' => 1
+        );
+        DB::table('academic_sessions')->update(array('active_session' => 0));
+        $app_type = DB::table('academic_sessions')->insert($array);
+        if($app_type){
+            return $app_type;
+        } else {
+            return false;
+        }
+    }
+
+    public static function new_payment_category($data){
+        $array = array(
+            'payment_name' => Str::title($data['payment_name']),
+        );
+        $app_type = DB::table('payment_categories')->insert($array);
+        if($app_type){
+            return $app_type;
+        } else {
+            return false;
+        }
+    }
+
+    public static function new_app_pin($data){
+        $number_to_generate = $data['number_to_generate'];
+        $array = array();
+        $pins = AIS::generate_pin($number_to_generate,12);
+        foreach ($pins as $pin) {
+            $array[] = array(
+                'pin_no' => $pin,
+                'usage_status' => 0,
+                'issuance_status' => 0,
+            );
+        }
+        $pin_stat = DB::table('pins')->insert($array);
+        if($pin_stat){
+            return $pin_stat;
         } else {
             return false;
         }
@@ -162,6 +267,30 @@ class Setting extends Basemodel {
         } else {
             return null;
         }
+    }
+
+    public static function all_banks(){
+        return DB::table('banks')->get();
+    }
+
+    public static function all_application_types(){
+        return DB::table('application_type')->get();
+    }
+
+    public static function all_academic_sessions(){
+        return DB::table('academic_sessions')->get();
+    }
+
+    public static function all_academic_terms(){
+        return DB::table('terms')->get();
+    }
+
+    public static function all_payment_categories(){
+        return DB::table('payment_categories')->get();
+    }
+
+    public static function all_pins(){
+        return DB::table('pins')->where('usage_status','!=',1)->where('issuance_status','!=',1)->get();
     }
 
     public static function show_teacher($id){
@@ -251,6 +380,66 @@ class Setting extends Basemodel {
     public static function delete_subject($id){
         try{
             DB::table('subjects')->delete((int)$id);
+        } catch (Exception $e){
+            return false;
+        }
+    }
+
+    public static function delete_bank($id){
+        try{
+            DB::table('banks')->delete((int)$id);
+        } catch (Exception $e){
+            return false;
+        }
+    }
+
+    public static function delete_app_type($id){
+        try{
+            DB::table('application_type')->delete((int)$id);
+        } catch (Exception $e){
+            return false;
+        }
+    }
+
+    public static function delete_payment_category($id){
+        try{
+            DB::table('payment_categories')->delete((int)$id);
+        } catch (Exception $e){
+            return false;
+        }
+    }
+
+    public static function delete_app_pin($id){
+        try{
+            DB::table('pins')->delete((int)$id);
+        } catch (Exception $e){
+            return false;
+        }
+    }
+
+    public static function active_session($id){
+        try{
+            DB::table('academic_sessions')->update(array('active_session' => 0));
+            DB::table('academic_sessions')->where('id','=',$id)->update(array('active_session' => 1));
+        } catch (Exception $e){
+            return false;
+        }
+    }
+
+    public static function active_term($id){
+        try{
+            DB::table('terms')->update(array('active_term' => 0));
+            DB::table('terms')->where('id','=',$id)->update(array('active_term' => 1));
+        } catch (Exception $e){
+            return false;
+        }
+    }
+
+    public static function delete_aca_session($id){
+        try{
+            DB::table('academic_sessions')->delete((int)$id);
+            $new_active = DB::table('academic_sessions')->order_by('id','desc')->take(1)->first(array('id'));
+            DB::table('academic_sessions')->where('id','=',$new_active->id)->update(array('active_session'=> 1));
         } catch (Exception $e){
             return false;
         }

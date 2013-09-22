@@ -80,6 +80,62 @@ class Settings_Controller extends Base_Controller {
         return View::make('settings.assign_class',$v_data);
     }
 
+    public function get_manage_banks(){
+        $v_data['banks'] = Setting::all_banks();
+        $v_data['nav'] = 'setting_nav';
+        return View::make('settings.manage_banks',$v_data);
+    }
+
+    public function get_manage_app_type(){
+        $v_data['app_types'] = Setting::all_application_types();
+        $v_data['nav'] = 'setting_nav';
+        return View::make('settings.manage_app_type',$v_data);
+    }
+
+    public function get_manage_app_pin(){
+        $v_data['pins'] = Setting::all_pins();
+        $v_data['nav'] = 'setting_nav';
+        return View::make('settings.manage_app_pin',$v_data);
+    }
+
+    public function get_manage_aca_session(){
+        $v_data['academic_sessions'] = Setting::all_academic_sessions();
+        $v_data['nav'] = 'setting_nav';
+        return View::make('settings.manage_aca_session',$v_data);
+    }
+
+    public function get_active_session($id){
+        $delete = Setting::active_session($id);
+        if($delete === false){
+            return Redirect::back()->with('message',Ais::message_format('An error occurred while making the academic session active, please try again!','error'));
+        } else {
+            $session_name = Expand::academic_session($id);
+            return Redirect::back()->with('message',Ais::message_format($session_name . ' Academic Session is now active!','success'));
+        }
+    }
+
+    public function get_active_term($id){
+        $delete = Setting::active_term($id);
+        if($delete === false){
+            return Redirect::back()->with('message',Ais::message_format('An error occurred while making the term active, please try again!','error'));
+        } else {
+            $term_name = Expand::term($id);
+            return Redirect::back()->with('message',Ais::message_format($term_name . ' is now active!','success'));
+        }
+    }
+
+    public function get_manage_aca_term(){
+        $v_data['terms'] = Setting::all_academic_terms();
+        $v_data['nav'] = 'setting_nav';
+        return View::make('settings.manage_aca_term',$v_data);
+    }
+
+    public function get_manage_payment_categories(){
+        $v_data['payment_categories'] = Setting::all_payment_categories();
+        $v_data['nav'] = 'setting_nav';
+        return View::make('settings.manage_payment_categories',$v_data);
+    }
+
     public function post_assign_subject(){
         $teacher = Setting::assign_subject(Input::all());
         if( $teacher === false ){
@@ -154,6 +210,78 @@ class Settings_Controller extends Base_Controller {
         }
     }
 
+    public function post_manage_banks(){
+        $validate = Setting::banks_validation(Input::all());
+        if( $validate === true ){
+            $bank = Setting::new_bank(Input::all());
+            if( $bank === false ){
+                return Redirect::back()->with('message',Ais::message_format('An error occurred while adding the bank, please try again!','error'))->with_input();
+            } else {
+                return Redirect::back()->with('message',Ais::message_format('Bank Added successfully!','success'));
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
+
+    public function post_manage_app_type(){
+        $validate = Setting::app_type_validation(Input::all());
+        if( $validate === true ){
+            $bank = Setting::new_app_type(Input::all());
+            if( $bank === false ){
+                return Redirect::back()->with('message',Ais::message_format('An error occurred while adding the application type, please try again!','error'))->with_input();
+            } else {
+                return Redirect::back()->with('message',Ais::message_format('Application Type Added successfully!','success'));
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
+
+    public function post_manage_app_pin(){
+        $validate = Setting::app_pin_validation(Input::all());
+        if( $validate === true ){
+            $bank = Setting::new_app_pin(Input::all());
+            if( $bank === false ){
+                return Redirect::back()->with('message',Ais::message_format('An error occurred while generating the PIN, please try again!','error'))->with_input();
+            } else {
+                return Redirect::back()->with('message',Ais::message_format('PIN Number(s) generated successfully!','success'));
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
+
+    public function post_manage_aca_session(){
+        $validate = Setting::aca_session_validation(Input::all());
+        if( $validate === true ){
+            $bank = Setting::new_aca_session(Input::all());
+            if( $bank === false ){
+                return Redirect::back()->with('message',Ais::message_format('An error occurred while adding the Academic Session, please try again!','error'))->with_input();
+            } else {
+                return Redirect::back()->with('message',Ais::message_format('Academic Session Added successfully!','success'));
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
+
+    public function post_manage_payment_categories(){
+        $validate = Setting::payment_categories_validation(Input::all());
+        if( $validate === true ){
+            $bank = Setting::new_payment_category(Input::all());
+            if( $bank === false ){
+                return Redirect::back()->with('message',Ais::message_format('An error occurred while adding the Payment Category, please try again!','error'))->with_input();
+            } else {
+                return Redirect::back()->with('message',Ais::message_format('Payment Category Added successfully!','success'));
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+
+    }
+
+
     public function get_delete_subject($id){
         $delete_subject = Setting::delete_subject($id);
         if($delete_subject === false){
@@ -171,5 +299,52 @@ class Settings_Controller extends Base_Controller {
             return Redirect::back()->with('message',Ais::message_format('Class successfully deleted!','success'));
         }
     }
+
+
+    public function get_delete_bank($id){
+        $delete = Setting::delete_bank($id);
+        if($delete === false){
+            return Redirect::back()->with('message',Ais::message_format('An error occurred while deleting the bank, please try again!','error'));
+        } else {
+            return Redirect::back()->with('message',Ais::message_format('Bank successfully deleted!','success'));
+        }
+    }
+
+    public function get_delete_app_type($id){
+        $delete = Setting::delete_app_type($id);
+        if($delete === false){
+            return Redirect::back()->with('message',Ais::message_format('An error occurred while deleting the application type, please try again!','error'));
+        } else {
+            return Redirect::back()->with('message',Ais::message_format('Application Type successfully deleted!','success'));
+        }
+    }
+
+    public function get_delete_aca_session($id){
+        $delete = Setting::delete_aca_session($id);
+        if($delete === false){
+            return Redirect::back()->with('message',Ais::message_format('An error occurred while deleting the academic session, please try again!','error'));
+        } else {
+            return Redirect::back()->with('message',Ais::message_format('Academic Session successfully deleted!','success'));
+        }
+    }
+
+    public function get_delete_payment_category($id){
+        $delete = Setting::delete_payment_category($id);
+        if($delete === false){
+            return Redirect::back()->with('message',Ais::message_format('An error occurred while deleting the payment category, please try again!','error'));
+        } else {
+            return Redirect::back()->with('message',Ais::message_format('Payment Category successfully deleted!','success'));
+        }
+    }
+
+    public function get_delete_app_pin($id){
+        $delete = Setting::delete_app_pin($id);
+        if($delete === false){
+            return Redirect::back()->with('message',Ais::message_format('An error occurred while deleting the PIN Number, please try again!','error'));
+        } else {
+            return Redirect::back()->with('message',Ais::message_format('PIN Number successfully deleted!','success'));
+        }
+    }
+
 
 }

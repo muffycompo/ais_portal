@@ -138,14 +138,25 @@ class Menu {
             <li '.$setting_nav.'>
             <a class="grid" href="javascript:void(0)" title="Portal Settings"><span>Portal Settings</span></a>
             <ul class="dropdown">
+                <li>
+                    <a class="grid" href="javascript:void(0)" title="Manage"><span>Manage</span></a>
+                    <ul class="dropdown">
+                        <li>' . HTML::link_to_route('manage_banks','<span>Banks</span>','',array('class'=>'calendar smronju','title'=>'Banks'))  .'</li>
+                        <li>' . HTML::link_to_route('manage_app_type','<span>Application Types</span>','',array('class'=>'calendar smronju','title'=>'Application Types'))  .'</li>
+                        <li>' . HTML::link_to_route('manage_aca_session','<span>Academic Sessions</span>','',array('class'=>'calendar smronju','title'=>'Academic Sessions'))  .'</li>
+                        <li>' . HTML::link_to_route('manage_aca_term','<span>Academic Terms</span>','',array('class'=>'calendar smronju','title'=>'Academic Terms'))  .'</li>
+                        <li>' . HTML::link_to_route('manage_app_pin','<span>Application PINs</span>','',array('class'=>'calendar smronju','title'=>'Application PINs'))  .'</li>
+                        <li>' . HTML::link_to_route('manage_payment_categories','<span>Payment Categories</span>','',array('class'=>'calendar smronju','title'=>'Payment Categories'))  .'</li>
+                    </ul>
+                </li>
                  <li>' . HTML::link_to_route('teachers','<span>Teachers</span>','',array('class'=>'grid smronju','title'=>'Teachers'))  .'</li>
                 <li>' . HTML::link_to_route('ais_subjects','<span>Subjects</span>','',array('class'=>'grid smronju','title'=>'Subjects'))  .'</li>
                 <li>' . HTML::link_to_route('ais_classes','<span>Classes</span>','',array('class'=>'grid smronju','title'=>'Classes'))  .'</li>
                 <li>' . HTML::link_to_route('questions','<span>Questions</span>','',array('class'=>'grid smronju','title'=>'Questions'))  .'</li>
             </ul>'
         .'</li>
-            <li '.$class_nav.'>'. HTML::link('#','<span>Classes</span>',array('class'=>'elements')) . '</li>
-            <li '.$assignment_nav.'>'. HTML::link('#','<span>Assignments</span>',array('class'=>'tables')) . '</li>
+            <!--<li '.$class_nav.'>'. HTML::link('#','<span>Classes</span>',array('class'=>'elements')) . '</li>
+            <li '.$assignment_nav.'>'. HTML::link('#','<span>Assignments</span>',array('class'=>'tables')) . '</li>-->
             <li '.$staff_nav.'>
                 <a class="calendar" href="javascript:void(0)" title="Staff"><span>Staff</span></a>
                 <ul class="dropdown">
