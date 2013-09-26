@@ -2,7 +2,7 @@
 
 //    Routes
 Route::get('/', array('as'=>'home', 'uses'=>'home@index'));
-//Route::get('home/hash_pwd', array('uses'=>'home@hash_pwd'));
+Route::get('home/hash_pwd', array('uses'=>'home@hash_pwd'));
 
 //    Users Controller - GET
 Route::get('users', array('as'=>'users', 'uses'=>'users@index'));
@@ -19,8 +19,6 @@ Route::get('users/edit_profile/(:num)', array('as'=>'edit_profile', 'uses'=>'use
 Route::get('users/delete_user/(:num)', array('as'=>'delete_user', 'uses'=>'users@delete_user'));
 Route::get('users/forgot_password', array('as'=>'forgot_password', 'uses'=>'users@forgot_password'));
 Route::get('users/password_confirmation', array('as'=>'password_confirmation', 'uses'=>'users@password_confirmation'));
-//Route::get('users/generate_hash', array('as'=>'generate_hash', 'uses'=>'users@generate_hash'));
-//Route::get('users/demo', array('as'=>'demo', 'uses'=>'users@demo'));
 
 
 //    Users Controller - POST

@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : LocalDevDB
-Source Server Version : 50524
+Source Server Version : 50612
 Source Host           : localhost:3306
 Source Database       : ais_portal
 
 Target Server Type    : MYSQL
-Target Server Version : 50524
+Target Server Version : 50612
 File Encoding         : 65001
 
-Date: 2013-06-23 22:54:02
+Date: 2013-09-27 00:04:43
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -24,12 +24,14 @@ CREATE TABLE `academic_sessions` (
   `academic_session` varchar(10) DEFAULT NULL,
   `active_session` int(2) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of academic_sessions
 -- ----------------------------
-INSERT INTO `academic_sessions` VALUES ('1', '2012/2013', '1');
+INSERT INTO `academic_sessions` VALUES ('1', '2012/2013', '0');
+INSERT INTO `academic_sessions` VALUES ('2', '2013/2014', '1');
+INSERT INTO `academic_sessions` VALUES ('5', '2014/2015', '0');
 
 -- ----------------------------
 -- Table structure for admission_recommendation
@@ -85,6 +87,74 @@ INSERT INTO `assessment_types` VALUES ('3', '3rd CA (10%)');
 INSERT INTO `assessment_types` VALUES ('4', 'Exam (60%)');
 
 -- ----------------------------
+-- Table structure for assignments_and_notes
+-- ----------------------------
+DROP TABLE IF EXISTS `assignments_and_notes`;
+CREATE TABLE `assignments_and_notes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL,
+  `an_type` tinyint(4) DEFAULT NULL,
+  `an_file_path` varchar(255) DEFAULT NULL,
+  `subject_id` int(11) NOT NULL DEFAULT '0',
+  `class_id` int(11) NOT NULL DEFAULT '0',
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `submission_deadline` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`,`subject_id`,`class_id`,`user_id`),
+  KEY `fk_assignments_and_notes_subjects1_idx` (`subject_id`),
+  KEY `fk_assignments_and_notes_classes1_idx` (`class_id`),
+  KEY `fk_assignments_and_notes_users1_idx` (`user_id`),
+  CONSTRAINT `fk_assignments_and_notes_classes1` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_assignments_and_notes_subjects1` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_assignments_and_notes_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of assignments_and_notes
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for assignment_submissions
+-- ----------------------------
+DROP TABLE IF EXISTS `assignment_submissions`;
+CREATE TABLE `assignment_submissions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `assignment_id` int(11) NOT NULL DEFAULT '0',
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `assignment_score` float DEFAULT NULL,
+  `submission_date` datetime DEFAULT NULL,
+  `assignment_file_path` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`,`assignment_id`,`user_id`),
+  KEY `fk_assignment_submissions_assignments_and_notes1_idx` (`assignment_id`),
+  KEY `fk_assignment_submissions_users1_idx` (`user_id`),
+  CONSTRAINT `fk_assignment_submissions_assignments_and_notes1` FOREIGN KEY (`assignment_id`) REFERENCES `assignments_and_notes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_assignment_submissions_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of assignment_submissions
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for banks
+-- ----------------------------
+DROP TABLE IF EXISTS `banks`;
+CREATE TABLE `banks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `bank_name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of banks
+-- ----------------------------
+INSERT INTO `banks` VALUES ('1', 'Zenith Bank');
+INSERT INTO `banks` VALUES ('2', 'Diamond Bank');
+INSERT INTO `banks` VALUES ('3', 'EcoBank');
+INSERT INTO `banks` VALUES ('4', 'UBA Bank');
+INSERT INTO `banks` VALUES ('5', 'GTBank');
+INSERT INTO `banks` VALUES ('6', 'Keystone Bank');
+
+-- ----------------------------
 -- Table structure for biodata
 -- ----------------------------
 DROP TABLE IF EXISTS `biodata`;
@@ -95,16 +165,17 @@ CREATE TABLE `biodata` (
   `date_of_birth` date DEFAULT NULL,
   `tribe` varchar(30) DEFAULT NULL,
   `form_no` varchar(8) DEFAULT NULL,
-  `user_id` int(11) NOT NULL,
-  `gender_id` int(11) NOT NULL,
-  `state_id` int(11) NOT NULL,
-  `nationality_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `gender_id` int(11) NOT NULL DEFAULT '0',
+  `state_id` int(11) NOT NULL DEFAULT '0',
+  `nationality_id` int(11) NOT NULL DEFAULT '0',
   `current_class_id` int(11) NOT NULL,
   `last_class_id` int(11) NOT NULL,
   `csai_id` int(11) NOT NULL,
-  `application_type_id` int(11) NOT NULL,
+  `application_type_id` int(11) NOT NULL DEFAULT '0',
   `passport_path` varchar(255) DEFAULT NULL,
   `reg_status` int(2) DEFAULT NULL,
+  `student_status` int(2) NOT NULL,
   PRIMARY KEY (`id`,`user_id`,`gender_id`,`state_id`,`nationality_id`,`current_class_id`,`last_class_id`,`csai_id`,`application_type_id`),
   KEY `fk_biodata_users1_idx` (`user_id`),
   KEY `fk_biodata_gender1_idx` (`gender_id`),
@@ -119,17 +190,11 @@ CREATE TABLE `biodata` (
   CONSTRAINT `fk_biodata_nationality1` FOREIGN KEY (`nationality_id`) REFERENCES `nationality` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_biodata_states1` FOREIGN KEY (`state_id`) REFERENCES `states` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_biodata_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of biodata
 -- ----------------------------
-INSERT INTO `biodata` VALUES ('1', null, '13', '2000-02-12', 'Babur', '17878547', '5', '1', '8', '118', '33', '31', '33', '4', '5_passport.jpg', '9');
-INSERT INTO `biodata` VALUES ('2', null, '14', '1999-02-12', 'Hausa', '19577138', '6', '1', '5', '118', '33', '31', '33', '4', '6_passport.jpg', '9');
-INSERT INTO `biodata` VALUES ('3', null, '53', '1960-01-01', 'Yakurr', '16953536', '7', '1', '9', '118', '33', '32', '33', '4', '7_passport.jpg', '9');
-INSERT INTO `biodata` VALUES ('4', null, '10', '2003-02-12', 'Hausa', '67242424', '8', '2', '17', '118', '33', '32', '33', '4', '8_passport.jpg', '9');
-INSERT INTO `biodata` VALUES ('5', 'Another', '13', '2000-02-12', 'Kanuri', '19437483', '9', '1', '8', '118', '1', '2', '8', '1', '9_passport.jpg', '8');
-INSERT INTO `biodata` VALUES ('6', 'USA', '15', '1998-02-12', 'Hause', '48091802', '10', '1', '15', '118', '1', '32', '34', '4', '10_passport.jpg', '7');
 
 -- ----------------------------
 -- Table structure for classes
@@ -185,6 +250,100 @@ INSERT INTO `classes` VALUES ('38', 'SS3 A');
 INSERT INTO `classes` VALUES ('39', 'SS3 B');
 
 -- ----------------------------
+-- Table structure for class_attendance
+-- ----------------------------
+DROP TABLE IF EXISTS `class_attendance`;
+CREATE TABLE `class_attendance` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `attendance_type_id` int(11) DEFAULT NULL,
+  `attendance_date` datetime DEFAULT NULL,
+  `admission_no` varchar(15) DEFAULT NULL,
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `term_id` int(11) NOT NULL DEFAULT '0',
+  `class_id` int(11) NOT NULL DEFAULT '0',
+  `academic_session_id` int(11) NOT NULL DEFAULT '0',
+  `subject_id` int(11) NOT NULL DEFAULT '0',
+  `attendance_reason` text,
+  PRIMARY KEY (`id`,`user_id`,`term_id`,`class_id`,`academic_session_id`,`subject_id`),
+  KEY `fk_class_attendance_users1_idx` (`user_id`),
+  KEY `fk_class_attendance_terms1_idx` (`term_id`),
+  KEY `fk_class_attendance_classes1_idx` (`class_id`),
+  KEY `fk_class_attendance_academic_sessions1_idx` (`academic_session_id`),
+  KEY `fk_class_attendance_subjects1_idx` (`subject_id`),
+  CONSTRAINT `fk_class_attendance_academic_sessions1` FOREIGN KEY (`academic_session_id`) REFERENCES `academic_sessions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_class_attendance_classes1` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_class_attendance_subjects1` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_class_attendance_terms1` FOREIGN KEY (`term_id`) REFERENCES `terms` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_class_attendance_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of class_attendance
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for deductions
+-- ----------------------------
+DROP TABLE IF EXISTS `deductions`;
+CREATE TABLE `deductions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `staff_id` int(11) NOT NULL DEFAULT '0',
+  `deduction_date` date DEFAULT NULL,
+  `deduction_type_id` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`,`staff_id`,`deduction_type_id`),
+  KEY `fk_deductions_staff_records1_idx` (`staff_id`),
+  KEY `fk_deductions_deduction_types1_idx` (`deduction_type_id`),
+  CONSTRAINT `fk_deductions_deduction_types1` FOREIGN KEY (`deduction_type_id`) REFERENCES `deduction_types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_deductions_staff_records1` FOREIGN KEY (`staff_id`) REFERENCES `staff_records` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of deductions
+-- ----------------------------
+INSERT INTO `deductions` VALUES ('2', '1', '2013-09-10', '2');
+
+-- ----------------------------
+-- Table structure for deduction_types
+-- ----------------------------
+DROP TABLE IF EXISTS `deduction_types`;
+CREATE TABLE `deduction_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `deduction_name` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of deduction_types
+-- ----------------------------
+INSERT INTO `deduction_types` VALUES ('1', 'Staff Children Scholarship');
+INSERT INTO `deduction_types` VALUES ('2', 'Pension');
+INSERT INTO `deduction_types` VALUES ('3', '3 Days Lateness');
+INSERT INTO `deduction_types` VALUES ('4', 'Rent - Single Apartment');
+INSERT INTO `deduction_types` VALUES ('5', 'Rent - Double Apartment');
+INSERT INTO `deduction_types` VALUES ('6', 'Rent - Shared Apartment');
+
+-- ----------------------------
+-- Table structure for designations
+-- ----------------------------
+DROP TABLE IF EXISTS `designations`;
+CREATE TABLE `designations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `designation_name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of designations
+-- ----------------------------
+INSERT INTO `designations` VALUES ('1', 'Ordinary Staff');
+INSERT INTO `designations` VALUES ('2', 'Principal');
+INSERT INTO `designations` VALUES ('3', 'Vice Principal');
+INSERT INTO `designations` VALUES ('4', 'HOD/Senior Master');
+INSERT INTO `designations` VALUES ('5', 'Exam Officer');
+INSERT INTO `designations` VALUES ('6', 'Head Cleaner/Security');
+INSERT INTO `designations` VALUES ('7', 'Special Duty/Extension');
+
+-- ----------------------------
 -- Table structure for entrance_examination
 -- ----------------------------
 DROP TABLE IF EXISTS `entrance_examination`;
@@ -199,7 +358,7 @@ CREATE TABLE `entrance_examination` (
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`,`user_id`),
   KEY `fk_entrance_examination_users1_idx` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of entrance_examination
@@ -209,6 +368,9 @@ INSERT INTO `entrance_examination` VALUES ('2', '87', '64', '83', '75', '34', '4
 INSERT INTO `entrance_examination` VALUES ('3', '45', '78', '38', '69', '86', '87', '7');
 INSERT INTO `entrance_examination` VALUES ('4', '87', '87', '68', '78', '60', '31', '8');
 INSERT INTO `entrance_examination` VALUES ('5', '45', '64', '68', '78', '81', '31', '9');
+INSERT INTO `entrance_examination` VALUES ('6', '56', '87', '65', '45', '67', '54', '10');
+INSERT INTO `entrance_examination` VALUES ('7', '56', '78', '87', '65', '56', '52', '5');
+INSERT INTO `entrance_examination` VALUES ('8', '65', '89', '57', '65', '52', '45', '6');
 
 -- ----------------------------
 -- Table structure for events
@@ -221,20 +383,21 @@ CREATE TABLE `events` (
   `start_date` datetime DEFAULT NULL,
   `end_date` datetime DEFAULT NULL,
   `all_day` tinyint(4) DEFAULT '0',
-  `event_for_group_id` int(11) NOT NULL,
+  `event_for_group_id` int(11) NOT NULL DEFAULT '0',
   `student_class_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`,`event_for_group_id`),
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`,`event_for_group_id`,`user_id`),
   KEY `fk_events_classes1_idx` (`student_class_id`),
   KEY `fk_events_event_group1_idx` (`event_for_group_id`),
+  KEY `fk_events_users1_idx` (`user_id`),
   CONSTRAINT `fk_events_event_group1` FOREIGN KEY (`event_for_group_id`) REFERENCES `event_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_events_classes1` FOREIGN KEY (`student_class_id`) REFERENCES `classes` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_events_classes1` FOREIGN KEY (`student_class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_events_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of events
 -- ----------------------------
-INSERT INTO `events` VALUES ('2', 'Test Event', 'http://www.maomuffy.com', '2013-06-23 22:30:12', '2013-06-23 23:30:12', '0', '3', null);
-INSERT INTO `events` VALUES ('3', 'Another Event', '', '2013-06-24 22:25:56', null, '1', '3', null);
 
 -- ----------------------------
 -- Table structure for event_group
@@ -269,6 +432,50 @@ CREATE TABLE `gender` (
 INSERT INTO `gender` VALUES ('1', 'Male');
 INSERT INTO `gender` VALUES ('2', 'Female');
 INSERT INTO `gender` VALUES ('3', 'Other');
+
+-- ----------------------------
+-- Table structure for incentives
+-- ----------------------------
+DROP TABLE IF EXISTS `incentives`;
+CREATE TABLE `incentives` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `incentive_name` varchar(255) DEFAULT NULL,
+  `incentive_percentage` float DEFAULT NULL,
+  `incentive_type_id` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`,`incentive_type_id`),
+  KEY `fk_incentives_incentive_types1_idx` (`incentive_type_id`),
+  CONSTRAINT `fk_incentives_incentive_types1` FOREIGN KEY (`incentive_type_id`) REFERENCES `incentive_types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of incentives
+-- ----------------------------
+INSERT INTO `incentives` VALUES ('2', 'Medical', '30', '1');
+INSERT INTO `incentives` VALUES ('3', 'Transport', '20', '1');
+INSERT INTO `incentives` VALUES ('4', 'Housing', '40', '1');
+INSERT INTO `incentives` VALUES ('5', 'Pension', '7.5', '1');
+INSERT INTO `incentives` VALUES ('6', 'Principal', '50', '2');
+INSERT INTO `incentives` VALUES ('7', 'Vice Principal', '30', '2');
+INSERT INTO `incentives` VALUES ('9', 'Hod/senior Master', '10', '2');
+INSERT INTO `incentives` VALUES ('10', 'Exam Officer', '5', '2');
+INSERT INTO `incentives` VALUES ('11', 'Head Cleaner/security', '5', '2');
+INSERT INTO `incentives` VALUES ('12', 'Special Duty/extension', '5', '2');
+
+-- ----------------------------
+-- Table structure for incentive_types
+-- ----------------------------
+DROP TABLE IF EXISTS `incentive_types`;
+CREATE TABLE `incentive_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `incentive_type_name` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of incentive_types
+-- ----------------------------
+INSERT INTO `incentive_types` VALUES ('1', 'General');
+INSERT INTO `incentive_types` VALUES ('2', 'Designated');
 
 -- ----------------------------
 -- Table structure for laravel_migrations
@@ -306,17 +513,13 @@ CREATE TABLE `medical_records` (
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`,`user_id`),
   KEY `fk_medical_records_users1_idx` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of medical_records
 -- ----------------------------
-INSERT INTO `medical_records` VALUES ('1', 'Medical Hospital', 'Some Hospital', 'Demo Doctor', '08030796088', '466343', 'O', 'AA', 'None', '', 'No', '', '5');
-INSERT INTO `medical_records` VALUES ('2', 'Medical Hospital', 'Listings in Demo Area', 'Dr. Mustapha Umar', '08036879223', '18432', 'A', 'AS', 'Yes', 'Reacts To Excess Stress', 'No', '', '6');
-INSERT INTO `medical_records` VALUES ('3', 'Medical Hospital', 'Another Hospital', 'Demo Doctor', '08036879223', '989321', 'O', 'AA', 'None', '', 'No', '', '7');
-INSERT INTO `medical_records` VALUES ('4', 'Medical Hospital', 'Another Hospital', 'Demo Doctor', '08030796088', '786343', 'B', 'AA', 'None', '', 'No', '', '8');
-INSERT INTO `medical_records` VALUES ('5', 'Medical Hospital', 'Hospital', 'Dr. Mustapha Usman', '08030796088', '7863432', 'A', 'AS', 'None', '', 'No', '', '9');
-INSERT INTO `medical_records` VALUES ('6', 'Medical Hospital', 'Nevada', 'Dr. Who Bond', '08059443154', '12345', 'O+', 'AA', 'No', '', 'No', '', '10');
+INSERT INTO `medical_records` VALUES ('1', 'Medical Home', 'No. 13, medical street', 'Dr. No-Eh', '08095878483', '93889HB', 'A+', 'AA', 'No', '', 'No', '', '5');
+INSERT INTO `medical_records` VALUES ('2', 'Borno State Hospital', 'Hospital address', 'Dr. Memphis Jackson', '08059443154', '', 'O', 'AA', 'No', '', 'No', '', '6');
 
 -- ----------------------------
 -- Table structure for nationality
@@ -506,11 +709,11 @@ INSERT INTO `nationality` VALUES ('168', 'Zimbawe');
 DROP TABLE IF EXISTS `official_use`;
 CREATE TABLE `official_use` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL DEFAULT '0',
   `last_class_id` int(11) NOT NULL,
   `present_class_id` int(11) NOT NULL,
   `aic_id` int(11) NOT NULL,
-  `admission_recommendation_id` int(11) NOT NULL,
+  `admission_recommendation_id` int(11) NOT NULL DEFAULT '0',
   `admission_no` varchar(12) DEFAULT NULL,
   PRIMARY KEY (`id`,`user_id`,`last_class_id`,`present_class_id`,`aic_id`,`admission_recommendation_id`),
   KEY `fk_official_use_admission_recommendation1_idx` (`admission_recommendation_id`),
@@ -518,18 +721,13 @@ CREATE TABLE `official_use` (
   KEY `fk_official_use_classes2_idx` (`present_class_id`),
   KEY `fk_official_use_classes3_idx` (`aic_id`),
   KEY `fk_official_use_users1_idx` (`user_id`),
-  CONSTRAINT `fk_official_use_admission_recommendation1` FOREIGN KEY (`admission_recommendation_id`) REFERENCES `admission_recommendation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_official_use_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_official_use_admission_recommendation1` FOREIGN KEY (`admission_recommendation_id`) REFERENCES `admission_recommendation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_official_use_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of official_use
 -- ----------------------------
-INSERT INTO `official_use` VALUES ('1', '5', '31', '1', '33', '2', 'AR/13/390478');
-INSERT INTO `official_use` VALUES ('2', '6', '31', '1', '33', '1', 'AR/13/109227');
-INSERT INTO `official_use` VALUES ('3', '7', '32', '1', '33', '1', 'AR/13/937228');
-INSERT INTO `official_use` VALUES ('4', '8', '32', '1', '33', '1', 'AR/13/136882');
-INSERT INTO `official_use` VALUES ('5', '9', '2', '1', '8', '1', 'AR/13/937283');
 
 -- ----------------------------
 -- Table structure for parental_information
@@ -551,17 +749,13 @@ CREATE TABLE `parental_information` (
   KEY `fk_parental_information_users1_idx` (`user_id`),
   KEY `fk_parental_information_religions1_idx` (`father_religion`),
   KEY `fk_parental_information_religions2_idx` (`mother_religion`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of parental_information
 -- ----------------------------
-INSERT INTO `parental_information` VALUES ('1', 'Demo Father', 'Civil Servant', '1', 'Somewhere in Nevada', '08002341234', 'Demo Mother', 'House Wife', '1', '08002341234', '5');
-INSERT INTO `parental_information` VALUES ('2', 'Umar A. Muhammad', 'Civil Servant', '1', 'Somewhere', '08030796088', 'Demo Mother', 'House Wife', '1', '08030796088', '6');
-INSERT INTO `parental_information` VALUES ('3', 'Dr. Sample Father', 'Civil Servant', '1', 'Another Address', '08030796088', 'Demo Mother', 'Lawyer', '1', '08030796088', '7');
-INSERT INTO `parental_information` VALUES ('4', 'Demo Father', 'Civil Servant', '1', 'Another Residential Address', '08030796088', 'Amina Hassan', 'Banker', '1', '08030796088', '8');
-INSERT INTO `parental_information` VALUES ('5', 'Umar A. Muhammad', 'Civil Servant', '1', 'Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam,', '08030796088', 'Amina Hassan', 'House Wife', '1', '08030796088', '9');
-INSERT INTO `parental_information` VALUES ('6', 'Dr. Hewlett Packard', 'Computer Developer', '1', 'Sillicon Valley', '(080) 5944 3154', 'Prof. Catherine Packard', 'C.E.O GitHub', '1', '(080) 5944 3154', '10');
+INSERT INTO `parental_information` VALUES ('1', 'Mr John Doe', 'Civil Servant', '1', 'No. 20, Aso rock villa', '08098839922', 'Mrs Jane Doe', 'Civil Servant', '1', '08098839922', '5');
+INSERT INTO `parental_information` VALUES ('2', 'Mr. John Kepler', 'Civil Servant', '1', 'Somewhere in Nevada', '08059443154', 'Mrs. Amina John', 'Nurse', '1', '08059443154', '6');
 
 -- ----------------------------
 -- Table structure for payments
@@ -643,21 +837,26 @@ CREATE TABLE `pins` (
   `usage_status` int(2) DEFAULT NULL,
   `issuance_status` int(2) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pins
 -- ----------------------------
 INSERT INTO `pins` VALUES ('1', '230779485127', '1', '1');
 INSERT INTO `pins` VALUES ('2', '121567026073', '1', '1');
-INSERT INTO `pins` VALUES ('3', '108015380130', '1', '1');
-INSERT INTO `pins` VALUES ('4', '141201293637', '1', '1');
-INSERT INTO `pins` VALUES ('5', '194586413821', '1', '1');
-INSERT INTO `pins` VALUES ('6', '357420443205', '1', '1');
+INSERT INTO `pins` VALUES ('3', '108015380130', '0', '0');
+INSERT INTO `pins` VALUES ('4', '141201293637', '0', '0');
+INSERT INTO `pins` VALUES ('5', '194586413821', '0', '0');
+INSERT INTO `pins` VALUES ('6', '357420443205', '0', '0');
 INSERT INTO `pins` VALUES ('7', '141120128813', '0', '0');
 INSERT INTO `pins` VALUES ('8', '135610207019', '0', '0');
 INSERT INTO `pins` VALUES ('9', '550032331121', '0', '0');
 INSERT INTO `pins` VALUES ('10', '136737982056', '0', '0');
+INSERT INTO `pins` VALUES ('11', '112276447113', '0', '0');
+INSERT INTO `pins` VALUES ('12', '846477048222', '0', '0');
+INSERT INTO `pins` VALUES ('13', '165021485145', '0', '0');
+INSERT INTO `pins` VALUES ('14', '817366208154', '0', '0');
+INSERT INTO `pins` VALUES ('15', '414110808198', '0', '0');
 
 -- ----------------------------
 -- Table structure for pin_payments
@@ -674,17 +873,37 @@ CREATE TABLE `pin_payments` (
   `pin_id` int(11) NOT NULL,
   PRIMARY KEY (`id`,`pin_id`),
   KEY `fk_pin_payments_pins1_idx` (`pin_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pin_payments
 -- ----------------------------
-INSERT INTO `pin_payments` VALUES ('1', 'Jonathan', 'Doe', '2500', 'AR-6831579', '2013-06-09', 'Ais Accountant', '1');
-INSERT INTO `pin_payments` VALUES ('2', 'Mfawa', 'Onen', '2500', 'AR-5052592', '2013-06-09', 'Ais Accountant', '2');
-INSERT INTO `pin_payments` VALUES ('3', 'Williams', 'Onen', '2500', 'AR-5705575', '2013-06-09', 'Ais Accountant', '3');
-INSERT INTO `pin_payments` VALUES ('4', 'Demo', 'Student', '2500', 'AR-6848013', '2013-06-09', 'Ais Accountant', '4');
-INSERT INTO `pin_payments` VALUES ('5', 'Test', 'Applicant', '2500', 'AR-7646302', '2013-06-09', 'AIS Administrator', '5');
-INSERT INTO `pin_payments` VALUES ('6', 'Michael', 'Dell', '2500', 'AR-3925691', '2013-06-14', 'AIS Administrator', '6');
+INSERT INTO `pin_payments` VALUES ('1', 'Williams', 'Onen', '2500', '10753718', '2013-09-12', 'Ais Accountant', '1');
+INSERT INTO `pin_payments` VALUES ('2', 'Student', 'Demo', '2500', '17008946', '2013-09-12', 'Ais Accountant', '2');
+
+-- ----------------------------
+-- Table structure for questions_bank
+-- ----------------------------
+DROP TABLE IF EXISTS `questions_bank`;
+CREATE TABLE `questions_bank` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `class_id` int(11) NOT NULL DEFAULT '0',
+  `subject_id` int(11) NOT NULL DEFAULT '0',
+  `question_title` varchar(255) DEFAULT NULL,
+  `question_file_path` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`,`user_id`,`class_id`,`subject_id`),
+  KEY `fk_questions_bank_users1_idx` (`user_id`),
+  KEY `fk_questions_bank_classes1_idx` (`class_id`),
+  KEY `fk_questions_bank_subjects1_idx` (`subject_id`),
+  CONSTRAINT `fk_questions_bank_classes1` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_questions_bank_subjects1` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_questions_bank_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of questions_bank
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for registered_subjects
@@ -1123,12 +1342,13 @@ CREATE TABLE `religions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `religion_name` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of religions
 -- ----------------------------
 INSERT INTO `religions` VALUES ('1', 'Islam');
+INSERT INTO `religions` VALUES ('2', 'Other');
 
 -- ----------------------------
 -- Table structure for results
@@ -1138,7 +1358,7 @@ CREATE TABLE `results` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `admission_no` varchar(12) DEFAULT NULL,
   `score` float DEFAULT NULL,
-  `assessment_type_id` int(11) NOT NULL,
+  `assessment_type_id` int(11) NOT NULL DEFAULT '0',
   `subject_id` int(11) NOT NULL,
   `term_id` int(11) NOT NULL,
   `academic_session_id` int(11) NOT NULL,
@@ -1150,60 +1370,20 @@ CREATE TABLE `results` (
   KEY `fk_results_academic_sessions1_idx` (`academic_session_id`),
   KEY `fk_results_subjects1_idx` (`subject_id`),
   KEY `fk_results_classes1_idx` (`class_id`),
-  CONSTRAINT `fk_results_assessment_types1` FOREIGN KEY (`assessment_type_id`) REFERENCES `assessment_types` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_results_assessment_types1` FOREIGN KEY (`assessment_type_id`) REFERENCES `assessment_types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of results
 -- ----------------------------
-INSERT INTO `results` VALUES ('1', 'AR/13/390478', '17', '1', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('2', 'AR/13/390478', '8', '2', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('3', 'AR/13/390478', '4', '3', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('4', 'AR/13/390478', '25', '4', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('5', 'AR/13/109227', '15', '1', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('6', 'AR/13/109227', '6', '2', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('7', 'AR/13/109227', '6', '3', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('8', 'AR/13/109227', '30', '4', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('9', 'AR/13/937228', '16', '1', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('10', 'AR/13/937228', '8', '2', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('11', 'AR/13/937228', '7', '3', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('12', 'AR/13/937228', '35', '4', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('13', 'AR/13/136882', '14', '1', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('14', 'AR/13/136882', '5', '2', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('15', 'AR/13/136882', '8', '3', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('16', 'AR/13/136882', '42', '4', '1', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('17', 'AR/13/390478', '15', '1', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('18', 'AR/13/390478', '6', '2', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('19', 'AR/13/390478', '5', '3', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('20', 'AR/13/390478', '50', '4', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('21', 'AR/13/109227', '18', '1', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('22', 'AR/13/109227', '6', '2', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('23', 'AR/13/109227', '7', '3', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('24', 'AR/13/109227', '40', '4', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('25', 'AR/13/937228', '12', '1', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('26', 'AR/13/937228', '8', '2', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('27', 'AR/13/136882', '16', '1', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('28', 'AR/13/136882', '7', '2', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('29', 'AR/13/136882', '7', '3', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('30', 'AR/13/136882', '47', '4', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('31', 'AR/13/937228', '9', '3', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('32', 'AR/13/937228', '38', '4', '4', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('33', 'AR/13/390478', '15', '1', '5', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('34', 'AR/13/390478', '8', '2', '5', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('35', 'AR/13/390478', '7.5', '3', '5', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('36', 'AR/13/390478', '52', '4', '5', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('37', 'AR/13/109227', '14', '1', '5', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('38', 'AR/13/109227', '8', '2', '5', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('39', 'AR/13/109227', '7', '3', '5', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('40', 'AR/13/109227', '46', '4', '5', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('41', 'AR/13/937228', '15', '1', '5', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('42', 'AR/13/937228', '5', '2', '5', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('43', 'AR/13/937228', '8', '3', '5', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('44', 'AR/13/937228', '47.5', '4', '5', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('45', 'AR/13/136882', '10', '1', '5', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('46', 'AR/13/136882', '6', '2', '5', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('47', 'AR/13/136882', '5', '3', '5', '1', '1', '33', '2');
-INSERT INTO `results` VALUES ('48', 'AR/13/136882', '58', '4', '5', '1', '1', '33', '2');
+INSERT INTO `results` VALUES ('1', 'AR/13/677038', '10', '1', '1', '1', '2', '34', '2');
+INSERT INTO `results` VALUES ('2', 'AR/13/172163', '15', '1', '1', '1', '2', '34', '2');
+INSERT INTO `results` VALUES ('3', 'AR/13/677038', '5', '2', '1', '1', '2', '34', '2');
+INSERT INTO `results` VALUES ('4', 'AR/13/172163', '6', '2', '1', '1', '2', '34', '2');
+INSERT INTO `results` VALUES ('5', 'AR/13/677038', '8', '3', '1', '1', '2', '34', '2');
+INSERT INTO `results` VALUES ('6', 'AR/13/172163', '4', '3', '1', '1', '2', '34', '2');
+INSERT INTO `results` VALUES ('7', 'AR/13/677038', '45', '4', '1', '1', '2', '34', '2');
+INSERT INTO `results` VALUES ('8', 'AR/13/172163', '40', '4', '1', '1', '2', '34', '2');
 
 -- ----------------------------
 -- Table structure for roles
@@ -1225,12 +1405,32 @@ INSERT INTO `roles` VALUES ('4', 'Ecommerce');
 INSERT INTO `roles` VALUES ('5', 'Administrator');
 
 -- ----------------------------
+-- Table structure for salaries
+-- ----------------------------
+DROP TABLE IF EXISTS `salaries`;
+CREATE TABLE `salaries` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `basic_monthly_salary` float DEFAULT NULL,
+  `bonus` float DEFAULT NULL,
+  `staff_id` int(11) NOT NULL DEFAULT '0',
+  `payment_date` date DEFAULT NULL,
+  PRIMARY KEY (`id`,`staff_id`),
+  KEY `fk_salaries_staff_records1_idx` (`staff_id`),
+  CONSTRAINT `fk_salaries_staff_records1` FOREIGN KEY (`staff_id`) REFERENCES `staff_records` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of salaries
+-- ----------------------------
+INSERT INTO `salaries` VALUES ('2', '20000', '0', '1', '2013-09-07');
+
+-- ----------------------------
 -- Table structure for schedule_of_fees
 -- ----------------------------
 DROP TABLE IF EXISTS `schedule_of_fees`;
 CREATE TABLE `schedule_of_fees` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `payment_category_id` int(11) NOT NULL,
+  `payment_category_id` int(11) NOT NULL DEFAULT '0',
   `amount` float DEFAULT NULL,
   `class_id` int(11) NOT NULL,
   `term_id` int(11) NOT NULL,
@@ -1240,7 +1440,7 @@ CREATE TABLE `schedule_of_fees` (
   KEY `fk_schedule_of_fees_payment_categories1_idx` (`payment_category_id`),
   KEY `fk_schedule_of_fees_classes1_idx` (`class_id`),
   KEY `fk_schedule_of_fees_terms1_idx` (`term_id`),
-  CONSTRAINT `fk_schedule_of_fees_payment_categories1` FOREIGN KEY (`payment_category_id`) REFERENCES `payment_categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_schedule_of_fees_payment_categories1` FOREIGN KEY (`payment_category_id`) REFERENCES `payment_categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1690 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -2947,23 +3147,17 @@ CREATE TABLE `schools_attended` (
   `class_to_id` int(11) NOT NULL,
   `year_from` int(4) DEFAULT NULL,
   `year_to` int(4) DEFAULT NULL,
-  `user_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`,`class_from_id`,`class_to_id`,`user_id`),
   KEY `fk_schools_attended_classes1_idx` (`class_from_id`),
   KEY `fk_schools_attended_classes2_idx` (`class_to_id`),
   KEY `fk_schools_attended_users1_idx` (`user_id`),
-  CONSTRAINT `fk_schools_attended_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_schools_attended_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of schools_attended
 -- ----------------------------
-INSERT INTO `schools_attended` VALUES ('1', 'Federal Govt. College, Maiduguri', '25', '31', '2001', '2005', '5');
-INSERT INTO `schools_attended` VALUES ('2', 'Roberto Nursery/primary School Wuse 2 Abuja', '1', '31', '2005', '2009', '6');
-INSERT INTO `schools_attended` VALUES ('3', 'Kings Private School', '5', '29', '2005', '2007', '7');
-INSERT INTO `schools_attended` VALUES ('4', 'Federal Govt. College, Maiduguri', '2', '24', '2001', '2005', '8');
-INSERT INTO `schools_attended` VALUES ('5', 'Kings Private School', '2', '5', '2001', '2005', '9');
-INSERT INTO `schools_attended` VALUES ('6', 'Fgc Maiduguri', '29', '32', '2004', '2005', '10');
 
 -- ----------------------------
 -- Table structure for sessions
@@ -2979,7 +3173,65 @@ CREATE TABLE `sessions` (
 -- ----------------------------
 -- Records of sessions
 -- ----------------------------
-INSERT INTO `sessions` VALUES ('aWN15YCKCP6v9hmiAMHTLanYryd9J5QtsgIkmW83', '1372024353', 'a:9:{s:5:\":new:\";a:0:{}s:5:\":old:\";a:0:{}s:10:\"csrf_token\";s:40:\"IHrbTh95EuKHBLaJRXeb15kkVFrpc2dkyuK6yV8i\";s:35:\"laravel_auth_drivers_eloquent_login\";i:1;s:7:\"user_id\";i:1;s:5:\"email\";s:16:\"admin@ais.sch.ng\";s:9:\"firstname\";s:3:\"AIS\";s:7:\"surname\";s:13:\"Administrator\";s:7:\"role_id\";i:5;}');
+INSERT INTO `sessions` VALUES ('b82rIqwbpvDqV7Bb9HtvRoMZrZJCEfXxEUALYI3h', '1380235273', 'a:9:{s:10:\"csrf_token\";s:40:\"1EBI9OkypB7ezYsM8bV6CxgLRcc0BHEgsLYOLtvr\";s:5:\":new:\";a:0:{}s:5:\":old:\";a:0:{}s:35:\"laravel_auth_drivers_eloquent_login\";i:1;s:7:\"user_id\";i:1;s:5:\"email\";s:16:\"admin@ais.sch.ng\";s:9:\"firstname\";s:3:\"Ais\";s:7:\"surname\";s:13:\"Administrator\";s:7:\"role_id\";i:5;}');
+
+-- ----------------------------
+-- Table structure for staff_attendance
+-- ----------------------------
+DROP TABLE IF EXISTS `staff_attendance`;
+CREATE TABLE `staff_attendance` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `attendance_date` datetime DEFAULT NULL,
+  `staff_id` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`,`staff_id`),
+  KEY `fk_staff_attendance_staff_records1_idx` (`staff_id`),
+  CONSTRAINT `fk_staff_attendance_staff_records1` FOREIGN KEY (`staff_id`) REFERENCES `staff_records` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of staff_attendance
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for staff_records
+-- ----------------------------
+DROP TABLE IF EXISTS `staff_records`;
+CREATE TABLE `staff_records` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `staff_no` varchar(50) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `address` text,
+  `contact_phone` varchar(50) DEFAULT NULL,
+  `email_address` varchar(50) DEFAULT NULL,
+  `qualification` text,
+  `date_of_birth` date DEFAULT NULL,
+  `department` text,
+  `years_of_experience` int(3) DEFAULT NULL,
+  `employment_date` date DEFAULT NULL,
+  `passport` varchar(255) DEFAULT NULL,
+  `gender_id` int(11) NOT NULL DEFAULT '0',
+  `state_of_origin` int(11) NOT NULL DEFAULT '0',
+  `nationality_id` int(11) NOT NULL DEFAULT '0',
+  `designation_id` int(11) NOT NULL DEFAULT '0',
+  `bank_account_number` varchar(10) DEFAULT NULL,
+  `bank_id` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`,`gender_id`,`state_of_origin`,`nationality_id`,`designation_id`,`bank_id`),
+  KEY `fk_staff_records_gender1_idx` (`gender_id`),
+  KEY `fk_staff_records_states1_idx` (`state_of_origin`),
+  KEY `fk_staff_records_nationality1_idx` (`nationality_id`),
+  KEY `fk_staff_records_designations1_idx` (`designation_id`),
+  KEY `fk_staff_records_banks1_idx` (`bank_id`),
+  CONSTRAINT `fk_staff_records_banks1` FOREIGN KEY (`bank_id`) REFERENCES `banks` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_staff_records_designations1` FOREIGN KEY (`designation_id`) REFERENCES `designations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_staff_records_gender1` FOREIGN KEY (`gender_id`) REFERENCES `gender` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_staff_records_nationality1` FOREIGN KEY (`nationality_id`) REFERENCES `nationality` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_staff_records_states1` FOREIGN KEY (`state_of_origin`) REFERENCES `states` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of staff_records
+-- ----------------------------
+INSERT INTO `staff_records` VALUES ('1', 'AIS/1234', 'Mfawa Alfred Onen', 'Somewhere in Nevada', '(080) 5944 3154', 'muffycompoqm@gmail.com', 'B.sc Geography', '2013-09-06', '', '2', '2013-09-06', '1379707318_passport.jpg', '1', '9', '118', '1', '0026511233', '5');
 
 -- ----------------------------
 -- Table structure for states
@@ -3100,16 +3352,52 @@ CREATE TABLE `teachers_and_classes` (
 -- ----------------------------
 -- Records of teachers_and_classes
 -- ----------------------------
-INSERT INTO `teachers_and_classes` VALUES ('3', '33');
-INSERT INTO `teachers_and_classes` VALUES ('4', '36');
+INSERT INTO `teachers_and_classes` VALUES ('3', '2');
+INSERT INTO `teachers_and_classes` VALUES ('4', '3');
+INSERT INTO `teachers_and_classes` VALUES ('5', '4');
+INSERT INTO `teachers_and_classes` VALUES ('6', '5');
+INSERT INTO `teachers_and_classes` VALUES ('7', '6');
+INSERT INTO `teachers_and_classes` VALUES ('8', '7');
+INSERT INTO `teachers_and_classes` VALUES ('9', '8');
+INSERT INTO `teachers_and_classes` VALUES ('10', '9');
+INSERT INTO `teachers_and_classes` VALUES ('11', '10');
+INSERT INTO `teachers_and_classes` VALUES ('12', '11');
+INSERT INTO `teachers_and_classes` VALUES ('13', '12');
+INSERT INTO `teachers_and_classes` VALUES ('14', '13');
+INSERT INTO `teachers_and_classes` VALUES ('15', '14');
+INSERT INTO `teachers_and_classes` VALUES ('16', '15');
+INSERT INTO `teachers_and_classes` VALUES ('17', '16');
+INSERT INTO `teachers_and_classes` VALUES ('18', '17');
+INSERT INTO `teachers_and_classes` VALUES ('19', '18');
+INSERT INTO `teachers_and_classes` VALUES ('20', '19');
+INSERT INTO `teachers_and_classes` VALUES ('21', '20');
+INSERT INTO `teachers_and_classes` VALUES ('22', '21');
+INSERT INTO `teachers_and_classes` VALUES ('23', '22');
+INSERT INTO `teachers_and_classes` VALUES ('24', '23');
+INSERT INTO `teachers_and_classes` VALUES ('25', '24');
+INSERT INTO `teachers_and_classes` VALUES ('26', '25');
+INSERT INTO `teachers_and_classes` VALUES ('27', '26');
+INSERT INTO `teachers_and_classes` VALUES ('28', '27');
+INSERT INTO `teachers_and_classes` VALUES ('29', '28');
+INSERT INTO `teachers_and_classes` VALUES ('30', '29');
+INSERT INTO `teachers_and_classes` VALUES ('31', '30');
+INSERT INTO `teachers_and_classes` VALUES ('32', '31');
+INSERT INTO `teachers_and_classes` VALUES ('33', '32');
+INSERT INTO `teachers_and_classes` VALUES ('34', '33');
+INSERT INTO `teachers_and_classes` VALUES ('35', '34');
+INSERT INTO `teachers_and_classes` VALUES ('36', '35');
+INSERT INTO `teachers_and_classes` VALUES ('37', '36');
+INSERT INTO `teachers_and_classes` VALUES ('38', '37');
+INSERT INTO `teachers_and_classes` VALUES ('39', '38');
+INSERT INTO `teachers_and_classes` VALUES ('40', '39');
 
 -- ----------------------------
 -- Table structure for teachers_and_subjects
 -- ----------------------------
 DROP TABLE IF EXISTS `teachers_and_subjects`;
 CREATE TABLE `teachers_and_subjects` (
-  `user_id` int(11) NOT NULL,
-  `subject_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `subject_id` int(11) NOT NULL DEFAULT '0',
   `class_id` int(11) NOT NULL,
   `term_id` int(11) NOT NULL,
   PRIMARY KEY (`user_id`,`subject_id`,`class_id`,`term_id`),
@@ -3117,18 +3405,13 @@ CREATE TABLE `teachers_and_subjects` (
   KEY `fk_users_has_subjects_users1_idx` (`user_id`),
   KEY `fk_teachers_and_subjects_classes1_idx` (`class_id`),
   KEY `fk_teachers_and_subjects_terms1_idx` (`term_id`),
-  CONSTRAINT `fk_users_has_subjects_subjects1` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_users_has_subjects_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_users_has_subjects_subjects1` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_users_has_subjects_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of teachers_and_subjects
 -- ----------------------------
-INSERT INTO `teachers_and_subjects` VALUES ('3', '1', '33', '1');
-INSERT INTO `teachers_and_subjects` VALUES ('4', '2', '33', '1');
-INSERT INTO `teachers_and_subjects` VALUES ('4', '3', '33', '1');
-INSERT INTO `teachers_and_subjects` VALUES ('3', '4', '33', '1');
-INSERT INTO `teachers_and_subjects` VALUES ('3', '5', '33', '1');
 
 -- ----------------------------
 -- Table structure for terms
@@ -3158,22 +3441,61 @@ CREATE TABLE `users` (
   `surname` varchar(45) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
-  `role_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`,`role_id`),
   KEY `fk_users_roles_idx` (`role_id`),
   CONSTRAINT `fk_users_roles` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('1', 'AIS', 'Administrator', 'admin@ais.sch.ng', '$2a$08$gvoTOqCQAq.BXmYDILZMDeAliMtr8gRx7IJFW6vfnZ5uri6XrmSw6', '5');
-INSERT INTO `users` VALUES ('2', 'Ais', 'Accountant', 'accountant@ais.sch.ng', '$2a$08$iO4suE.bWKqD8JfJCQqGuu6eZSo/g6BWMBgp7uSlwNsJWkw9d/lmS', '3');
-INSERT INTO `users` VALUES ('3', 'Ais', 'Teacher One', 'teacher1@ais.sch.ng', '$2a$08$ALWZigL7oSYAXNNvxFv8r.1SrQq9r6FXfUyrWS/0doNNelKNff186', '2');
-INSERT INTO `users` VALUES ('4', 'Ais', 'Teacher Two', 'teacher2@ais.sch.ng', '$2a$08$2CMGQzsGBwBw/IrMT9.L4OM3JSI0oyzInpcVYcMljt0f4aSK9NLPi', '2');
-INSERT INTO `users` VALUES ('5', 'Jonathan', 'Doe', 'jonhdoe@demo.com', '$2a$08$2u3aDnUE1wYPvVIxLJQDGeL00RKkhgX/IPOuf3uYejn7AE3M/K3mC', '1');
-INSERT INTO `users` VALUES ('6', 'Mfawa', 'Onen', 'muffycompoqm@gmail.com', '$2a$08$2RDvLgpkpw0PIK5NwCuBZOvnFdgPd672n1HAzIOPDb45hsZRYvhzO', '1');
-INSERT INTO `users` VALUES ('7', 'Williams', 'Onen', 'kiwixcompome@googlemail.com', '$2a$08$tTQXk8jW8wv2e/DNBMpWK.pFIYsc0AV2ephC5skoQeb.4SIzfsLV2', '1');
-INSERT INTO `users` VALUES ('8', 'Demo', 'Student', 'student@demo.com', '$2a$08$0JP0ovnHIgGI.92CksCptOHdxni2JR7j0/Wqnh2MhoJZNvk3CEXb6', '1');
-INSERT INTO `users` VALUES ('9', 'Test', 'User', 'test@demo.com', '$2a$08$Smgz1qMSdmckeTh1eFhLTOpDotb.7Z9SsexptiXqQ7BwgltNjQ9p.', '1');
-INSERT INTO `users` VALUES ('10', 'Michael', 'Dell', 'systemadmin@binghamuni.edu.ng', '$2a$08$0PscoE/i3PUl/TrhdjWpfu5dSqYyAhQIySzfaSZ9t3A9.oMMZ5yei', '1');
+INSERT INTO `users` VALUES ('1', 'Ais', 'Administrator', 'admin@ais.sch.ng', '$2a$08$tfFzi9y9Tmhb..WyTfA4t.miWanQ3dBiMfWlfThrnlKoM3Qk9Oyd6', '5');
+INSERT INTO `users` VALUES ('2', 'Ais', 'Accountant', 'accountant@ais.sch.ng', '$2a$08$3erG/D8OrKDh31nxkEXfB.pC1TJdX.f8LkS/AFX9kE0L3x/e.JN8K', '3');
+INSERT INTO `users` VALUES ('3', 'Abdulkarim', 'Adam', 'abdulkarim.adam@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('4', 'Mohammad', 'Labaran', 'mohammad.labaran@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('5', 'Abubakar', 'Anvoh', 'abubakar.anvoh@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('6', 'Saratu', 'Lawal', 'saratu.lawal@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('7', 'Ngozi', 'Oboli', 'ngozi.oboli@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('8', 'Hashiya', 'Sheidu', 'hashiya.sheidu@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('9', 'Salimat', 'Abdul-Gaffar', 'salimat.abdul@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('10', 'Samiat', 'Ibrahim', 'samiat.ibrahim@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('11', 'Amina', 'Zoru', 'amina.zoru@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('12', 'Rosemary', 'Ojochegbe', 'rosemary.ojochegbe@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('13', 'lfeoma', 'Okechukwu', 'lfeoma.okechukwu@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('14', 'Hannatu', 'Sanni', 'hannatu.sanni@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('15', 'Ali', 'Eze', 'ali.eze@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('16', 'Suleiman', 'Muhammad', 'suleiman.muhammad@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('17', 'Jude', 'Peter', 'jude.peter@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('18', 'Daniel', 'Young', 'daniel.young@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('19', 'Ramalan', 'Fatimah', 'ramalan.fatimah@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('20', 'Alabi', 'Abubakar', 'alabi.abubakar@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('21', 'Ambrose', 'Unwerhauve', 'ambrose.unwerhauve@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('22', 'Riskat', 'Abubakar', 'riskat.abubakar@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('23', 'Muritala', 'Maigari', 'muritala.maigari@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('24', 'Muibat', 'Jaiyeala', 'muibat.jaiyeala@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('25', 'Muhammad', 'Awwal', 'muhammad.awwal@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('26', 'Kemi', 'Esther', 'kemi.esther@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('27', 'Sherifat', 'Ayuba', 'sherifat.ayuba@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('28', 'Razzaqi', 'Abbas', 'razzaqi.abbas@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('29', 'Habiba', 'Omolara', 'habiba.omolara@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('30', 'Umar', 'Mababub', 'umar.mababub@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('31', 'Faisal', 'Abubakar', 'faisal.abubakar@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('32', 'Suleiman', 'lsah', 'suleiman.lsah@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('33', 'Kehinde', 'Oladayo', 'kehinde.oladayo@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('34', 'Oyevvale', 'Femi', 'oyevvale.femi@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('35', 'Atiyu', 'M', 'atiyu.m@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('36', 'Emmanuel', 'Babatude', 'emmanuel.babatude@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('37', 'Olaniyan', 'Olatunji', 'olaniyan.olatunji@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('38', 'Joseph', '', 'joseph.@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('39', 'Lawal', 'Ahmed', 'lawal.ahmed@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+INSERT INTO `users` VALUES ('40', 'Alfred', 'Mngbari', 'alfred.mngbari@ais.sch.ng', '$2a$08$3KE0T.BQh.3Js5Abtgntbek.kfj9Jy5yRRgy8VVqalzwa5r9jk6Ly', '2');
+
+-- ----------------------------
+-- Event structure for ais_event_cleaner
+-- ----------------------------
+DROP EVENT IF EXISTS `ais_event_cleaner`;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` EVENT `ais_event_cleaner` ON SCHEDULE EVERY 3 HOUR STARTS '2013-06-24 01:01:52' ON COMPLETION NOT PRESERVE ENABLE COMMENT 'Deletes Passed AIS Calendar Events' DO DELETE FROM events WHERE CURDATE() > DATE(end_date) OR (CURDATE() > DATE(start_date) AND all_day = 1)
+;;
+DELIMITER ;
