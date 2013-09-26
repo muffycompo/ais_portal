@@ -169,7 +169,7 @@ class Menu {
             <a class="calendar" href="javascript:void(0)" title="Events"><span>Events</span></a>
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('calendars','<span>Calendar</span>','',array('class'=>'calendar smronju','title'=>'Calendar'))  .'</li>
-                    <li>' . HTML::link_to_route('notifications','<span>Notification</span>','',array('class'=>'calendar smronju','title'=>'Reminder'))  .'</li>
+                    <!--<li>' . HTML::link_to_route('notifications','<span>Notification</span>','',array('class'=>'calendar smronju','title'=>'Reminder'))  .'</li>-->
                 </ul>'
             . '</li>
             <li '.$shop_nav.'>'. HTML::link('#','<span>Shop Inventory</span>',array('class'=>'barcode')) . '</li>
@@ -208,7 +208,7 @@ class Menu {
             <a class="calendar" href="javascript:void(0)" title="Events"><span>Events</span></a>
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('calendars','<span>Calendar</span>','',array('class'=>'calendar smronju','title'=>'Calendar'))  .'</li>
-                    <li>' . HTML::link_to_route('notifications','<span>Notification</span>','',array('class'=>'calendar smronju','title'=>'Reminder'))  .'</li>
+                    <!--<li>' . HTML::link_to_route('notifications','<span>Notification</span>','',array('class'=>'calendar smronju','title'=>'Reminder'))  .'</li>-->
                 </ul>'
             . '</li>';
     }
