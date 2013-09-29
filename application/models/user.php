@@ -244,12 +244,20 @@ class User extends Basemodel {
 
    public static function edit_profile($data){
        $user_id = $data['user_id'];
+       $role_id = Session::get('role_id');
        $edit_user = array(
            'firstname' => Str::title($data['firstname']),
            'surname' => Str::title($data['surname']),
        );
         if( ! empty($data['password']) ) { $edit_user['password'] = Hash::make($data['password']); }
-        $users = DB::table('users')->where('id','=',$user_id)->update($edit_user);
+       if($role_id == 1 && isset($data['class_id'])){
+           $migrate = array(
+               'current_class_id' => $data['class_id'],
+               'migration' => 0
+           );
+           DB::table('biodata')->where('user_id','=',$user_id)->update($migrate);
+       }
+       $users = DB::table('users')->where('id','=',$user_id)->update($edit_user);
         if( $users ){
             Session::put('firstname',$edit_user['firstname']);
             Session::put('surname',$edit_user['surname']);

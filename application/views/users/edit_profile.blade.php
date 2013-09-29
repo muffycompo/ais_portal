@@ -36,7 +36,7 @@
                                         <section class="utopia-widget">
                                             <div class="utopia-widget-title">
                                                 {{ HTML::image('webassets/img/icons/paragraph_justify.png','',array('class'=>'utopia-widget-icon')) }}
-                                                <span>Editing {{ $user->firstname . ' ' . $user->surname }}&apos; Profile</span>
+                                                <span>Editing {{ $user->firstname . ' ' . $user->surname }}&apos;s Profile</span>
                                             </div>
                                             @include('template.partials.notification')
                                             <div class="utopia-widget-content">
@@ -60,7 +60,14 @@
                                                                         {{ $errors->first('firstname','<span class="help-inline">:message</span>') }}
                                                                     </div>
                                                                 </div>
-
+                                                                @if(Ais::migration_status())
+                                                                    <div class="control-group">
+                                                                        {{ Form::label('class_id','Current Class:',array('class'=>'control-label')) }}
+                                                                        <div class="controls">
+                                                                            {{ Ais::class_dropdown('class_id',Input::old('class_id'),array('id'=>'class_id','class'=>'span6 input-fluid')) }}
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
                                                                 <div class="control-group">
                                                                     {{ Form::label('password','Password:',array('class'=>'control-label')) }}
                                                                     <div class="controls">

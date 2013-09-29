@@ -297,6 +297,18 @@ class Ais {
         }
     }
 
+    public static function migration_status(){
+        $user_id = Session::get('user_id');
+        $role_id = Session::get('role_id');
+        if($role_id == 1){
+            $migration = DB::table('biodata')->where('user_id','=',$user_id)->first(array('migration'));
+            return ($migration->migration == 1)? true : false;
+        } else {
+            return false;
+        }
+
+    }
+
     public static function passport_image($id = ''){
         $user_id = !empty($id)? (int)$id : Session::get('user_id');
         $role_id = !empty($id)? static::resolve_userrole_userid($user_id) : Session::get('role_id');
