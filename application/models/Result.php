@@ -518,10 +518,25 @@
 
         public static function final_grade($user_id = '', $term_id = '')
         {
+            // Check if there is result for this Academic Session and Term
+            $session       = Ais::active_academic_session();
             $user_id       = empty($user_id) ? Session::get('user_id') : $user_id;
             $term_id       = empty($term_id) ? Ais::active_term() : $term_id;
-            $final_average = static::student_final_average($user_id, $term_id);
-            return Expand::ca_exam_grade($final_average);
+            $admission_no  = Ais::resolve_admission_no_from_userid($user_id);
+
+            $count = DB::table('results')
+                    ->where('admission_no','=',$admission_no)
+                    ->where('term_id','=',$term_id)
+                    ->where('academic_session_id','=', $session)
+                    ->where('published','=',2)
+                    ->count();
+            if($count > 0){
+                $final_average = static::student_final_average($user_id, $term_id);
+                return Expand::ca_exam_grade($final_average);
+            } else {
+                return 0;
+            }
+
         }
 
         public static function new_question($data)

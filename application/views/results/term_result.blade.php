@@ -40,7 +40,7 @@
                                             </div>
                                             @include('template.partials.notification')
                                             <div class="utopia-widget-content">
-                                              @if($final_average > 0)
+                                              @if($final_grade > 0)
                                                 <table class="table">
                                                     <tbody>
                                                         <tr>
@@ -142,7 +142,6 @@
                                                 </div>
                                                 @else
                                                     <div class="alert alert-error">
-                                                        <strong>An error occurred...</strong>
                                                         <p><strong>{{Expand::term($term_id)}}</strong> Result has not been published, please check back at a later date when the result has been published!</p>
                                                     </div>
 
