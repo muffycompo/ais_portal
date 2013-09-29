@@ -2,7 +2,7 @@
 
 //    Routes
 Route::get('/', array('as'=>'home', 'uses'=>'home@index'));
-Route::get('home/hash_pwd', array('uses'=>'home@hash_pwd'));
+//Route::get('home/hash_pwd', array('uses'=>'home@hash_pwd'));
 
 //    Users Controller - GET
 Route::get('users', array('as'=>'users', 'uses'=>'users@index'));

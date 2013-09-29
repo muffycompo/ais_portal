@@ -42,7 +42,7 @@ class Admin extends Basemodel {
             'present_class_id' => Ais::resolve_classid_from_userid($data['user_id']),
             'admission_recommendation_id' => $data['admission_recommendation_id'],
             'aic_id' => $data['class_admitted_into'],
-            'admission_no' => Ais::generate_admission_no(1,6,'AR'),
+            'admission_no' => Ais::generate_admission_no(1,6,'AIS'),
             'user_id' => $data['user_id'],
         );
 
