@@ -17,7 +17,7 @@ class Setting extends Basemodel {
     );
 
     private static $new_subject_rules = array(
-        'subject_title' => 'required|min:3',
+        'subject_name' => 'required|min:3',
     );
 
     private static $new_class_rules = array(
@@ -191,7 +191,7 @@ class Setting extends Basemodel {
     }
 
     public static function edit_subject($data){
-        $subject_array = array('subject_name' => Str::title($data['subject_title']));
+        $subject_array = array('subject_name' => Str::title($data['subject_name']));
         $subject = DB::table('subjects')->where('id','=',$data['subject_id'])->update($subject_array);
         if($subject){
             return $subject;

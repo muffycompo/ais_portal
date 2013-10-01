@@ -188,6 +188,11 @@ class Payment extends Basemodel {
         if( $delete ){ return true; } else { return false; }
     }
 
+    public static function delete_fee_payment($id){
+        $delete = DB::table('payments')->where('id','=',$id)->delete();
+        if( $delete ){ return true; } else { return false; }
+    }
+
 //  Secondary DB Queries
     public static function check_pin($pin){
         $pin_count = DB::table('pins')->where('pin_no','=',$pin)->where('usage_status','=',0)

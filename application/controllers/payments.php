@@ -114,6 +114,15 @@ class Payments_Controller extends Base_Controller {
         }
      }
 
+    public function get_delete_fee_payment($id){
+         $delete_schedule = Payment::delete_fee_payment($id);
+        if($delete_schedule){
+            return Redirect::back()->with('message',Ais::message_format('Fee Payment deleted successfully!','success'))->with_input();
+        } else {
+            return Redirect::back()->with('message',Ais::message_format('An error occurred while deleting the fee payment, please try again!','error'))->with_input();
+        }
+     }
+
 
 
 

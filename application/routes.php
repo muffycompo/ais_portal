@@ -49,6 +49,7 @@ Route::get('payments/fees_schedule/(:num)', array('as'=>'fees_schedule_term', 'u
 Route::get('payments/class_fee_schedule/(:num)/(:num)', array('as'=>'class_fee_schedule', 'uses'=>'payments@class_fee_schedule'));
 Route::get('payments/edit_fee_schedule/(:num)', array('as'=>'edit_fee_schedule', 'uses'=>'payments@edit_fee_schedule'));
 Route::get('payments/delete_fee_schedule/(:num)', array('as'=>'delete_fee_schedule', 'uses'=>'payments@delete_fee_schedule'));
+Route::get('payments/delete_fee_payment/(:num)', array('as'=>'delete_fee_payment', 'uses'=>'payments@delete_fee_payment'));
 
 
 
@@ -124,6 +125,7 @@ Route::get('settings/edit_subject/(:num)', array('as'=>'edit_subject', 'uses'=>'
 Route::get('settings/classes', array('as'=>'ais_classes', 'uses'=>'settings@classes'));
 Route::get('settings/new_class', array('as'=>'new_class', 'uses'=>'settings@new_class'));
 Route::get('settings/edit_class/(:num)', array('as'=>'edit_class', 'uses'=>'settings@edit_class'));
+Route::get('settings/edit_subject/(:num)', array('as'=>'edit_subject', 'uses'=>'settings@edit_subject'));
 Route::get('settings/delete_class/(:num)', array('as'=>'delete_class', 'uses'=>'settings@delete_class'));
 Route::get('settings/delete_subject/(:num)', array('as'=>'delete_subject', 'uses'=>'settings@delete_subject'));
 Route::get('settings/teacher/(:num)/assign_class', array('as'=>'assign_class', 'uses'=>'settings@assign_class'));

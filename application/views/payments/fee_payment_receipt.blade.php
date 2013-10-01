@@ -28,7 +28,7 @@
                 <tr>
 
                     <td class="meta-head">Date</td>
-                    <td><div id="date" class="ta">{{ Ais::reverse_db_date($payment->payment_of_date) }}</div></td>
+                    <td><div id="date" class="ta">{{ Ais::reverse_db_date($payment->date_of_payment) }}</div></td>
                 </tr>
                 <tr>
                     <td class="meta-head">Amount Paid</td>
@@ -51,7 +51,7 @@
 
 		  <tr class="item-row">
 		      <td class="item-name">Received from:</td>
-		      <td class="description" colspan="4"><strong>{{ $payment->applicant_firstname . ' ' . $payment->applicant_surname }}</strong></td>
+		      <td class="description" colspan="4"><strong>{{ $payment->firstname . ' ' . $payment->surname }}</strong></td>
 		  </tr>
 
 		  <tr class="item-row">

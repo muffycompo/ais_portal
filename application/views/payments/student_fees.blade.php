@@ -47,6 +47,7 @@
                                                         <tr>
                                                             <th>S/N</th>
                                                             <th>Admission No</th>
+                                                            <th>Amount</th>
                                                             <th>Teller No.</th>
                                                             <th>Receipt No.</th>
                                                             <th>Payment Type</th>
@@ -78,6 +79,7 @@
                                                     <tr>
                                                         <th>S/N</th>
                                                         <th>Admission No</th>
+                                                        <th>Amount</th>
                                                         <th>Teller No.</th>
                                                         <th>Receipt No.</th>
                                                         <th>Payment Type</th>
