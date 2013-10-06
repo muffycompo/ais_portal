@@ -11,7 +11,7 @@
         <!-- Body start -->
             <div class="span10 body-container">
 
-            <div class="row-fluid">
+            <div class="row-fluid print-top-breadcrumb">
                 <div class="span12">
                     <ul class="breadcrumb">
                         Navigator <span class="divider">/</span>
@@ -20,6 +20,16 @@
                             <!--<span class="divider">/</span> -->
                         </li>
                     </ul>
+                </div>
+            </div>
+
+            <div class="row-fluid print-only-div" style="display: none;">
+                <div class="span12">
+                    <div id="print-identity">
+                        <div id="logo">
+                          {{ HTML::image('webassets/receipts/images/logo.png','Logo') }}
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -136,7 +146,8 @@
                                                 <div class="row-fluid">
                                                     <div class="span12">
                                                         <div class="pull-right">
-                                                            <a href="javascript:void(0)" class="btn btn-info"><li class="icon-print"></li> Print</a>
+                                                            <!--<a href="javascript:void(0)" class="btn btn-info"><li class="icon-print"></li> Print</a>-->
+                                                            <a href="javascript:window.print();" class="btn btn-info"><li class="icon-print"></li> Print</a>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -360,8 +360,13 @@ class Ais {
         if($count == 1){ return true;} else { return false;}
     }
 
-    public static function is_admin($user_id){
+    public static function is_junior_admin($user_id){
         $count = DB::table('users')->where('id','=',$user_id)->where('role_id','=',5)->count();
+        if($count == 1){ return true;} else { return false;}
+    }
+
+    public static function is_admin($user_id){
+        $count = DB::table('users')->where('id','=',$user_id)->where('role_id','=',6)->count();
         if($count == 1){ return true;} else { return false;}
     }
 

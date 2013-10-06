@@ -11,7 +11,7 @@
         <!-- Body start -->
             <div class="span10 body-container">
 
-            <div class="row-fluid">
+            <div class="row-fluid print-top-breadcrumb">
                 <div class="span12">
                     <ul class="breadcrumb">
                         Navigator <span class="divider">/</span>
@@ -20,6 +20,16 @@
                             <!--<span class="divider">/</span> -->
                         </li>
                     </ul>
+                </div>
+            </div>
+
+            <div class="row-fluid print-only-div" style="display: none;">
+                <div class="span12">
+                    <div id="print-identity">
+                        <div id="logo">
+                          {{ HTML::image('webassets/receipts/images/logo.png','Logo') }}
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -38,7 +48,6 @@
                                                 {{ HTML::image('webassets/img/icons/paragraph_justify.png','',array('class'=>'utopia-widget-icon')) }}
                                                 <span>Staff Payslip - {{ $details->name . ' [' . $details->staff_no . ']' }}</span>
                                             </div>
-                                            @include('template.partials.notification')
                                             <div class="utopia-widget-content">
                                                 <div class="row-fluid">
                                                     <div class="span12 utopia-form-freeSpace">
@@ -51,7 +60,7 @@
                                                              </div>
                                                              <div class="span7 utopia-form-freeSpace">
                                                                 <p>
-                                                                    {{ HTML::image('uploads/staff/' . $details->passport .'?' . time(),'Passport',array('class'=>'passport-image-border')) }}
+                                                                    {{ HTML::image('uploads/staff/' . $details->passport .'?' . time(),'Passport',array('class'=>'passport-image-border print-img')) }}
                                                                 </p>
                                                              </div>
                                                          </div>
@@ -105,7 +114,7 @@
                                                                       </tr>
                                                                       <tr><td colspan="2">&nbsp;</td></tr>
                                                                   </table>
-                                                                 <p>{{ HTML::link_to_route('staff_salary','Cancel',array($details->id),array('class'=>'btn btn-danger span3')) }}</p>
+                                                                 <p>{{ HTML::link_to_route('staff_salary','Back',array($details->id),array('class'=>'btn btn-danger print-btn')) }} <a href="javascript:window.print();" class="btn btn-info print-btn">Print</a></p>
                                                              </div>
                                                          </div>
                                                     </div>

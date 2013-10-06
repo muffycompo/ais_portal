@@ -14,7 +14,6 @@
             <div id="logo">
               {{ HTML::image('webassets/receipts/images/logo.png','Logo') }}
             </div>
-
 		</div>
 
 		<div style="clear:both"></div>

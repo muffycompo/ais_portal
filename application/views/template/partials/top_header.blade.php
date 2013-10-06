@@ -1,5 +1,5 @@
     <!-- Header starts -->
-    <div class="row-fluid">
+    <div class="row-fluid print-top-head">
         <div class="span12">
 
             <div class="header-top">

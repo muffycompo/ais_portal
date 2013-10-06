@@ -65,7 +65,7 @@
                                                             <td>{{ Expand::role($user->role_id) }}</td>
                                                             <td>
                                                                 {{ HTML::decode(HTML::link('users/edit_user/' . $user->id, HTML::image('webassets/img/icons/pencil.png','Edit',array('title'=>'Edit')),array('class'=>'edit'))) }}
-                                                                @if($user->id != Session::get('user_id'))
+                                                                @if($user->id != Session::get('user_id') && $user->role_id < 5)
                                                                 {{ HTML::decode(HTML::link('users/delete_user/' . $user->id, HTML::image('webassets/img/icons/trash_can.png','Delete',array('title'=>'Delete')),array('class'=>'delete'))) }}
                                                                 @endif
                                                             </td>

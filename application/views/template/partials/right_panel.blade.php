@@ -1,4 +1,4 @@
-<div class="span3">
+<div class="span3 print-span3">
     <div class="row-fluid">
         <div class="span12">
 

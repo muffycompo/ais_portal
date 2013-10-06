@@ -1,0 +1,22 @@
+body {
+    background: white;
+}
+
+div.print-span3,div.print-span2-left,a.btn-info,div.print-top-head,
+div.print-top-breadcrumb,img.utopia-widget-icon,
+a.print-btn, img.print-img {
+    display: none !important;
+}
+
+div.utopia-widget-content {
+    color: black;
+}
+
+#print-identity {
+    margin:0 auto;
+    width: 400px;
+    padding: 10px 0 20px 0;
+}
+div.print-only-div {
+    display: block !important;
+}

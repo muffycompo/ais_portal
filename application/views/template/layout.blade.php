@@ -44,6 +44,7 @@
     {{ HTML::style('webassets/css/custom.css') }}
     <!-- TODO: Is there a better way? -->
     {{ HTML::script('webassets/js/fullcalendar.js') }}
+    {{ HTML::style('webassets/css/print.css',array('media'=>'print')) }}
 </head>
 
 <body>

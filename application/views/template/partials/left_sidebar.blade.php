@@ -1,5 +1,5 @@
 <!-- Sidebar start -->
-    <div class="span2 sidebar-container">
+    <div class="span2 sidebar-container print-span2-left">
       <div class="sidebar">
 
         <div class="navbar sidebar-toggle">
