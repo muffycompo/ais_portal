@@ -67,7 +67,9 @@
                                                             <th>No. of Sub</th>
                                                             <th>Ave.</th>
                                                             <th>Pos.</th>
+                                                            @if($term_id == 3)
                                                             <th>Status</th>
+                                                            @endif
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -109,6 +111,7 @@
                                                                 $key = array_search($ave, $ts_ar);
                                                             ?>
                                                             <td>{{ $key + 1 }}</td>
+                                                            @if($term_id == 3)
                                                             <td>
                                                                 {{ Ais::class_promotion($final_ave, $student->id, $class_id, $term_id, $session_id) }}
                                                                 <?php
@@ -125,6 +128,7 @@
 
                                                                 ?>
                                                             </td>
+                                                            @endif
                                                         </tr>
                                                       @endforeach
                                                     @else
@@ -154,10 +158,10 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
+                                                <a href="javascript:window.print();" class="btn btn-info"><li class="icon-print"></li> Print</a>
                                                 @else
                                                 <p>Results has not been published for <strong>{{Expand::term($term_id)}}</strong>!</p>
                                                 @endif
-                                                <a href="javascript:window.print();" class="btn btn-info"><li class="icon-print"></li> Print</a>
                                             </div>
 
                                         </section>

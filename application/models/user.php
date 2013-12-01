@@ -96,8 +96,8 @@ class User extends Basemodel {
 //  DB Inserts
     public static function new_signup($data){
         $signup_data = array(
-            'firstname' => Str::title($data['firstname']),
-            'surname' => Str::title($data['surname']),
+            'firstname' => Str::upper($data['firstname']),
+            'surname' => Str::upper($data['surname']),
             'email' => Str::lower($data['email']),
             'password' => Hash::make($data['password']),
             'role_id' => 1,
@@ -133,8 +133,8 @@ class User extends Basemodel {
 
     public static function new_user($data){
         $user_data = array(
-            'firstname' => Str::title($data['firstname']),
-            'surname' => Str::title($data['surname']),
+            'firstname' => Str::upper($data['firstname']),
+            'surname' => Str::upper($data['surname']),
             'email' => Str::lower($data['email']),
             'password' => Hash::make($data['password']),
             'role_id' => $data['role_id'],
@@ -225,12 +225,14 @@ class User extends Basemodel {
        $user_id = $data['user_id'];
        $class = false;
        $edit_user = array(
-           'firstname' => Str::title($data['firstname']),
-           'surname' => Str::title($data['surname']),
-           'role_id' => $data['role_id'],
+           'firstname' => Str::upper($data['firstname']),
+           'surname' => Str::upper($data['surname']),
        );
-        if( ! empty($data['password']) ) { $edit_user['password'] = Hash::make($data['password']); }
-        $users = DB::table('users')->where('id','=',$user_id)->update($edit_user);
+       if( ! empty($data['password']) ) { $edit_user['password'] = Hash::make($data['password']); }
+
+       if( isset($data['role_id']) ) { $edit_user['role_id'] = $data['role_id']; }
+
+       $users = DB::table('users')->where('id','=',$user_id)->update($edit_user);
        if(isset($data['class_id']) && ! empty($data['class_id'])) {
            $class = DB::table('biodata')->where('user_id','=',$data['user_id'])->update(array('current_class_id' => $data['class_id']));
        }
@@ -246,8 +248,8 @@ class User extends Basemodel {
        $user_id = $data['user_id'];
        $role_id = Session::get('role_id');
        $edit_user = array(
-           'firstname' => Str::title($data['firstname']),
-           'surname' => Str::title($data['surname']),
+           'firstname' => Str::upper($data['firstname']),
+           'surname' => Str::upper($data['surname']),
        );
         if( ! empty($data['password']) ) { $edit_user['password'] = Hash::make($data['password']); }
        if($role_id == 1 && isset($data['class_id'])){

@@ -17,7 +17,7 @@ class Setting extends Basemodel {
     );
 
     private static $new_subject_rules = array(
-        'subject_name' => 'required|min:3',
+        'subject_title' => 'required|min:3',
     );
 
     private static $new_class_rules = array(

@@ -86,18 +86,18 @@
                                                                     </div>
                                                                 </div>
                                                                 @endif
-
+                                                                @if($user->role_id < 6 && Session::get('role_id') == 6)
                                                                 <div class="control-group">
                                                                     {{ Form::label('role_id','Role:',array('class'=>'control-label')) }}
                                                                     <div class="controls">
                                                                         {{ Ais::role_dropdown('role_id',$user->role_id,array('id'=>'role_id','class'=>'span6 input-fluid')) }}
                                                                         {{ $errors->first('role_id','<span class="help-inline">:message</span>') }}
-                                                                        {{ Form::hidden('user_id',$user->id) }}
                                                                     </div>
                                                                 </div>
-
+                                                                @endif
                                                                 <div class="control-group">
                                                                     <div class="controls inline">
+                                                                    {{ Form::hidden('user_id',$user->id) }}
                                                                     {{ Form::button('Update', array('class'=>'btn btn-info span3')) }}
                                                                     @if($user->role_id == 1)
                                                                     {{ HTML::link_to_route('students','Cancel','',array('class'=>'btn btn-danger span3')) }}
