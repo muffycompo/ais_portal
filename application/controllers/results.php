@@ -167,14 +167,7 @@ class Results_Controller extends Base_Controller {
 //    Controller Actions - POST
 
     public function post_new_assessment(){
-        $assessment_type_id = Input::get('assessment_type_id');
-        if($assessment_type_id == 1){
-            $validate = Result::new_fa_assessment_validation(Input::all());
-        } elseif($assessment_type_id == 2 || $assessment_type_id == 3){
-            $validate = Result::new_sta_assessment_validation(Input::all());
-        } else {
-            $validate = Result::new_exam_assessment_validation(Input::all());
-        }
+        $validate = Result::assessment_score_validation(Input::all());
         if( $validate === true ){
             $assessment = Result::new_assessment(Input::all());
             if( $assessment === false ){
@@ -186,6 +179,27 @@ class Results_Controller extends Base_Controller {
             return Redirect::back()->with_errors($validate)->with_input();
         }
     }
+//
+//    public function post_new_assessment(){
+//        $assessment_type_id = Input::get('assessment_type_id');
+//        if($assessment_type_id == 1){
+//            $validate = Result::new_fa_assessment_validation(Input::all());
+//        } elseif($assessment_type_id == 2 || $assessment_type_id == 3){
+//            $validate = Result::new_sta_assessment_validation(Input::all());
+//        } else {
+//            $validate = Result::new_exam_assessment_validation(Input::all());
+//        }
+//        if( $validate === true ){
+//            $assessment = Result::new_assessment(Input::all());
+//            if( $assessment === false ){
+//                return Redirect::back()->with('message',Ais::message_format('An error occurred while adding result, please try again!','error'))->with_input();
+//            } else {
+//                return Redirect::to('results/assessment/' . Input::get('subject_id') . '/' . Input::get('class_id') .'/' . Input::get('term_id'));
+//            }
+//        } else {
+//            return Redirect::back()->with_errors($validate)->with_input();
+//        }
+//    }
 
     public function post_new_question(){
         $validate = Result::new_question_validation(Input::all());
@@ -243,7 +257,7 @@ class Results_Controller extends Base_Controller {
         }
     }
 
-    public function post_attendance(){
+        public function post_attendance(){
         $validate = Result::attendance_validation(Input::all());
         if( $validate === true ){
             $parent = Result::attendance(Input::all());

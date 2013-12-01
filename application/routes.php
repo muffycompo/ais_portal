@@ -113,6 +113,7 @@ Route::post('results/new_question', array('uses'=>'results@new_question'));
 Route::post('results/new_assignment', array('uses'=>'results@new_assignment'));
 Route::post('results/new_assignment_submission', array('uses'=>'results@new_assignment_submission'));
 Route::post('results/assignment_score', array('uses'=>'results@assignment_score'));
+Route::post('results/assessment_score', array('uses'=>'results@assessment_score'));
 Route::post('results/attendance', array('uses'=>'results@attendance'));
 
 //    Settings Controller - GET

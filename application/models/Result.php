@@ -35,6 +35,12 @@
         private static $assignment_score_rules = array(
             'score' => 'required|max:100|min:0',
         );
+        private static $assessment_score_rules = array(
+            'first_ca_score' => 'numeric|max:20',
+            'second_ca_score' => 'numeric|max:10',
+            'third_ca_score' => 'numeric|max:10',
+            'exam_score' => 'numeric|max:60',
+        );
 
 
 //  Validation
@@ -47,6 +53,11 @@
         public static function new_sta_assessment_validation($input)
         {
             return static::validation($input, static::$new_sta_assessment_rules);
+        }
+
+        public static function assessment_score_validation($input)
+        {
+            return static::validation($input, static::$assessment_score_rules);
         }
 
         public static function new_exam_assessment_validation($input)
@@ -91,31 +102,104 @@
         public static function new_assessment($data)
         {
             $admission_no            = Ais::resolve_admission_no_from_userid($data['user_id']);
-            $assessment_array        = array(
-                'admission_no'        => $admission_no,
-                'subject_id'          => $data['subject_id'],
-                'class_id'            => $data['class_id'],
-                'academic_session_id' => Ais::active_academic_session(),
-                'term_id'             => Ais::active_term(),
-                'assessment_type_id'  => $data['assessment_type_id'],
-                'score'               => $data['score'],
-            );
-            $assessment_update_array = array('score' => $data['score']);
-            if (static::check_assessment_exist_for_student($admission_no, $data['class_id'], $data['subject_id'], $data['assessment_type_id'])) {
-                $assessment = DB::table('results')->where('admission_no', '=', $admission_no)
-                    ->where('assessment_type_id', '=', $data['assessment_type_id'])
-                    ->update($assessment_update_array);
-            } else {
-                $assessment = DB::table('results')->insert($assessment_array);
+
+            $a = static::check_assessment_exist_for_student($admission_no, $data['class_id'], $data['subject_id'], 1);
+            $b = static::check_assessment_exist_for_student($admission_no, $data['class_id'], $data['subject_id'], 2);
+            $c = static::check_assessment_exist_for_student($admission_no, $data['class_id'], $data['subject_id'], 3);
+            $d = static::check_assessment_exist_for_student($admission_no, $data['class_id'], $data['subject_id'], 4);
+            if ($a) {
+                DB::table('results')->where('admission_no', '=', $admission_no)
+                    ->where('assessment_type_id', '=', 1)
+                    ->update(array('score'=>$data['first_ca_score']));
+            }else {
+                DB::table('results')->insert(array(
+                    'admission_no'        => $admission_no,
+                    'subject_id'          => $data['subject_id'],
+                    'class_id'            => $data['class_id'],
+                    'academic_session_id' => Ais::active_academic_session(),
+                    'term_id'             => Ais::active_term(),
+                    'assessment_type_id'  => 1,
+                    'score'               => !empty($data['first_ca_score'])? $data['first_ca_score'] : 0,
+                ));
             }
-            if ($assessment) {
-                return $assessment;
-            } else {
-                return FALSE;
+            if($b){
+                DB::table('results')->where('admission_no', '=', $admission_no)
+                    ->where('assessment_type_id', '=', 2)
+                    ->update(array('score'=>$data['second_ca_score']));
+            }else {
+                DB::table('results')->insert(array(
+                    'admission_no'        => $admission_no,
+                    'subject_id'          => $data['subject_id'],
+                    'class_id'            => $data['class_id'],
+                    'academic_session_id' => Ais::active_academic_session(),
+                    'term_id'             => Ais::active_term(),
+                    'assessment_type_id'  => 2,
+                    'score'               => !empty($data['second_ca_score'])? $data['second_ca_score'] : 0,
+                ));
             }
+            if($c){
+                DB::table('results')->where('admission_no', '=', $admission_no)
+                    ->where('assessment_type_id', '=', 3)
+                    ->update(array('score'=>$data['third_ca_score']));
+            }else {
+                DB::table('results')->insert(array(
+                    'admission_no'        => $admission_no,
+                    'subject_id'          => $data['subject_id'],
+                    'class_id'            => $data['class_id'],
+                    'academic_session_id' => Ais::active_academic_session(),
+                    'term_id'             => Ais::active_term(),
+                    'assessment_type_id'  => 3,
+                    'score'               => !empty($data['third_ca_score'])? $data['third_ca_score'] : 0,
+                ));
+            }
+            if($d){
+                DB::table('results')->where('admission_no', '=', $admission_no)
+                    ->where('assessment_type_id', '=', 4)
+                    ->update(array('score'=>$data['exam_score']));
+            }else {
+                DB::table('results')->insert(array(
+                    'admission_no'        => $admission_no,
+                    'subject_id'          => $data['subject_id'],
+                    'class_id'            => $data['class_id'],
+                    'academic_session_id' => Ais::active_academic_session(),
+                    'term_id'             => Ais::active_term(),
+                    'assessment_type_id'  => 4,
+                    'score'               => !empty($data['exam_score'])? $data['exam_score'] : 0,
+                ));
+            }
+            return true;
 
         }
 
+//
+//        public static function new_assessment($data)
+//        {
+//            $admission_no            = Ais::resolve_admission_no_from_userid($data['user_id']);
+//            $assessment_array        = array(
+//                'admission_no'        => $admission_no,
+//                'subject_id'          => $data['subject_id'],
+//                'class_id'            => $data['class_id'],
+//                'academic_session_id' => Ais::active_academic_session(),
+//                'term_id'             => Ais::active_term(),
+//                'assessment_type_id'  => $data['assessment_type_id'],
+//                'score'               => $data['score'],
+//            );
+//            $assessment_update_array = array('score' => $data['score']);
+//            if (static::check_assessment_exist_for_student($admission_no, $data['class_id'], $data['subject_id'], $data['assessment_type_id'])) {
+//                $assessment = DB::table('results')->where('admission_no', '=', $admission_no)
+//                    ->where('assessment_type_id', '=', $data['assessment_type_id'])
+//                    ->update($assessment_update_array);
+//            } else {
+//                $assessment = DB::table('results')->insert($assessment_array);
+//            }
+//            if ($assessment) {
+//                return $assessment;
+//            } else {
+//                return FALSE;
+//            }
+//
+//        }
+//
         protected static function check_assessment_exist_for_student($admission_no, $class_id, $subject_id, $assessment_type)
         {
             $count = DB::table('results')->where('admission_no', '=', $admission_no)

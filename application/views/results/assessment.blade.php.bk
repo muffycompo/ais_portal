@@ -63,23 +63,17 @@
                                                     @if(! is_null($students) && is_array($students) )
                                                       @foreach($students as $student)
                                                         <tr>
-                                                            {{ Form::open('results/new_assessment','post'); }}
                                                             <td>{{ $sn++ }}</td>
                                                             <td>{{ Ais::resolve_admission_no_from_userid($student['student_id']) }}</td>
                                                             <td>{{ $student['surname'] }}</td>
                                                             <td>{{ $student['firstname'] }}</td>
-                                                            <td>{{ Form::text('first_ca_score', $student['first_ca_score'],array('maxlength'=>3,'style'=>'width: 30px;')); }}</td>
-                                                            <td>{{ Form::text('second_ca_score', $student['second_ca_score'],array('maxlength'=>3,'style'=>'width: 30px;')); }}</td>
-                                                            <td>{{ Form::text('third_ca_score', $student['third_ca_score'],array('maxlength'=>3,'style'=>'width: 30px;')); }}</td>
-                                                            <!--<td>{{ $student['first_ca_score'] }}</td>
+                                                            <td>{{ $student['first_ca_score'] }}</td>
                                                             <td>{{ $student['second_ca_score'] }}</td>
-                                                            <td>{{ $student['third_ca_score'] }}</td>-->
-                                                            <td>{{ Form::text('exam_score', $student['exam_score'],array('maxlength'=>3,'style'=>'width: 30px;')); }}</td>
-                                                            <!--<td>{{ $student['exam_score'] }}</td>-->
+                                                            <td>{{ $student['third_ca_score'] }}</td>
+                                                            <td>{{ $student['exam_score'] }}</td>
                                                             <td>{{ $student['total'] }}</td>
                                                             <td>
-                                                                <input type="submit" class="edit btn btn-info" value="Save" />
-                                                                <!--{{ HTML::decode(HTML::link('results/new_assessment/' . $student['student_id'] .'/' . $subject_id. '/' .$class_id . '/' . $term_id, HTML::image('webassets/img/icons/calculator.png','Scores',array('title'=>'Scores')),array('class'=>'edit'))) }}-->
+                                                                {{ HTML::decode(HTML::link('results/new_assessment/' . $student['student_id'] .'/' . $subject_id. '/' .$class_id . '/' . $term_id, HTML::image('webassets/img/icons/calculator.png','Scores',array('title'=>'Scores')),array('class'=>'edit'))) }}
                                                                 @if($student['total'] > 0)
                                                                     @if($student['publish_status'])
                                                                       {{ HTML::decode(HTML::link('results/unpublish_result/' . $student['student_id'] .'/' . $subject_id. '/' .$class_id . '/' . $term_id, HTML::image('webassets/img/icons/undo.png','UnPublish',array('title'=>'UnPublish')),array('class'=>'edit'))) }}
@@ -89,11 +83,6 @@
                                                                 @endif
                                                                 {{ HTML::decode(HTML::link_to_route('attendance', HTML::image('webassets/img/icons/notepad.png','Mark Attendance',array('title'=>'Mark Attendance')),array($student['student_id'], $subject_id, $class_id, $term_id),array('class'=>'edit'))) }}
                                                             </td>
-                                                            {{ Form::hidden('user_id',$student['student_id']); }}
-                                                            {{ Form::hidden('subject_id',$subject_id); }}
-                                                            {{ Form::hidden('class_id',$class_id); }}
-                                                            {{ Form::hidden('term_id',$term_id); }}
-                                                            {{ Form::close(); }}
                                                         </tr>
                                                       @endforeach
                                                       @endif

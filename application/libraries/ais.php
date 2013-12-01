@@ -650,6 +650,7 @@ class Ais {
             } // value
             return $money;
           } // numeric
+        return 0;
         } // format_to_currency
 
     public static function message_format($text, $css_class){
