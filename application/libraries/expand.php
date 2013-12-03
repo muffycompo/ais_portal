@@ -187,7 +187,7 @@ class Expand {
             for($i=1; $i < 5; $i++){
                $total = $total + static::ca_exam_score($id, $subject_id, $class_id, $term_id, $i);
             }
-            return $total;
+            return round($total,2);
     }
 
     public static function ca_exam_grade($score){
