@@ -68,13 +68,13 @@
                                                             <td>{{ Ais::resolve_admission_no_from_userid($student['student_id']) }}</td>
                                                             <td>{{ $student['surname'] }}</td>
                                                             <td>{{ $student['firstname'] }}</td>
-                                                            <td>{{ Form::text('first_ca_score', $student['first_ca_score'],array('maxlength'=>3,'style'=>'width: 30px;')); }}</td>
-                                                            <td>{{ Form::text('second_ca_score', $student['second_ca_score'],array('maxlength'=>3,'style'=>'width: 30px;')); }}</td>
-                                                            <td>{{ Form::text('third_ca_score', $student['third_ca_score'],array('maxlength'=>3,'style'=>'width: 30px;')); }}</td>
+                                                            <td>{{ Form::text('first_ca_score', $student['first_ca_score'],array('maxlength'=>5,'style'=>'width: 30px;')); }}</td>
+                                                            <td>{{ Form::text('second_ca_score', $student['second_ca_score'],array('maxlength'=>5,'style'=>'width: 30px;')); }}</td>
+                                                            <td>{{ Form::text('third_ca_score', $student['third_ca_score'],array('maxlength'=>5,'style'=>'width: 30px;')); }}</td>
                                                             <!--<td>{{ $student['first_ca_score'] }}</td>
                                                             <td>{{ $student['second_ca_score'] }}</td>
                                                             <td>{{ $student['third_ca_score'] }}</td>-->
-                                                            <td>{{ Form::text('exam_score', $student['exam_score'],array('maxlength'=>3,'style'=>'width: 30px;')); }}</td>
+                                                            <td>{{ Form::text('exam_score', $student['exam_score'],array('maxlength'=>5,'style'=>'width: 30px;')); }}</td>
                                                             <!--<td>{{ $student['exam_score'] }}</td>-->
                                                             <td>{{ $student['total'] }}</td>
                                                             <td>
