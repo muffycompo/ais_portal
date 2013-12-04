@@ -109,6 +109,9 @@
             $d = static::check_assessment_exist_for_student($admission_no, $data['class_id'], $data['subject_id'], 4);
             if ($a) {
                 DB::table('results')->where('admission_no', '=', $admission_no)
+                    ->where('subject_id', '=', $data['subject_id'])
+                    ->where('term_id', '=', Ais::active_term())
+                    ->where('academic_session_id', '=', Ais::active_academic_session())
                     ->where('assessment_type_id', '=', 1)
                     ->update(array('score'=>$data['first_ca_score']));
             }else {
@@ -124,6 +127,9 @@
             }
             if($b){
                 DB::table('results')->where('admission_no', '=', $admission_no)
+                    ->where('subject_id', '=', $data['subject_id'])
+                    ->where('term_id', '=', Ais::active_term())
+                    ->where('academic_session_id', '=', Ais::active_academic_session())
                     ->where('assessment_type_id', '=', 2)
                     ->update(array('score'=>$data['second_ca_score']));
             }else {
@@ -139,6 +145,9 @@
             }
             if($c){
                 DB::table('results')->where('admission_no', '=', $admission_no)
+                    ->where('subject_id', '=', $data['subject_id'])
+                    ->where('term_id', '=', Ais::active_term())
+                    ->where('academic_session_id', '=', Ais::active_academic_session())
                     ->where('assessment_type_id', '=', 3)
                     ->update(array('score'=>$data['third_ca_score']));
             }else {
@@ -154,6 +163,9 @@
             }
             if($d){
                 DB::table('results')->where('admission_no', '=', $admission_no)
+                    ->where('subject_id', '=', $data['subject_id'])
+                    ->where('term_id', '=', Ais::active_term())
+                    ->where('academic_session_id', '=', Ais::active_academic_session())
                     ->where('assessment_type_id', '=', 4)
                     ->update(array('score'=>$data['exam_score']));
             }else {
