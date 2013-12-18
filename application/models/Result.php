@@ -102,7 +102,6 @@
         public static function new_assessment($data)
         {
             $admission_no            = Ais::resolve_admission_no_from_userid($data['user_id']);
-
             $a = static::check_assessment_exist_for_student($admission_no, $data['class_id'], $data['subject_id'], 1);
             $b = static::check_assessment_exist_for_student($admission_no, $data['class_id'], $data['subject_id'], 2);
             $c = static::check_assessment_exist_for_student($admission_no, $data['class_id'], $data['subject_id'], 3);
@@ -113,7 +112,7 @@
                     ->where('term_id', '=', Ais::active_term())
                     ->where('academic_session_id', '=', Ais::active_academic_session())
                     ->where('assessment_type_id', '=', 1)
-                    ->update(array('score'=>$data['first_ca_score']));
+                    ->update(array('score'=>(float)$data['first_ca_score']));
             }else {
                 DB::table('results')->insert(array(
                     'admission_no'        => $admission_no,
@@ -122,7 +121,7 @@
                     'academic_session_id' => Ais::active_academic_session(),
                     'term_id'             => Ais::active_term(),
                     'assessment_type_id'  => 1,
-                    'score'               => !empty($data['first_ca_score'])? $data['first_ca_score'] : 0,
+                    'score'               => !empty($data['first_ca_score'])? (float)$data['first_ca_score'] : 0,
                 ));
             }
             if($b){
@@ -131,7 +130,7 @@
                     ->where('term_id', '=', Ais::active_term())
                     ->where('academic_session_id', '=', Ais::active_academic_session())
                     ->where('assessment_type_id', '=', 2)
-                    ->update(array('score'=>$data['second_ca_score']));
+                    ->update(array('score'=>(float)$data['second_ca_score']));
             }else {
                 DB::table('results')->insert(array(
                     'admission_no'        => $admission_no,
@@ -140,7 +139,7 @@
                     'academic_session_id' => Ais::active_academic_session(),
                     'term_id'             => Ais::active_term(),
                     'assessment_type_id'  => 2,
-                    'score'               => !empty($data['second_ca_score'])? $data['second_ca_score'] : 0,
+                    'score'               => !empty($data['second_ca_score'])? (float)$data['second_ca_score'] : 0,
                 ));
             }
             if($c){
@@ -149,7 +148,7 @@
                     ->where('term_id', '=', Ais::active_term())
                     ->where('academic_session_id', '=', Ais::active_academic_session())
                     ->where('assessment_type_id', '=', 3)
-                    ->update(array('score'=>$data['third_ca_score']));
+                    ->update(array('score'=>(float)$data['third_ca_score']));
             }else {
                 DB::table('results')->insert(array(
                     'admission_no'        => $admission_no,
@@ -158,7 +157,7 @@
                     'academic_session_id' => Ais::active_academic_session(),
                     'term_id'             => Ais::active_term(),
                     'assessment_type_id'  => 3,
-                    'score'               => !empty($data['third_ca_score'])? $data['third_ca_score'] : 0,
+                    'score'               => !empty($data['third_ca_score'])? (float)$data['third_ca_score'] : 0,
                 ));
             }
             if($d){
@@ -167,7 +166,7 @@
                     ->where('term_id', '=', Ais::active_term())
                     ->where('academic_session_id', '=', Ais::active_academic_session())
                     ->where('assessment_type_id', '=', 4)
-                    ->update(array('score'=>$data['exam_score']));
+                    ->update(array('score'=>(float)$data['exam_score']));
             }else {
                 DB::table('results')->insert(array(
                     'admission_no'        => $admission_no,
@@ -176,7 +175,7 @@
                     'academic_session_id' => Ais::active_academic_session(),
                     'term_id'             => Ais::active_term(),
                     'assessment_type_id'  => 4,
-                    'score'               => !empty($data['exam_score'])? $data['exam_score'] : 0,
+                    'score'               => !empty($data['exam_score'])? (float)$data['exam_score'] : 0,
                 ));
             }
             return true;
@@ -217,8 +216,11 @@
             $count = DB::table('results')->where('admission_no', '=', $admission_no)
                 ->where('class_id', '=', $class_id)
                 ->where('subject_id', '=', $subject_id)
+                ->where('term_id', '=', Ais::active_term())
+                ->where('academic_session_id', '=', Ais::active_academic_session())
                 ->where('assessment_type_id', '=', $assessment_type)
                 ->count();
+
             if ($count > 0) {
                 return TRUE;
             } else {
@@ -386,6 +388,7 @@
 
         public static function term_result_report($term_id)
         {
+            set_time_limit(60);
             $results             = array();
             $user_id             = Session::get('user_id');
             $academic_session_id = Ais::active_academic_session();
@@ -406,9 +409,8 @@
                         'comment'         => Expand::ca_exam_grade($total)['comment'],
                         'out_of'          => static::total_students_per_subject($subject->subject_id, $class_id, $term_id),
                         'class_average'   => static::class_average_per_subject($subject->subject_id, $class_id, $term_id),
-                        'pos'             => ($pos[$total] + 1),
+                        'pos'             => array_key_exists((int)$total,$pos) ? ($pos[$total] + 1) : 0,
                     );
-
                 }
                 return $results;
             } else {
@@ -446,10 +448,15 @@
                 natsort($total_scores);
                 $total_scores = array_reverse($total_scores);
                 $inv          = array();
-                foreach ($total_scores as $k => $v) {
-                    $inv[$v] = $k;
+                if(is_array($total_scores) && count($total_scores > 0)){
+                    foreach ($total_scores as $k => $v) {
+                        $inv[$v] = $k;
+                    }
+                    return $inv;
+                } else {
+                    return 0;
                 }
-                return $inv;
+
             } else {
                 return 0;
             }
@@ -462,12 +469,10 @@
                 ->where('class_id', '=', $class_id)
                 ->where('term_id', '=', $term_id)
                 ->where('assessment_type_id', '=', 4)
-                ->group_by('admission_no')->get('admission_no');
-            if ($total) {
-                return count($total);
-            } else {
-                return 0;
-            }
+                ->group_by('admission_no')
+                ->count(array('admission_no'));
+            return ($total > 0) ? $total : 0;
+
         }
 
         protected static function class_average_per_subject($subject_id, $class_id, $term_id)

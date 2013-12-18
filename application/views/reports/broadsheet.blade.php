@@ -40,7 +40,7 @@
 
                         <div class="row-fluid">
 
-                            <div class="span9">
+                            <div class="span12">
                                 <div class="row-fluid">
 
                                     <div class="span12">
@@ -171,8 +171,7 @@
                                 </div>
 
                             </div><!-- Mid panel -->
-                            <!--  Right Panel -->
-                            @include('template.partials.right_panel')
+
                         </div>
 
                     </div>
