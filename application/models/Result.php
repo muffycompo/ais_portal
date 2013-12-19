@@ -388,7 +388,7 @@
 
         public static function term_result_report($term_id)
         {
-            set_time_limit(60);
+            set_time_limit(0);
             $results             = array();
             $user_id             = Session::get('user_id');
             $academic_session_id = Ais::active_academic_session();
@@ -407,7 +407,7 @@
                         'total'           => $total,
                         'grade'           => Expand::ca_exam_grade($total)['grade'],
                         'comment'         => Expand::ca_exam_grade($total)['comment'],
-                        'out_of'          => static::total_students_per_subject($subject->subject_id, $class_id, $term_id),
+                        'out_of'          => static::total_students_per_subject($subject->subject_id, $class_id, $term_id, $academic_session_id),
                         'class_average'   => static::class_average_per_subject($subject->subject_id, $class_id, $term_id),
                         'pos'             => array_key_exists((int)$total,$pos) ? ($pos[$total] + 1) : 0,
                     );
@@ -462,25 +462,28 @@
             }
         }
 
-        protected static function total_students_per_subject($subject_id, $class_id, $term_id)
+        protected static function total_students_per_subject($subject_id, $class_id, $term_id, $session_id)
         {
             $total = DB::table('results')->where('subject_id', '=', $subject_id)
                 ->where('published', '=', 2)
                 ->where('class_id', '=', $class_id)
                 ->where('term_id', '=', $term_id)
                 ->where('assessment_type_id', '=', 4)
+                ->where('academic_session_id', '=', $session_id)
                 ->group_by('admission_no')
-                ->count(array('admission_no'));
-            return ($total > 0) ? $total : 0;
+                ->get(array('admission_no'));
+            $count = count($total);
+            return ($count > 0) ? $count : 0;
 
         }
 
         protected static function class_average_per_subject($subject_id, $class_id, $term_id)
         {
+            $academic_session_id = Ais::active_academic_session();
             $total = static::total_score($subject_id, $class_id, $term_id);
             if ($total > 0) {
                 $total_scores   = $total;
-                $total_students = static::total_students_per_subject($subject_id, $class_id, $term_id);
+                $total_students = static::total_students_per_subject($subject_id, $class_id, $term_id,$academic_session_id);
                 $class_average  = round(($total_scores / $total_students), 2);
                 return (float)$class_average;
             } else {
