@@ -35,6 +35,7 @@ class User extends Basemodel {
    private static $edit_user_rules = array(
         'firstname' => 'required|min:3',
         'surname' => 'required|min:3',
+        'email' => 'required|email|unique:users',
         'password' => 'min:5',
     );
 
@@ -227,6 +228,7 @@ class User extends Basemodel {
        $edit_user = array(
            'firstname' => Str::upper($data['firstname']),
            'surname' => Str::upper($data['surname']),
+           'email' => Str::lower($data['email']),
        );
        if( ! empty($data['password']) ) { $edit_user['password'] = Hash::make($data['password']); }
 
