@@ -64,7 +64,7 @@
                                                             <td>{{ $user->firstname }}</td>
                                                             <td>{{ $user->email }}</td>
                                                             <td>
-                                                                {{ HTML::decode(HTML::link('users/edit_user/' . $user->id, HTML::image('webassets/img/icons/pencil.png','Edit',array('title'=>'Edit')),array('class'=>'edit'))) }}
+                                                                {{ HTML::decode(HTML::link('users/edit_user/' . $user->id . '/s', HTML::image('webassets/img/icons/pencil.png','Edit',array('title'=>'Edit')),array('class'=>'edit'))) }}
                                                                 {{ HTML::decode(HTML::link('users/delete_user/' . $user->id, HTML::image('webassets/img/icons/trash_can.png','Delete',array('title'=>'Delete')),array('class'=>'delete'))) }}
                                                             </td>
                                                         </tr>

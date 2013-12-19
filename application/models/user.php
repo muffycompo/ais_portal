@@ -35,7 +35,7 @@ class User extends Basemodel {
    private static $edit_user_rules = array(
         'firstname' => 'required|min:3',
         'surname' => 'required|min:3',
-        'email' => 'required|email|unique:users',
+        'email' => 'required|email',
         'password' => 'min:5',
     );
 

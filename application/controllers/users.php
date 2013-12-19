@@ -58,9 +58,10 @@ class Users_Controller extends Base_Controller {
         return View::make('users.new_user', $v_data);
     }
 
-    public function get_edit_user($id){
+    public function get_edit_user($id, $st = ''){
         $v_data['user'] = User::show_user($id);
         $v_data['nav'] = 'user_nav';
+        if(!empty($st)){$v_data['st'] = $st;}
         return View::make('users.edit_user', $v_data);
     }
 
@@ -139,13 +140,18 @@ class Users_Controller extends Base_Controller {
     }
 
     public function post_edit_user(){
+        $st = Input::get('st');
+        $route = (isset($st) && (Input::get('st') == 's')) ? 'students' : 'users';
+
         $validate = User::edit_user_validation(Input::all());
         if( $validate === true ){
             $signup = User::edit_user(Input::all());
             if( $signup === false ){
                 return Redirect::back()->with('message',Ais::message_format('An error occurred while updating the user, please try again later!','error'))->with_input();
             } else {
-                return Redirect::to_route('users')->with('message',Ais::message_format('User updated successfully','success'));
+//                return Redirect::to_route('users')->with('message',Ais::message_format('User updated successfully','success'));
+                return Redirect::to_route($route)->with('message',Ais::message_format('User updated successfully','success'));
+
             }
         } else {
             return Redirect::back()->with_errors($validate)->with_input();

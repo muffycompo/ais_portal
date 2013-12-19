@@ -97,6 +97,9 @@
                                                                 @endif
                                                                 <div class="control-group">
                                                                     <div class="controls inline">
+                                                                    @if(isset($st))
+                                                                    {{ Form::hidden('st',$st) }}
+                                                                    @endif
                                                                     {{ Form::hidden('user_id',$user->id) }}
                                                                     {{ Form::button('Update', array('class'=>'btn btn-info span3')) }}
                                                                     @if($user->role_id == 1)

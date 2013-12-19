@@ -176,7 +176,7 @@ class Expand {
             ->where('assessment_type_id','=',$type)
             ->first(array('score'));
         if($result){
-            return $result->score;
+            return round($result->score,2);
         } else {
             return 0;
         }

@@ -14,7 +14,7 @@ Route::get('users/dashboard', array('as'=>'user_dashboard', 'uses'=>'users@dashb
 Route::get('users/profile', array('as'=>'user_profile', 'uses'=>'users@profile'));
 Route::get('users/logout', array('as'=>'user_logout', 'uses'=>'users@logout'));
 Route::get('users/new_user', array('as'=>'new_user', 'uses'=>'users@new_user'));
-Route::get('users/edit_user/(:num)', array('as'=>'edit_user', 'uses'=>'users@edit_user'));
+Route::get('users/edit_user/(:num)/(:any?)', array('as'=>'edit_user', 'uses'=>'users@edit_user'));
 Route::get('users/edit_profile/(:num)', array('as'=>'edit_profile', 'uses'=>'users@edit_profile'));
 Route::get('users/delete_user/(:num)', array('as'=>'delete_user', 'uses'=>'users@delete_user'));
 Route::get('users/forgot_password', array('as'=>'forgot_password', 'uses'=>'users@forgot_password'));
