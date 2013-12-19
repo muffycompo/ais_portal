@@ -79,14 +79,14 @@
                                                             <td>{{ $student['total'] }}</td>
                                                             <td>
                                                                 <input type="submit" class="edit btn btn-info" value="Save" />
-                                                                <!--{{ HTML::decode(HTML::link('results/new_assessment/' . $student['student_id'] .'/' . $subject_id. '/' .$class_id . '/' . $term_id, HTML::image('webassets/img/icons/calculator.png','Scores',array('title'=>'Scores')),array('class'=>'edit'))) }}-->
-                                                                @if($student['total'] > 0)
+                                                                <!--{{-- HTML::decode(HTML::link('results/new_assessment/' . $student['student_id'] .'/' . $subject_id. '/' .$class_id . '/' . $term_id, HTML::image('webassets/img/icons/calculator.png','Scores',array('title'=>'Scores')),array('class'=>'edit'))) --}}-->
+                                                                <!--@if($student['total'] > 0)
                                                                     @if($student['publish_status'])
-                                                                      {{ HTML::decode(HTML::link('results/unpublish_result/' . $student['student_id'] .'/' . $subject_id. '/' .$class_id . '/' . $term_id, HTML::image('webassets/img/icons/undo.png','UnPublish',array('title'=>'UnPublish')),array('class'=>'edit'))) }}
+                                                                      {{-- HTML::decode(HTML::link('results/unpublish_result/' . $student['student_id'] .'/' . $subject_id. '/' .$class_id . '/' . $term_id, HTML::image('webassets/img/icons/undo.png','UnPublish',array('title'=>'UnPublish')),array('class'=>'edit'))) }}
                                                                     @else
-                                                                      {{ HTML::decode(HTML::link('results/publish_result/' . $student['student_id'] .'/' . $subject_id. '/' .$class_id . '/' . $term_id, HTML::image('webassets/img/icons/redo.png','Publish',array('title'=>'Publish')),array('class'=>'edit'))) }}
+                                                                      {{-- HTML::decode(HTML::link('results/publish_result/' . $student['student_id'] .'/' . $subject_id. '/' .$class_id . '/' . $term_id, HTML::image('webassets/img/icons/redo.png','Publish',array('title'=>'Publish')),array('class'=>'edit'))) }}
                                                                     @endif
-                                                                @endif
+                                                                @endif-->
                                                                 {{ HTML::decode(HTML::link_to_route('attendance', HTML::image('webassets/img/icons/notepad.png','Mark Attendance',array('title'=>'Mark Attendance')),array($student['student_id'], $subject_id, $class_id, $term_id),array('class'=>'edit'))) }}
                                                             </td>
                                                             {{ Form::hidden('user_id',$student['student_id']); }}

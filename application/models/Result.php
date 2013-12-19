@@ -166,7 +166,10 @@
                     ->where('term_id', '=', Ais::active_term())
                     ->where('academic_session_id', '=', Ais::active_academic_session())
                     ->where('assessment_type_id', '=', 4)
-                    ->update(array('score'=>(float)$data['exam_score']));
+                    ->update(array(
+                        'score'=>(float)$data['exam_score'],
+                        'published' => 2
+                    ));
             }else {
                 DB::table('results')->insert(array(
                     'admission_no'        => $admission_no,
@@ -176,6 +179,7 @@
                     'term_id'             => Ais::active_term(),
                     'assessment_type_id'  => 4,
                     'score'               => !empty($data['exam_score'])? (float)$data['exam_score'] : 0,
+                    'published'           => 2
                 ));
             }
             return true;
@@ -409,8 +413,9 @@
                         'comment'         => Expand::ca_exam_grade($total)['comment'],
                         'out_of'          => static::total_students_per_subject($subject->subject_id, $class_id, $term_id, $academic_session_id),
                         'class_average'   => static::class_average_per_subject($subject->subject_id, $class_id, $term_id),
-                        'pos'             => array_key_exists((int)$total,$pos) ? ($pos[$total] + 1) : 0,
+                        'pos'             => array_key_exists((int)$total,$pos) ? ($pos[(int)$total] + 1) : 0,
                     );
+                    Log::info(static::total_students_per_subject($subject->subject_id, $class_id, $term_id, $academic_session_id));
                 }
                 return $results;
             } else {

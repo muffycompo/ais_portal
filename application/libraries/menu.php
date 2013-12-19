@@ -255,6 +255,7 @@ class Menu {
     protected static function teacher_role($nav_trail){
        $result_nav = ($nav_trail == 'result_nav')? 'class="current"' : '';
        $event_nav = ($nav_trail == 'event_nav')? 'class="current"' : '';
+        $report_nav = ($nav_trail == 'report_nav')? 'class="current"' : '';
         return '
             <li '.$result_nav.'>
                 <a class="simple" href="javascript:void(0)" title="Results"><span>Results</span></a>
@@ -269,7 +270,13 @@ class Menu {
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('calendars','<span>Calendar</span>','',array('class'=>'calendar smronju','title'=>'Calendar'))  .'</li>
                 </ul>'
-            . '</li>';
+            . '</li>
+            <li '.$report_nav.'>
+                <a class="list" href="javascript:void(0)" title="Reports"><span>Reports</span></a>
+                <ul class="dropdown">
+                    <li>' . HTML::link_to_route('session_broadsheet','<span>Results Broadsheets</span>','',array('class'=>'list smronju','title'=>'Results Broadsheets'))  .'</li>
+                </ul>'
+            .'</li>';
     }
 
     protected static function ecommerce_role($nav_trail){

@@ -61,6 +61,10 @@
                                                             </td>
                                                         </tr>
                                                       @endforeach
+                                                    @else
+                                                    <tr>
+                                                        <td colspan="3">No class has been assigned to you</td>
+                                                    </tr>
                                                     @endif
                                                     </tbody>
 

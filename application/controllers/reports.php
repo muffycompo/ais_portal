@@ -18,9 +18,12 @@ class Reports_Controller extends Base_Controller {
 
    public function get_broadsheets($session_id, $term_id)
     {
+        $role_id = Session::get('role_id');
+        $user_id = Session::get('user_id');
+
         $v_data['session_id'] = (int) $session_id;
         $v_data['term_id'] = (int) $term_id;
-        $v_data['classes'] = Setting::all_classes();
+        $v_data['classes'] = ( $role_id == 2 )? Setting::assigned_teacher_class_report($user_id) : Setting::all_classes();
         $v_data['nav'] = 'report_nav';
         return View::make('reports/classes_broadsheet', $v_data);
     }

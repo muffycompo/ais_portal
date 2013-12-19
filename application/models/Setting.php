@@ -257,6 +257,7 @@ class Setting extends Basemodel {
     }
 
     public static function all_classes($paginate = false, $per_page = 10){
+        $role_id = Session::get('role_id');
         if($paginate){
             $classes = DB::table('classes')->paginate($per_page);
         } else {
@@ -354,6 +355,20 @@ class Setting extends Basemodel {
         } else {
             return null;
         }
+    }
+
+    public static function assigned_teacher_class_report($id){
+        $teachers = DB::table('teachers_and_classes')->where('user_id','=',$id)->get(array('class_id'));
+        if($teachers){
+            $in = array();
+            foreach($teachers as $teacher){
+                $in[] = $teacher->class_id;
+            }
+            $classes= DB::table('classes')->where_in('id',$in)->get();
+            return $classes? $classes : false;
+        }
+        return false;
+
     }
 
     protected static function check_teacher_exist_for_subject($user_id, $subject_id, $class_id){
