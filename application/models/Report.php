@@ -132,7 +132,7 @@ class Report extends Basemodel {
                        ->where('academic_session_id','=',$academic_session_id)
                        ->group_by('subject_id')->sum('score');
            if($total){
-               return $total;
+               return round($total,2);
            } else {
                return 0;
            }

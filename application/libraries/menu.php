@@ -260,6 +260,7 @@ class Menu {
             <li '.$result_nav.'>
                 <a class="simple" href="javascript:void(0)" title="Results"><span>Results</span></a>
                 <ul class="dropdown">
+                    <li>' . HTML::link_to_route('student_results','<span>Results</span>','',array('class'=>'simple smronju','title'=>'Results'))  .'</li>
                     <li>' . HTML::link_to_route('assessments','<span>Assessments</span>','',array('class'=>'simple smronju','title'=>'Assessments'))  .'</li>
                     <li>' . HTML::link_to_route('assignments','<span>Assignments</span>','',array('class'=>'simple smronju','title'=>'Assignments'))  .'</li>
                     <li>' . HTML::link_to_route('questions','<span>Questions</span>','',array('class'=>'simple smronju','title'=>'Questions'))  .'</li>

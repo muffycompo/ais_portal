@@ -30,6 +30,7 @@ class Reports_Controller extends Base_Controller {
 
     public function get_broadsheet($session_id, $term_id,$class_id)
     {
+        set_time_limit(0);
         $v_data['class_id'] = (int) $class_id;
         $v_data['session_id'] = (int) $session_id;
         $v_data['sn'] = 1;

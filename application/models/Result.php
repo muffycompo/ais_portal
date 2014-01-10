@@ -310,9 +310,9 @@
             return static::result_publish_status($student_id, $subject_id, $class_id, $term_id, 1);
         }
 
-        public static function student_result_biodata()
+        public static function student_result_biodata($id = '')
         {
-            $user_id = Session::get('user_id');
+            $user_id      = empty($id) ? Session::get('user_id') : $id;
             $student = DB::table('users')
                 ->left_join('biodata', 'users.id', '=', 'biodata.user_id')
                 ->where('users.id', '=', $user_id)
@@ -326,7 +326,7 @@
 
         public static function result_report($subject_id, $class_id, $term_id)
         {
-            $results         = array();
+            $results = array();
             $student_results = static::registered_students_in_class($class_id);
             if ($student_results) {
                 foreach ($student_results as $result) {
@@ -343,6 +343,25 @@
                         'grade'           => Expand::ca_exam_grade(Expand::ca_exam_total($result->id, $subject_id, $class_id, $term_id))['grade'],
                         'comment'         => Expand::ca_exam_grade(Expand::ca_exam_total($result->id, $subject_id, $class_id, $term_id))['comment'],
                         'publish_status'  => static::check_publish_status($admission_no, $class_id, $subject_id, $term_id),
+                    );
+
+                }
+                return $results;
+            } else {
+                return null;
+            }
+        }
+
+        public static function result_student($class_id)
+        {
+            $results = array();
+            $student_results = static::registered_students_in_class($class_id);
+            if ($student_results) {
+                foreach ($student_results as $result) {
+                    $results[]    = array(
+                        'student_id'      => $result->id,
+                        'firstname'       => $result->firstname,
+                        'surname'         => $result->surname,
                     );
 
                 }
@@ -390,11 +409,11 @@
             }
         }
 
-        public static function term_result_report($term_id)
+        public static function term_result_report($term_id, $id = '')
         {
             set_time_limit(0);
             $results             = array();
-            $user_id             = Session::get('user_id');
+            $user_id             = empty($id) ? Session::get('user_id') : $id;
             $academic_session_id = Ais::active_academic_session();
             $class_id            = Ais::resolve_classid_from_userid($user_id);
             $subject_results     = static::registered_subjects_result($user_id, $class_id, $term_id, $academic_session_id);
@@ -571,9 +590,9 @@
             }
         }
 
-        public static function subjects_offered($user_id = '', $term_id = '')
+        public static function subjects_offered($id = '', $term_id = '')
         {
-            $user_id             = empty($user_id) ? Session::get('user_id') : $user_id;
+            $user_id             = empty($id) ? Session::get('user_id') : $id;
             $admission_no        = Ais::resolve_admission_no_from_userid($user_id);
             $class_id            = Ais::resolve_classid_from_userid($user_id);
             $term_id             = empty($term_id) ? Ais::active_term() : $term_id;

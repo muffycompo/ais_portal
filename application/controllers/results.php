@@ -24,6 +24,12 @@ class Results_Controller extends Base_Controller {
         return View::make('results.assessments', $v_data);
     }
 
+    public function get_student_results(){
+        $v_data['subjects'] = Result::teacher_subjects();
+        $v_data['nav'] = 'result_nav';
+        return View::make('results.student_results', $v_data);
+    }
+
    public function get_assessment($subject_id, $class_id, $term_id){
         $v_data['subject_id'] = (int)$subject_id;
         $v_data['class_id'] = (int)$class_id;
@@ -33,21 +39,31 @@ class Results_Controller extends Base_Controller {
         return View::make('results.assessment', $v_data);
     }
 
-   public function get_term_result($term_id){
-       $v_data['class_id'] = Ais::resolve_classid_from_userid(Session::get('user_id'));
+   public function get_student_result($subject_id, $class_id, $term_id){
+        $v_data['subject_id'] = (int)$subject_id;
+        $v_data['class_id'] = (int)$class_id;
+        $v_data['term_id'] = (int)$term_id;
+        $v_data['students'] = Result::result_student($v_data['class_id']);
+       $v_data['nav'] = 'result_nav';
+        return View::make('results.student_result', $v_data);
+    }
+
+   public function get_term_result($term_id,$student_id = ''){
+       $id = (empty($student_id) && Session::get('role_id') == 1) ? Session::get('user_id') : $student_id;
+       $v_data['class_id'] = Ais::resolve_classid_from_userid($id);
        $v_data['term_id'] = $term_id;
        $v_data['nav'] = 'result_nav';
-       $grade = Result::final_grade('',$term_id);
+       $grade = Result::final_grade($id,$term_id);
        if($grade > 0){
-           $v_data['subject_results'] = Result::term_result_report((int)$term_id);
-           $v_data['biodata'] = Result::student_result_biodata();
-           $v_data['subjects_offered'] = Result::subjects_offered('',$term_id);
-           $v_data['total_score'] = Result::student_subjects_total_score('',$term_id);
-           $v_data['final_average'] = Result::student_final_average('',$term_id);
-           $v_data['final_position'] = Result::position_per_class('',$term_id);
+           $v_data['subject_results'] = Result::term_result_report((int)$term_id,$id);
+           $v_data['biodata'] = Result::student_result_biodata($id);
+           $v_data['subjects_offered'] = Result::subjects_offered($id,$term_id);
+           $v_data['total_score'] = Result::student_subjects_total_score($id,$term_id);
+           $v_data['final_average'] = Result::student_final_average($id,$term_id);
+           $v_data['final_position'] = Result::position_per_class($id,$term_id);
            $v_data['final_grade'] = $grade;
            $v_data['number_in_class'] = Result::registered_students_in_class($v_data['class_id'],true);
-           $v_data['class_average'] = Result::result_class_average('',$term_id);
+           $v_data['class_average'] = Result::result_class_average($id,$term_id);
        } else {
            $v_data['final_grade'] = $grade;
        }

@@ -88,9 +88,11 @@ Route::post('registrations/finalize_application', array('uses'=>'registrations@f
 
 //    Results Controller - GET
 Route::get('results', array('as'=>'results', 'uses'=>'results@index'));
+Route::get('results/student_results', array('as'=>'student_results', 'uses'=>'results@student_results'));
 Route::get('results/assessments', array('as'=>'assessments', 'uses'=>'results@assessments'));
-Route::get('results/term_result/(:num)', array('as'=>'term_result', 'uses'=>'results@term_result'));
+Route::get('results/term_result/(:num)/(:num?)', array('as'=>'term_result', 'uses'=>'results@term_result'));
 Route::get('results/assessment/(:num)/(:num)/(:num)', array('as'=>'assessment', 'uses'=>'results@assessment'));
+Route::get('results/student_result/(:num)/(:num)/(:num)', array('as'=>'student_result', 'uses'=>'results@student_result'));
 Route::get('results/new_assessment/(:num)/(:num)/(:num)/(:num)', array('as'=>'new_assessment', 'uses'=>'results@new_assessment'));
 Route::get('results/unpublish_result/(:num)/(:num)/(:num)/(:num)', array('as'=>'unpublish_result', 'uses'=>'results@unpublish_result'));
 Route::get('results/publish_result/(:num)/(:num)/(:num)/(:num)', array('as'=>'publish_result', 'uses'=>'results@publish_result'));
