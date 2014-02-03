@@ -43,6 +43,15 @@ class User extends Basemodel {
         'email' => 'email|required',
     );
 
+   private static $search_rules = array(
+        'search' => 'required|min:3',
+    );
+
+   private static $student_bio_rules = array(
+        'age' => 'numeric|required',
+//        'house' => 'required',
+    );
+
 //  Validation
     public static function login_validation($input){
         return static::validation($input, static::$login_rules);
@@ -66,6 +75,14 @@ class User extends Basemodel {
 
     public static function forgot_password_validation($input){
         return static::validation($input, static::$forgot_password_rules);
+    }
+
+    public static function search_validation($input){
+        return static::validation($input, static::$search_rules);
+    }
+
+    public static function student_bio_validation($input){
+        return static::validation($input, static::$student_bio_rules);
     }
 
 //  Authentication
@@ -132,6 +149,25 @@ class User extends Basemodel {
         }
     }
 
+    public static function search_user($data){
+        $search = Str::upper($data['search']);
+        $admission_no = Ais::resolve_userid_from_admission_no($search);
+
+        $db = DB::table('users')
+                    ->where('role_id','=',1)
+                    ->where('firstname','LIKE',"$search%")
+                    ->or_where('surname','LIKE',"$search%")
+                    ->or_where('email','LIKE',"$search%")
+                    ->or_where('id','=',$admission_no)
+                    ->get();
+        if( $db ) {
+            return $db;
+        } else {
+            return false;
+        }
+
+    }
+
     public static function new_user($data){
         $user_data = array(
             'firstname' => Str::upper($data['firstname']),
@@ -143,6 +179,22 @@ class User extends Basemodel {
         $new_user = DB::table('users')->insert($user_data);
         if( $new_user ) {
             return $user_data;
+        } else {
+            return false;
+        }
+
+    }
+
+    public static function student_bio($data){
+        $id = $data['user_id'];
+        $bio_data = array(
+            'age' => $data['age'],
+            'gender_id' => $data['gender_id'],
+        );
+
+        $student_bio = DB::table('biodata')->where('user_id','=',$id)->update($bio_data);
+        if( $student_bio ) {
+            return $student_bio;
         } else {
             return false;
         }
@@ -215,6 +267,15 @@ class User extends Basemodel {
 
    public static function show_user($user_id){
         $users = DB::table('users')->where('id','=',$user_id)->first();
+        if( $users ){
+            return $users;
+        } else {
+            return false;
+        }
+    }
+
+   public static function show_student_bio($user_id){
+        $users = DB::table('biodata')->where('user_id','=',$user_id)->first(array('age','gender_id'));
         if( $users ){
             return $users;
         } else {

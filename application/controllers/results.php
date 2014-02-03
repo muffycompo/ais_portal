@@ -60,7 +60,8 @@ class Results_Controller extends Base_Controller {
            $v_data['subjects_offered'] = Result::subjects_offered($id,$term_id);
            $v_data['total_score'] = Result::student_subjects_total_score($id,$term_id);
            $v_data['final_average'] = Result::student_final_average($id,$term_id);
-           $v_data['final_position'] = Result::position_per_class($id,$term_id);
+//           $v_data['final_position'] = Result::position_per_class($id,$term_id);
+           $v_data['final_position'] = '';
            $v_data['final_grade'] = $grade;
            $v_data['number_in_class'] = Result::registered_students_in_class($v_data['class_id'],true);
            $v_data['class_average'] = Result::result_class_average($id,$term_id);

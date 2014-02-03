@@ -75,6 +75,18 @@ class Users_Controller extends Base_Controller {
         return View::make('users.forgot_password');
     }
 
+    public function get_user_search(){
+        $v_data['nav'] = 'search_nav';
+        return View::make('users.user_search',$v_data);
+    }
+
+    public function get_edit_student_bio($id){
+        $v_data['nav'] = 'user_nav';
+        $v_data['user'] = User::show_user($id);
+        $v_data['bio'] = User::show_student_bio($id);
+        return View::make('users.edit_student_bio',$v_data);
+    }
+
     public function get_password_confirmation(){
         return View::make('users.password_confirmation');
     }
@@ -195,6 +207,36 @@ class Users_Controller extends Base_Controller {
                 return Redirect::back()->with('message',Ais::message_format('We do not have that email address in our database!','error'))->with_input();
             } else {
                 return Redirect::to_route('password_confirmation')->with('email',Input::get('email'));
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
+
+    public function post_search(){
+        $validate = User::search_validation(Input::all());
+        if( $validate === true ){
+            $search = User::search_user(Input::all());
+            if( $search ){
+                $v_data['nav'] = 'search_nav';
+                $v_data['searches'] = $search;
+                return View::make('users.search_result', $v_data);
+            } else {
+                return Redirect::back()->with('message',Ais::message_format('Oops! Something happened while we tried to search for the user','error'))->with_input();
+            }
+        } else {
+            return Redirect::back()->with_errors($validate)->with_input();
+        }
+    }
+
+    public function post_student_bio(){
+        $validate = User::student_bio_validation(Input::all());
+        if( $validate === true ){
+            $search = User::student_bio(Input::all());
+            if( $search ){
+                return Redirect::back()->with('message',Ais::message_format('The student Bio has been updated','success'))->with_input();
+            } else {
+                return Redirect::back()->with('message',Ais::message_format('An error occurred while updating the user, please try again!','error'))->with_input();
             }
         } else {
             return Redirect::back()->with_errors($validate)->with_input();

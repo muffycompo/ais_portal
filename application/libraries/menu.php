@@ -109,6 +109,7 @@ class Menu {
         $report_nav = ($nav_trail == 'report_nav')? 'class="current"' : '';
         $user_nav = ($nav_trail == 'user_nav')? 'class="current"' : '';
         $setting_nav = ($nav_trail == 'setting_nav')? 'class="current"' : '';
+        $search_nav = ($nav_trail == 'search_nav')? 'class="current"' : '';
         return '
             <li '.$payment_nav.'>
                 <a class="wizard-form" href="javascript:void(0)" title="Payments"><span>Payments</span></a>
@@ -167,6 +168,9 @@ class Menu {
                     <li>' . HTML::link_to_route('users','<span>Admin</span>','',array('class'=>'users smronju','title'=>'Admin'))  .'</li>
                     <li>' . HTML::link_to_route('students','<span>Students</span>','',array('class'=>'users smronju','title'=>'Students List'))  .'</li>
                 </ul>'
+            .'</li>
+            <li '.$search_nav.'>'.
+                HTML::link_to_route('user_search','<span>Search</span>','',array('class'=>'list smronju','title'=>'Search'))
             .'</li>';
     }
 
@@ -178,6 +182,7 @@ class Menu {
         $user_nav = ($nav_trail == 'user_nav')? 'class="current"' : '';
         $setting_nav = ($nav_trail == 'setting_nav')? 'class="current"' : '';
         $report_nav = ($nav_trail == 'report_nav')? 'class="current"' : '';
+        $search_nav = ($nav_trail == 'search_nav')? 'class="current"' : '';
         return '
             <li '.$payment_nav.'>
                 <a class="wizard-form" href="javascript:void(0)" title="Payments"><span>Payments</span></a>
@@ -249,6 +254,9 @@ class Menu {
                     <li>' . HTML::link_to_route('users','<span>Admin</span>','',array('class'=>'users smronju','title'=>'Admin'))  .'</li>
                     <li>' . HTML::link_to_route('students','<span>Students</span>','',array('class'=>'users smronju','title'=>'Students List'))  .'</li>
                 </ul>'
+            .'</li>
+            <li '.$search_nav.'>'.
+                HTML::link_to_route('user_search','<span>Search</span>','',array('class'=>'list smronju','title'=>'Search'))
             .'</li>';
     }
 
@@ -256,6 +264,7 @@ class Menu {
        $result_nav = ($nav_trail == 'result_nav')? 'class="current"' : '';
        $event_nav = ($nav_trail == 'event_nav')? 'class="current"' : '';
         $report_nav = ($nav_trail == 'report_nav')? 'class="current"' : '';
+        $search_nav = ($nav_trail == 'search_nav')? 'class="current"' : '';
         return '
             <li '.$result_nav.'>
                 <a class="simple" href="javascript:void(0)" title="Results"><span>Results</span></a>
@@ -277,6 +286,9 @@ class Menu {
                 <ul class="dropdown">
                     <li>' . HTML::link_to_route('session_broadsheet','<span>Results Broadsheets</span>','',array('class'=>'list smronju','title'=>'Results Broadsheets'))  .'</li>
                 </ul>'
+            .'</li>
+            <li '.$search_nav.'>'.
+                HTML::link_to_route('user_search','<span>Search</span>','',array('class'=>'list smronju','title'=>'Search'))
             .'</li>';
     }
 

@@ -19,6 +19,8 @@ Route::get('users/edit_profile/(:num)', array('as'=>'edit_profile', 'uses'=>'use
 Route::get('users/delete_user/(:num)', array('as'=>'delete_user', 'uses'=>'users@delete_user'));
 Route::get('users/forgot_password', array('as'=>'forgot_password', 'uses'=>'users@forgot_password'));
 Route::get('users/password_confirmation', array('as'=>'password_confirmation', 'uses'=>'users@password_confirmation'));
+Route::get('users/search', array('as'=>'user_search', 'uses'=>'users@user_search'));
+Route::get('users/edit_student_bio/(:num)', array('as'=>'edit_student_bio', 'uses'=>'users@edit_student_bio'));
 
 
 //    Users Controller - POST
@@ -29,6 +31,8 @@ Route::post('users/edit_user', array('uses'=>'users@edit_user'));
 Route::post('users/edit_profile', array('uses'=>'users@edit_profile'));
 Route::post('users/forgot_password', array('uses'=>'users@forgot_password'));
 Route::post('users/upload_photo', array('uses'=>'users@upload_photo'));
+Route::post('users/search', array('as'=>'search', 'uses'=>'users@search'));
+Route::post('users/student_bio', array('as'=>'student_bio', 'uses'=>'users@student_bio'));
 
 
 //    Payments Controller - GET
