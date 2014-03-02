@@ -21,7 +21,7 @@ return array(
 			'driver'   => 'mysql',
 			'host'     => 'mysql.ais.sch.ng',
 			'database' => 'aisportaldbcore',
-			'username' => 'aisportaldbuser',
+			'username' => 'aisdbuser',
 			'password' => 'ais@portal',
 			'charset'  => 'utf8',
 			'prefix'   => '',
