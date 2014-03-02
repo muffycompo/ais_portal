@@ -77,6 +77,14 @@
                                                                     </div>
                                                                 </div>
 
+                                                                {{ $errors->has('phone_number')? '<div class="control-group error">' : '<div class="control-group">' }}
+                                                                    {{ Form::label('phone_number','Phone Number:',array('class'=>'control-label')) }}
+                                                                    <div class="controls">
+                                                                        {{ Form::input('text','phone_number',isset($meta->phone_number) ? $meta->phone_number : '',array('id'=>'phone_number','class'=>'span6 input-fluid')) }}
+                                                                        {{ $errors->first('phone_number','<span class="help-inline">:message</span>') }}
+                                                                    </div>
+                                                                </div>
+
                                                                 @if($user->role_id == 1)
                                                                 <div class="control-group">
                                                                     {{ Form::label('class_id','Class:',array('class'=>'control-label')) }}
@@ -85,7 +93,22 @@
                                                                         {{ $errors->first('class_id','<span class="help-inline">:message</span>') }}
                                                                     </div>
                                                                 </div>
+                                                                <div class="control-group">
+                                                                    {{ Form::label('gender_id','Gender:',array('class'=>'control-label')) }}
+                                                                    <div class="controls">
+                                                                        {{ Ais::gender_dropdown('gender_id',Ais::resolve_genderid_from_userid($user->id),array('id'=>'gender_id','class'=>'span6 input-fluid')) }}
+                                                                        {{ $errors->first('gender_id','<span class="help-inline">:message</span>') }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="control-group">
+                                                                    {{ Form::label('state_id','State of Origin:',array('class'=>'control-label')) }}
+                                                                    <div class="controls">
+                                                                        {{ Ais::state_dropdown('state_id',Ais::resolve_stateid_from_userid($user->id),array('id'=>'state_id','class'=>'span6 input-fluid')) }}
+                                                                        {{ $errors->first('state_id','<span class="help-inline">:message</span>') }}
+                                                                    </div>
+                                                                </div>
                                                                 @endif
+
                                                                 @if($user->role_id < 6 && Session::get('role_id') == 6)
                                                                 <div class="control-group">
                                                                     {{ Form::label('role_id','Role:',array('class'=>'control-label')) }}

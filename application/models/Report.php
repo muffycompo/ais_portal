@@ -165,4 +165,134 @@ class Report extends Basemodel {
           return null;
       }
   }
+
+  public static function all_student_numbers()
+  {
+      $students = DB::table('users')
+        ->join('biodata','users.id','=','biodata.user_id')
+        ->where('biodata.phone_number','!=','')
+        ->or_where_not_null('biodata.phone_number')
+        ->order_by('biodata.current_class_id','asc')
+        ->get(array('users.id','firstname','surname','biodata.phone_number','biodata.current_class_id'));
+      if($students){
+          return $students;
+      } else {
+          return false;
+      }
+  }
+
+  public static function all_students_gender()
+  {
+      $students = DB::table('users')
+        ->join('biodata','users.id','=','biodata.user_id')
+        ->order_by('biodata.current_class_id','asc')
+        ->get(array('users.id','firstname','surname','biodata.current_class_id','biodata.gender_id'));
+      if($students){
+          return $students;
+      } else {
+          return false;
+      }
+  }
+
+  public static function all_students_state()
+  {
+      $students = DB::table('users')
+        ->join('biodata','users.id','=','biodata.user_id')
+        ->order_by('biodata.current_class_id','asc')
+        ->get(array('users.id','firstname','surname','biodata.current_class_id','biodata.state_id'));
+      if($students){
+          return $students;
+      } else {
+          return false;
+      }
+  }
+
+  public static function all_staff_numbers()
+  {
+      $students = DB::table('users')
+        ->join('staff_biodata','users.id','=','staff_biodata.user_id')
+        ->order_by('users.id','asc')
+        ->get(array('users.id','firstname','surname','staff_biodata.phone_number','email'));
+      if($students){
+          return $students;
+      } else {
+          return false;
+      }
+  }
+
+    public static function all_no_list($code)
+    {
+        $csv = new MCSV();
+
+        if($code == 'student'){
+            $csv->columns(array('Surname','Firstname','Class','GSM Number'));
+            $students = static::all_student_numbers();
+            if($students !== false && count($students) > 0){
+                foreach ($students as $student) {
+                    $csv->row(array($student->surname,$student->firstname,Expand::classes($student->current_class_id),$student->phone_number));
+                }
+            } else {
+                $csv->row(array('','','',''));
+            }
+            return $csv->to_download('students_phone_numbers.csv');
+        } elseif($code == 'staff'){
+            $csv->columns(array('Surname','Firstname','Email','GSM Number'));
+            $students = static::all_staff_numbers();
+            if(count($students) > 0){
+                foreach ($students as $student) {
+                    $csv->row(array($student->surname,$student->firstname,$student->email,$student->phone_number));
+                }
+            } else {
+                $csv->row(array('','','',''));
+            }
+            return $csv->to_download('staff_phone_numbers.csv');
+        } else{
+            return Redirect::back();
+        }
+
+
+    }
+
+    public static function all_gender_list($code)
+    {
+        $csv = new MCSV();
+
+        if($code == 'student'){
+            $csv->columns(array('Surname','Firstname','Class','Gender/Sex'));
+            $students = static::all_student_numbers();
+            if($students !== false && count($students) > 0){
+                foreach ($students as $student) {
+                    $csv->row(array($student->surname,$student->firstname,Expand::classes($student->current_class_id),Expand::gender($student->gender_id)));
+                }
+            } else {
+                $csv->row(array('','','',''));
+            }
+            return $csv->to_download('students_by_gender.csv');
+        } else{
+            return Redirect::back();
+        }
+
+    }
+
+    public static function all_state_list($code)
+    {
+        $csv = new MCSV();
+
+        if($code == 'student'){
+            $csv->columns(array('Surname','Firstname','Class','State of Origin'));
+            $students = static::all_student_numbers();
+            if($students !== false && count($students) > 0){
+                foreach ($students as $student) {
+                    $csv->row(array($student->surname,$student->firstname,Expand::classes($student->current_class_id),Expand::state($student->state_id)));
+                }
+            } else {
+                $csv->row(array('','','',''));
+            }
+            return $csv->to_download('students_by_state.csv');
+        } else{
+            return Redirect::back();
+        }
+
+    }
+
 }

@@ -60,6 +60,7 @@ class Users_Controller extends Base_Controller {
 
     public function get_edit_user($id, $st = ''){
         $v_data['user'] = User::show_user($id);
+        $v_data['meta'] = User::show_biodata_meta($id);
         $v_data['nav'] = 'user_nav';
         if(!empty($st)){$v_data['st'] = $st;}
         return View::make('users.edit_user', $v_data);
@@ -91,7 +92,15 @@ class Users_Controller extends Base_Controller {
         return View::make('users.password_confirmation');
     }
 
-    public function get_delete_user($id){
+    public function get_students_nos($id){
+        $v_data['nav'] = 'user_nav';
+        $v_data['user'] = User::show_user($id);
+        $v_data['bio'] = User::show_student_bio($id);
+        return View::make('users.edit_student_bio',$v_data);
+    }
+
+
+        public function get_delete_user($id){
         $delete = User::delete_user($id);
         if( $delete === false ){
             return Redirect::back()->with('message',Ais::message_format('An error occurred while deleting the user!','error'));
@@ -161,7 +170,6 @@ class Users_Controller extends Base_Controller {
             if( $signup === false ){
                 return Redirect::back()->with('message',Ais::message_format('An error occurred while updating the user, please try again later!','error'))->with_input();
             } else {
-//                return Redirect::to_route('users')->with('message',Ais::message_format('User updated successfully','success'));
                 return Redirect::to_route($route)->with('message',Ais::message_format('User updated successfully','success'));
 
             }

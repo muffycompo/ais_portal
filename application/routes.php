@@ -173,9 +173,16 @@ Route::post('settings/manage_payment_categories', array('uses'=>'settings@manage
 
 //    Reports Controller - GET
 Route::get('reports', array('as'=>'reports', 'uses'=>'reports@index'));
+Route::get('reports/students_nos', array('as'=>'students_nos', 'uses'=>'reports@students_nos'));
+Route::get('reports/staff_nos', array('as'=>'staff_nos', 'uses'=>'reports@staff_nos'));
+Route::get('reports/students_gender', array('as'=>'students_gender', 'uses'=>'reports@students_gender'));
+Route::get('reports/students_state', array('as'=>'students_state', 'uses'=>'reports@students_state'));
 Route::get('reports/broadsheets', array('as'=>'session_broadsheet', 'uses'=>'reports@session_broadsheet'));
 Route::get('reports/broadsheet/(:num)/(:num)', array('as'=>'class_broadsheets', 'uses'=>'reports@broadsheets'));
 Route::get('reports/broadsheet/(:num)/(:num)/(:num)', array('as'=>'broadsheets', 'uses'=>'reports@broadsheet'));
+Route::get('reports/download_no_list/(:any)', array('as'=>'download_no_list', 'uses'=>'reports@download_no_list'));
+Route::get('reports/download_gender_list/(:any)', array('as'=>'download_gender_list', 'uses'=>'reports@download_gender_list'));
+Route::get('reports/download_state_list/(:any)', array('as'=>'download_state_list', 'uses'=>'reports@download_state_list'));
 
 //    Settings Controller - POST
 Route::post('reports', array('uses'=>'reports@index'));

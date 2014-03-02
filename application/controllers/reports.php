@@ -16,6 +16,52 @@ class Reports_Controller extends Base_Controller {
         return View::make('reports/session_broadsheet', $v_data);
     }
 
+    public function get_students_nos()
+    {
+        $v_data['students'] = Report::all_student_numbers();
+        $v_data['nav'] = 'report_nav';
+        return View::make('reports/students_nos', $v_data);
+    }
+
+    public function get_staff_nos()
+    {
+        $v_data['students'] = Report::all_staff_numbers();
+        $v_data['nav'] = 'report_nav';
+        return View::make('reports/staff_nos', $v_data);
+    }
+
+    public function get_students_gender()
+    {
+        $v_data['students'] = Report::all_students_gender();
+        $v_data['nav'] = 'report_nav';
+        return View::make('reports/students_gender', $v_data);
+    }
+
+    public function get_students_state()
+    {
+        $v_data['students'] = Report::all_students_state();
+        $v_data['nav'] = 'report_nav';
+        return View::make('reports/students_state', $v_data);
+    }
+
+    public function get_download_no_list($download_code)
+    {
+        $code = base64_decode($download_code);
+        return Report::all_no_list($code);
+    }
+
+    public function get_download_gender_list($download_code)
+    {
+        $code = base64_decode($download_code);
+        return Report::all_gender_list($code);
+    }
+
+    public function get_download_state_list($download_code)
+    {
+        $code = base64_decode($download_code);
+        return Report::all_state_list($code);
+    }
+
    public function get_broadsheets($session_id, $term_id)
     {
         $role_id = Session::get('role_id');

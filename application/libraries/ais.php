@@ -461,10 +461,29 @@ class Ais {
         if($user) {return $user->role_id;} else { return '';}
     }
 
+    public static function has_biodata_meta($user_id, $role_id){
+        if($role_id == 1){
+            $user = DB::table('biodata')->where('user_id','=',$user_id)->first(array('phone_number'));
+        } else {
+            $user = DB::table('staff_biodata')->where('user_id','=',$user_id)->first(array('phone_number'));
+        }
+
+        if($user) {return true;} else { return false;}
+    }
+
     public static function resolve_admission_no_from_userid($user_id){
         $user = DB::table('official_use')->where('user_id','=',$user_id)->first(array('admission_no'));
         if($user) {return $user->admission_no;} else { return '';}
 
+    }
+
+    public static function resolve_genderid_from_userid($user_id){
+        $user = DB::table('biodata')->where('user_id','=',$user_id)->first(array('gender_id'));
+        if($user) {return $user->gender_id;} else { return '';}
+    }
+    public static function resolve_stateid_from_userid($user_id){
+        $user = DB::table('biodata')->where('user_id','=',$user_id)->first(array('state_id'));
+        if($user) {return $user->state_id;} else { return '';}
     }
 
     public static function resolve_classid_from_userid($user_id, $other = ''){

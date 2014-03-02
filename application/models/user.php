@@ -37,6 +37,7 @@ class User extends Basemodel {
         'surname' => 'required|min:3',
         'email' => 'required|email',
         'password' => 'min:5',
+        'phone_number' => 'numeric|min:10',
     );
 
    private static $forgot_password_rules = array(
@@ -274,6 +275,23 @@ class User extends Basemodel {
         }
     }
 
+   public static function show_biodata_meta($user_id){
+       $role_id = Ais::resolve_userrole_userid($user_id);
+       if($role_id == 1)
+       {
+           $users = DB::table('biodata')->where('user_id','=',$user_id)->first(array('phone_number'));
+       }
+       else
+       {
+           $users = DB::table('staff_biodata')->where('user_id','=',$user_id)->first(array('phone_number'));
+       }
+        if( $users ){
+            return $users;
+        } else {
+            return false;
+        }
+    }
+
    public static function show_student_bio($user_id){
         $users = DB::table('biodata')->where('user_id','=',$user_id)->first(array('age','gender_id'));
         if( $users ){
@@ -293,16 +311,43 @@ class User extends Basemodel {
        );
        if( ! empty($data['password']) ) { $edit_user['password'] = Hash::make($data['password']); }
 
-       if( isset($data['role_id']) ) { $edit_user['role_id'] = $data['role_id']; }
+       if( isset($data['role_id']) )
+       {
+           $edit_user['role_id'] = $data['role_id'];
+           if(Ais::has_biodata_meta($data['user_id'],$data['role_id'])){
+               if(!empty($data['phone_number'])){
+                   $biodata = DB::table('staff_biodata')->where('user_id','=',$data['user_id'])->update(array('phone_number' => $data['phone_number']));
+               }
+           } else {
+               if(!empty($data['phone_number'])){
+                   $biodata = DB::table('staff_biodata')->insert(array('phone_number' => $data['phone_number'], 'user_id' => $data['user_id']));
+               }
+           }
+
+       } else {
+           if(!empty($data['phone_number'])){
+               $biodata = DB::table('biodata')->where('user_id','=',$data['user_id'])->update(array('phone_number' => $data['phone_number']));
+           }
+       }
 
        $users = DB::table('users')->where('id','=',$user_id)->update($edit_user);
        if(isset($data['class_id']) && ! empty($data['class_id'])) {
-           $class = DB::table('biodata')->where('user_id','=',$data['user_id'])->update(array('current_class_id' => $data['class_id']));
+           $bdata_update = array(
+               'current_class_id' => $data['class_id'],
+               'gender_id' => $data['gender_id'],
+               'state_id' => $data['state_id']
+           );
+           $class = DB::table('biodata')->where('user_id','=',$data['user_id'])->update($bdata_update);
        }
-        if( $users ){
+
+        if( $users){
             return $users;
         } else {
-            if($class !== false){ return $class;}
+            if($class !== false){
+                return $class;
+            } elseif ($biodata !== false){
+                return $biodata;
+            }
             return false;
         }
     }

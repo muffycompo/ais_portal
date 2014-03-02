@@ -246,6 +246,15 @@ class Menu {
                     <li>' . HTML::link_to_route('session_broadsheet','<span>Results Broadsheets</span>','',array('class'=>'list smronju','title'=>'Results Broadsheets'))  .'</li>
                     <li>'. HTML::link('#','<span>Clubs</span>',array('class'=>'chat')) . '</li>
                     <li>'. HTML::link('#','<span>Sports</span>',array('class'=>'charts')) . '</li>
+                    <li>
+                        <a class="list" href="javascript:void(0)" title="More..."><span>More...</span></a>
+                        <ul class="dropdown">
+                            <li>' . HTML::link_to_route('students_nos','<span>Students GSM Nos.</span>','',array('class'=>'calendar smronju','title'=>'Calendar'))  .'</li>
+                            <li>' . HTML::link_to_route('staff_nos','<span>Staff GSM Nos.</span>','',array('class'=>'calendar smronju','title'=>'Calendar'))  .'</li>
+                            <li>' . HTML::link_to_route('students_gender','<span>Students by Gender</span>','',array('class'=>'calendar smronju','title'=>'Calendar'))  .'</li>
+                            <li>' . HTML::link_to_route('students_state','<span>Students by State</span>','',array('class'=>'calendar smronju','title'=>'Calendar'))  .'</li>
+                        </ul>
+                    </li>
                 </ul>'
             .'</li>
             <li '.$user_nav.'>
